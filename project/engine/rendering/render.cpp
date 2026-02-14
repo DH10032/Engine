@@ -1,16 +1,12 @@
-#include "render.h"
+#include <iostream>
+#include <filesystem>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
-extern "C" {
-    
-}
+namespace GameGraphicApi {
 
-namespace GameGrphicApi{
-    /**
-    * @brief window와 
-    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, NULL 입니다.
-    */
     typedef struct {
-        char* window_name;
+        const char* window_name;
         SDL_Window* window;
         SDL_Renderer* renderer;
         int Red;
@@ -19,123 +15,155 @@ namespace GameGrphicApi{
         int Bright;
     } window_info;
 
-    /**
-    * @brief SLD_system_video 초기화 및, window를 생성
-    * @param[in] char* 생생될 window 이름
-    * @param[in] Red Red의 배경화면 내용
-    * @param[in] Green Green의 배경화면 내용
-    * @param[in] Blue Blue의 배경화면 내용
-    * @param[in] Bright Bright의 배경화면 내용
-    * @param[out] SDL_Renderer* window에 생성될 객체
-    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, NULL 입니다!ㅇㄴㅇㄴ
-    */
-    void Create_window(GameGrphicApi::window_info* info){
-        std::cout << "run : " << info->window_name << std::endl;
-        SDL_Init(SDL_INIT_VIDEO);
-        SDL_Window* window = SDL_CreateWindow(
+
+    bool Create_window(window_info* info) {
+
+        if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+            std::cout << "SDL Init Error: " << SDL_GetError() << std::endl;
+            return false;
+        }
+
+        if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))) {
+            std::cout << "SDL_image Init Error: " << IMG_GetError() << std::endl;
+            return false;
+        }
+
+        info->window = SDL_CreateWindow(
             info->window_name,
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
             800, 600,
             SDL_WINDOW_SHOWN
         );
-        info->window = window;
-        info->renderer = SDL_CreateRenderer(window, -1, 0);
-        SDL_SetRenderDrawColor(info->renderer, info->Red, info->Blue, info->Green, info->Bright);
+
+        if (!info->window) {
+            std::cout << "Window Creation Error: " << SDL_GetError() << std::endl;
+            return false;
+        }
+
+        info->renderer = SDL_CreateRenderer(info->window, -1, SDL_RENDERER_ACCELERATED);
+
+        if (!info->renderer) {
+            std::cout << "Renderer Creation Error: " << SDL_GetError() << std::endl;
+            return false;
+        }
+
+        // 하얀색 배경화면
+        SDL_SetRenderDrawColor(
+            info->renderer,
+            info->Red,
+            info->Green,
+            info->Blue,
+            info->Bright
+        );
+
+        return true;
     }
 
-    SDL_Renderer* Render_window(int Red, int Green, int Blue, int Bright){
 
-    }
-
-    /**
-    * @brief jpg,png,bmp를 SDL_Texture*로 변환해주는 함수
-    * @param[in] SDL_Renderer* window에 렌러딩할 객체들
-    * @param[in] char* path Texture로 바꿀 path
-    * @param[out] SDL_Texture* 경로를 변환한 Texture
-    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, NULL
-    */
-    SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, char* path){
+    SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, const char* path) {
 
         std::filesystem::path p(path);
-        std::string png = ".png";
-        std::string jpg = ".jpg";
-        std::string bmp = ".bmp";
         std::string extension = p.extension().string();
 
-        SDL_Surface* BMP=NULL;
-        SDL_Texture* Texture=NULL;
+        SDL_Surface* surface = nullptr;
 
-        // 확장자에 따른 SDL_Surface 변환
-        if (extension == png) BMP = IMG_Load(path);
-        else if (extension == jpg) BMP = IMG_Load(path);
-        else if (extension == bmp) BMP = SDL_LoadBMP(path);
-
-        if (BMP==NULL) {
-            Texture = SDL_CreateTextureFromSurface(renderer, BMP);
-            SDL_FreeSurface(BMP);
-            return Texture;
+        if (extension == ".png" || extension == ".jpg") {
+            surface = IMG_Load(path);
         }
-        else
-            return NULL;
-    }
-
-    void Append(SDL_Texture** ObjLst, SDL_Texture* Obj){
-        // 이미지를 메모리에 1열로 배열하는 방식
-    }
-
-    void Set_draw_all(SDL_Renderer* renderer, int* Color, int** Obj){
-        SDL_SetRenderDrawColor(renderer, Color[0], Color[1], Color[2], 255);
-        SDL_RenderClear(renderer);
-        // 모든 객체 이미지 그리는 for문
-    }
-
-    void load_img(int** Obj){
-        char* path = "../../character/test.jpg";
-    }
-
-    void Destroy_imgs(SDL_Texture** IMG){
-        for (SDL_Texture** i = IMG; *i != NULL; i++){
-            
+        else if (extension == ".bmp") {
+            surface = SDL_LoadBMP(path);
         }
+
+        if (!surface) {
+            std::cout << "Image Load Error: " << IMG_GetError() << std::endl;
+            return nullptr;
+        }
+
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+        SDL_FreeSurface(surface);
+
+        if (!texture) {
+            std::cout << "Texture Creation Error: " << SDL_GetError() << std::endl;
+            return nullptr;
+        }
+
+        return texture;
     }
 
-    void Destroy_window(window_info* window_setting){
-        SDL_DestroyRenderer(window_setting->renderer);
-        SDL_DestroyWindow(window_setting->window);
+
+    void Destroy_window(window_info* info) {
+
+        if (info->renderer)
+            SDL_DestroyRenderer(info->renderer);
+
+        if (info->window)
+            SDL_DestroyWindow(info->window);
+
+        IMG_Quit();
+        SDL_Quit();
     }
+
 }
 
-// test2.c - 색상 변경
+
 
 int main() {
-    GameGrphicApi::window_info window_setting {
-        .window_name = "test_game",
-        .window = NULL,
-        .renderer = NULL,
-        .Red = 255,
-        .Green = 255,
-        .Blue = 255,
-        .Bright = 255
-    };
-    GameGrphicApi::Create_window(&window_setting);
-    SDL_Surface* BMP = IMG_Load("../../character/bug1.png");
-    SDL_Texture* IMG = SDL_CreateTextureFromSurface(window_setting.renderer, BMP);
-    SDL_FreeSurface(BMP);
 
-    SDL_Rect dst = {10, 10, 32, 32};
-    
-    for(;;) {
+    GameGraphicApi::window_info window_setting{
+        "test_game",
+        nullptr,
+        nullptr,
+        255, 255, 255, 255
+    };
+
+    if (!GameGraphicApi::Create_window(&window_setting))
+        return -1;
+
+
+    SDL_Texture* IMG =
+        GameGraphicApi::Path_to_Texture(
+            window_setting.renderer,
+            "../../character/bug1.png"
+        );
+
+    if (!IMG)
+        return -1;
+
+
+    SDL_Rect dst = { 10, 10, 64, 64 };
+
+    bool running = true;
+    SDL_Event event;
+
+    while (running) {
+
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT)
+                running = false;
+        }
+
+        SDL_SetRenderDrawColor(
+            window_setting.renderer,
+            255, 255, 255, 255
+        );
+
         SDL_RenderClear(window_setting.renderer);
-        SDL_RenderCopy(window_setting.renderer, IMG, NULL, &dst);
+
+        SDL_RenderCopy(
+            window_setting.renderer,
+            IMG,
+            nullptr,
+            &dst
+        );
+
         SDL_RenderPresent(window_setting.renderer);
-        SDL_Delay(500);  // 2초씩
+
+        SDL_Delay(16); // 약 60FPS
     }
-    
-    SDL_DestroyRenderer(window_setting.renderer);
-    SDL_DestroyWindow(window_setting.window);
+
     SDL_DestroyTexture(IMG);
-    SDL_Quit();
-    
+    GameGraphicApi::Destroy_window(&window_setting);
+
     return 0;
 }
