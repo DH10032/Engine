@@ -6,9 +6,9 @@ project/
 │   ├── core.cpp         # ECS 및 메모리 관리 코어
 │   │
 │   ├── rendering/       # 렌더링
-│   │   ├── renderer.cpp
-│   │   ├── sprite_manager.cpp   # 연속된 이미지로 애니메이션 생성
-│   │   └── camera.cpp
+│   │   ├── renderer.h          // 외부로 노출시킬 API (모드 떄문)
+│   │   ├── renderer.cpp        // 내부 동작
+│   │   └── camera.cpp          // 카메라 조작 라이브러리
 │   │
 │   ├── systems/
 │   │   ├── hive_system.cpp
