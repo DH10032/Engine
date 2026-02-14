@@ -27,7 +27,7 @@ namespace GameGrphicApi{
     * @param[in] Blue Blue의 배경화면 내용
     * @param[in] Bright Bright의 배경화면 내용
     * @param[out] SDL_Renderer* window에 생성될 객체
-    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, NULL 입니다!
+    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, NULL 입니다!ㅇㄴㅇㄴ
     */
     void Create_window(GameGrphicApi::window_info* info){
         std::cout << "run : " << info->window_name << std::endl;
