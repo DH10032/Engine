@@ -10,6 +10,9 @@ else
     # 패키지가 없으면 설치
     if ! command -v x11vnc &> /dev/null; then
         sudo apt-get update
+        # xvfb x11vnc novnc websockify -> remote 서버 연결
+        # libsdl2-dev -> sdl 라이브러리(윈도우 화면 여는 용도 및 렌더링 용도)
+        # libsdl2-image-dev -> 이미지 변환 관련 라이브러리 png, jpg등등
         sudo apt-get install -y xvfb x11vnc novnc websockify libsdl2-image-dev libsdl2-dev
     fi
     
