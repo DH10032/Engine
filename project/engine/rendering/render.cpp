@@ -3,9 +3,18 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+/* 
+컴파일
+g++ render.cpp -o render -lSDL2 -lSDL2_image
+
+실행
+./render
+-> cd 이용해서 rendering 폴더로 이동 후 실행하기
+*/
+
 namespace GameGraphicApi {
 
-    typedef struct {
+    typedef struct { 
         const char* window_name;
         SDL_Window* window;
         SDL_Renderer* renderer;
@@ -131,7 +140,7 @@ int main() {
         return -1;
 
 
-    SDL_Rect dst = { 10, 10, 64, 64 };
+    SDL_Rect dst = { 10, 10, 128, 128 };
 
     bool running = true;
     SDL_Event event;
