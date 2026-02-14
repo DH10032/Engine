@@ -6,40 +6,44 @@ project/
 ├── engine/              # C++ (성능 핵심)
 │   ├── core.cpp         # ECS 및 메모리 관리 코어
 │   │
-│   ├── rendering/       # 렌더링
-│   │   ├── renderer.h          // 외부로 노출시킬 API (모드 떄문)
-│   │   ├── renderer.cpp        // 내부 동작
-│   │   └── camera.cpp          // 카메라 조작 라이브러리
+│   ├── rendering/       # 렌더링 (쉐이더도 추가해야함)
+│   │   ├── render.h          // 외부로 노출시킬 API (모드 떄문)
+│   │   └── render.cpp        // 카메라 조작 및, 렌더링 내부 동작
 │   │
 │   ├── systems/
-│   │   ├── hive_system.cpp
-│   │   ├── ai_system.cpp        # AI도 C++
-│   │   ├── save_system.cpp
-│   │   ├── gather_system.cpp
-│   │   └── combat_system.cpp
+│   │   ├── system.h            // 외부로 노출할 system 함수들 정의 (모드 떄문)
+│   │   ├── hive_system.cpp     // 자원을 통해 하이브 목표 결정 (1순위는 플레이어)
+│   │   ├── ai_system.cpp       // 유닛들을 제어
+│   │   ├── save_system.cpp     // 게임 데이터, 저장 및, 로드
+│   │   └── combat_system.cpp   // ai 전투 시스템
 │   │
-│   └── ai_data/                 # AI 엔진
-│       ├── decision.cpp 
+│   └── ai_data/                 # json에 적히 unit 행동 규칙 해석하기
+│       ├── decision.cpp         # 외부로 공개 생각 없어서 헤더 파일 생성 x   
 │       ├── evaluator.cpp
-│       └── action_loader.cpp    # JSON 읽기
+│       └── action_loader.cpp    // JSON 읽기
 │
-├── character/
-│   └── image.jpg
+├── character/                   # unit관 관련된 img 모아 놓은 폴더 
+│   ├──uinit_type/
+│        ├──move/
+│        ├── move1.png
+│        ├    ...
 │
-├── data/                        # 게임 데이터 (쉬운 수정)
-│   ├── actions.json
-│   ├── unit_types.json
-│   ├── hive_config.json
-│   └── balance.json
+├── data/                        # 게임 데이터
+│   ├── actions.json            // AI 액션 규칙
+│   ├── unit_types.json         // unit_type에 대한 정보
+│   ├── hive_config.json        // unit_type에 대한 정보 
+│   └── balance.json            // 밸러스 조절 json (데미지 계수 등등)
 │
-├── mods/                        # Lua
+├── mods/                        # Lua(아직은 구체적이지 않음)
 │   └── custom_ai/
 │       └── ai.lua
+├── save/
+│   ├── save_id.json            // 유저 게임 데이터 저장
 │
-├── tools/                       # Python 도구들 (엔진 디버깅용)
-│   ├── data_editor.py           # 데이터 편집기
-│   ├── balance_test.py          # 밸런스 테스트
-│   └── replay_viewer.py         # 리플레이 분석
+├── tools/                       # Python 도구들 (엔진 디버깅용, 천천히 해도됨)
+│   ├── data_editor.py           // 데이터 편집기
+│   ├── balance_test.py          // 밸런스 테스트
+│   └── replay_viewer.py         // 리플레이 분석
 │
 └── main.cpp
 ```
