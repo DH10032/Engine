@@ -7,7 +7,7 @@ extern "C" {
 namespace GameGrphicApi{
     /**
     * @brief window와 
-    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, NULL
+    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, NULL 입니다.
     */
     typedef struct {
         char* window_name;
