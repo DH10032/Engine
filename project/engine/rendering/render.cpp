@@ -68,10 +68,17 @@ namespace GameGraphicApi{
 
     /**
     * @brief jpg,png,bmp를 SDL_Texture*로 변환해주는 함수
+<<<<<<< HEAD
     * @param[in] renderer window에 렌러딩할 객체들
     * @param[in] path Texture로 바꿀 path
     * @param[out] SDL_Texture* 경로를 변환한 Texture
     * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, nullptr
+=======
+    * @param[in] SDL_Renderer* window에 렌러딩할 객체들
+    * @param[in] char* path Texture로 바꿀 path
+    * @param[out] SDL_Texture* 경로를 변환한 Texture
+    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, NULL
+>>>>>>> cache
     */
     SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, char* path){
 
@@ -163,6 +170,11 @@ int main() {
         .Blue = 255,
         .Bright = 255
     };
+    GameGraphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
+    SDL_Surface* BMP = IMG_Load("../../character/bug1.png");
+    SDL_Texture* IMG = SDL_CreateTextureFromSurface(window_setting.renderer, BMP);
+    SDL_FreeSurface(BMP);
+
     GameGraphicApi::window_info window_setting{
         "test_game",
         nullptr,
@@ -170,12 +182,8 @@ int main() {
         255, 255, 255, 255
     };
 
-    GameGraphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
-    SDL_Surface* BMP = IMG_Load("../../character/bug1.png");
-    SDL_Texture* IMG = SDL_CreateTextureFromSurface(window_setting.renderer, BMP);
-    SDL_FreeSurface(BMP);
-
-    SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(
+    SDL_Texture* IMG =
+        GameGraphicApi::Path_to_Texture(
             window_setting.renderer,
             "../../character/bug1.png"
         );
