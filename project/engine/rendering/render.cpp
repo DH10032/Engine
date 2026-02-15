@@ -78,7 +78,6 @@ namespace GameGraphicApi{
         std::filesystem::path p(path);
         std::string extension = p.extension().string();
 
-        SDL_Surface* BMP = nullptr;
         SDL_Texture* Texture = nullptr;
         SDL_Surface* surface = nullptr;
 
@@ -94,8 +93,8 @@ namespace GameGraphicApi{
             return nullptr;
         }
         
-        Texture = SDL_CreateTextureFromSurface(renderer, BMP);
-        SDL_FreeSurface(BMP);
+        Texture = SDL_CreateTextureFromSurface(renderer, surface);
+        SDL_FreeSurface(surface);
 
         if (!Texture)
             return nullptr;
@@ -104,44 +103,17 @@ namespace GameGraphicApi{
     }
 
     /**
-    * @brief 캐릭터 이미지 전체 변환
+    * @brief 현재 미완 사용하지 말 것
     */
-    void Append(SDL_Texture** ObjLst, SDL_Texture* Obj) {
-        
-        return;
-    }
-
     void Set_draw_all(SDL_Renderer* renderer, int* Color, int** Obj){
         SDL_SetRenderDrawColor(renderer, Color[0], Color[1], Color[2], 255);
         SDL_RenderClear(renderer);
         // 모든 객체 이미지 그리는 for문
     }
 
-    void load_img(int** Obj){
-        char* path = "../../character/test.jpg";
-    }
-
-    void Destroy_imgs(SDL_Texture** IMG){
-        // for (SDL_Texture** i = IMG; *i != nullptr; i++){
-            
-        // }
-
-        // if (!surface) {
-        //     std::cout << "Image Load Error: " << IMG_GetError() << std::endl;
-        //     return nullptr;
-        // }
-
-        // SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-        // SDL_FreeSurface(surface);
-
-        // if (!texture) {
-        //     std::cout << "Texture Creation Error: " << SDL_GetError() << std::endl;
-        //     return nullptr;
-        // }
-
-        // return texture;
-    }
-
+    /**
+    * @brief 윈도우 내 모든 렌더링 제거및 위도우창 닫기(SDL종료)
+    */
     void Destroy_window(window_info* window_setting){
         SDL_DestroyRenderer(window_setting->renderer);
         SDL_DestroyWindow(window_setting->window);
@@ -150,8 +122,6 @@ namespace GameGraphicApi{
     }
 
 }
-
-
 
 int main() {
     GameGraphicApi::window_info window_setting {
@@ -164,50 +134,18 @@ int main() {
         .Bright = 255
     };
     GameGraphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
+    SDL_Rect dst = {10, 10, 32, 32};
+    SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../character/bug1.png");
 
-    GameGraphicApi::window_info window_setting{
-        "test_game",
-        nullptr,
-        nullptr,
-        255, 255, 255, 255
-    };
-
-    SDL_Texture* IMG =
-        GameGraphicApi::Path_to_Texture(
-            window_setting.renderer,
-            "../../character/bug1.png"
-        );
-
-    if (!IMG)
-        return -1;
-
-
-    SDL_Rect dst = { 10, 10, 128, 128 };
-
-    bool running = true;
-    SDL_Event event;
-
-    while (running) {
-
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT)
-                running = false;
-        }
-
-        SDL_SetRenderDrawColor(
-            window_setting.renderer,
-            255, 255, 255, 255
-        );
-
+    for(;;) {
         SDL_RenderClear(window_setting.renderer);
         SDL_RenderCopy(window_setting.renderer, IMG, nullptr, &dst);
         SDL_RenderPresent(window_setting.renderer);
 
         SDL_Delay(16); // 약 60FPS
     }
-
-    SDL_DestroyTexture(IMG);
+    
     GameGraphicApi::Destroy_window(&window_setting);
-
+    
     return 0;
 }
