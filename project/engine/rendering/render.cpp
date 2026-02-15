@@ -20,16 +20,21 @@ namespace GameGrphicApi{
     } window_info;
 
     /**
-    * @brief SLD_system_video 초기화 및, window를 생성
-    * @param[in] char* 생생될 window 이름
-    * @param[in] Red Red의 배경화면 내용
-    * @param[in] Green Green의 배경화면 내용
-    * @param[in] Blue Blue의 배경화면 내용
-    * @param[in] Bright Bright의 배경화면 내용
-    * @param[out] SDL_Renderer* window에 생성될 객체
-    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, NULL
+     * @date 26/2/15
+     * @author 이동훈
+     * @brief SDL 비디오 시스템 초기화 및 윈도우 생성
+     * 
+     * @param[in] title 생성될 윈도우의 제목
+     * @param[in] flags 생성될 SDL_Window의 설정 플래그
+     * @note - 기본 flag: SDL_WINDOW_SHOWN
+     * @note - OpenGL flag: SDL_WINDOW_OPENGL
+     * @note - 자세한 플래그는 SDL_WindowFlags 참고  
+     * 
+     * @param[out] renderer 윈도우에 연결될 SDL_Renderer 객체 포인터
+     * 
+     * @exception renderer혹은 window가 생성되지 않을 경우 에러문구 및 함수 종료
     */
-    void Create_window(GameGrphicApi::window_info* info){
+    void Create_window(GameGrphicApi::window_info* info, SDL_WindowFlags flags){
         std::cout << "run : " << info->window_name << std::endl;
         SDL_Init(SDL_INIT_VIDEO);
         SDL_Window* window = SDL_CreateWindow(
@@ -37,15 +42,28 @@ namespace GameGrphicApi{
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
             800, 600,
-            SDL_WINDOW_SHOWN
+            flags
         );
+
         info->window = window;
+        if (!info->window) {
+            std::cout << "Window Creation Error: " << SDL_GetError() << std::endl;
+            return;
+        }
+
         info->renderer = SDL_CreateRenderer(window, -1, 0);
-        SDL_SetRenderDrawColor(info->renderer, info->Red, info->Blue, info->Green, info->Bright);
-    }
+        if (!info->renderer) {
+            std::cout << "Renderer Creation Error: " << SDL_GetError() << std::endl;
+            return;
+        }
 
-    SDL_Renderer* Render_window(int Red, int Green, int Blue, int Bright){
-
+        SDL_SetRenderDrawColor(
+            info->renderer,
+            info->Red,
+            info->Blue,
+            info->Green,
+            info->Bright
+        );
     }
 
     /**
@@ -118,7 +136,7 @@ int main() {
         .Blue = 255,
         .Bright = 255
     };
-    GameGrphicApi::Create_window(&window_setting);
+    GameGrphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
     SDL_Surface* BMP = IMG_Load("../../character/bug1.png");
     SDL_Texture* IMG = SDL_CreateTextureFromSurface(window_setting.renderer, BMP);
     SDL_FreeSurface(BMP);
