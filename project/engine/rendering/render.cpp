@@ -1,7 +1,4 @@
-#include <iostream>
-#include <filesystem>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include "render.h"
 
  
 // 컴파일
@@ -123,6 +120,7 @@ namespace GameGraphicApi{
 
 }
 
+
 int main() {
     GameGraphicApi::window_info window_setting {
         .window_name = "test_game",
@@ -134,7 +132,11 @@ int main() {
         .Bright = 255
     };
     GameGraphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
-    SDL_Rect dst = {10, 10, 32, 32};
+
+    // ========================================== 기본설정 ==========================================
+
+
+    SDL_Rect dst = {-100, -100, 32, 32};
     SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/character/bug1.png");
 
     for(;;) {
