@@ -7,7 +7,7 @@ extern "C" {
 namespace GameGrphicApi{
     /**
     * @brief window와 
-    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, NULL 입니다.
+    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, nullptr 입니다.
     */
     typedef struct {
         char* window_name;
@@ -68,10 +68,10 @@ namespace GameGrphicApi{
 
     /**
     * @brief jpg,png,bmp를 SDL_Texture*로 변환해주는 함수
-    * @param[in] SDL_Renderer* window에 렌러딩할 객체들
-    * @param[in] char* path Texture로 바꿀 path
+    * @param[in] renderer window에 렌러딩할 객체들
+    * @param[in] path Texture로 바꿀 path
     * @param[out] SDL_Texture* 경로를 변환한 Texture
-    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, NULL
+    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, nullptr
     */
     SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, char* path){
 
@@ -81,25 +81,37 @@ namespace GameGrphicApi{
         std::string bmp = ".bmp";
         std::string extension = p.extension().string();
 
-        SDL_Surface* BMP=NULL;
-        SDL_Texture* Texture=NULL;
+        SDL_Surface* BMP = nullptr;
+        SDL_Texture* Texture = nullptr;
+        SDL_Surface* surface = nullptr;
 
         // 확장자에 따른 SDL_Surface 변환
-        if (extension == png) BMP = IMG_Load(path);
-        else if (extension == jpg) BMP = IMG_Load(path);
-        else if (extension == bmp) BMP = SDL_LoadBMP(path);
+        if (extension == ".png" || extension == ".jpg")
+            surface = IMG_Load(path);
 
-        if (BMP!=NULL) {
-            Texture = SDL_CreateTextureFromSurface(renderer, BMP);
-            SDL_FreeSurface(BMP);
-            return Texture;
+        else if (extension == ".bmp")
+            surface = SDL_LoadBMP(path);
+
+        if (!surface) {
+            std::cout << "Image Load Error: " << IMG_GetError() << std::endl;
+            return nullptr;
         }
-        else
-            return NULL;
+        
+        Texture = SDL_CreateTextureFromSurface(renderer, BMP);
+        SDL_FreeSurface(BMP);
+
+        if (!Texture)
+            return nullptr;
+
+        return Texture;
     }
 
-    void Append(SDL_Texture** ObjLst, SDL_Texture* Obj){
-        // 이미지를 메모리에 1열로 배열하는 방식
+    /**
+    * @brief 캐릭터 이미지 전체 변환
+    */
+    void Append(SDL_Texture** ObjLst, SDL_Texture* Obj) {
+        
+        return;
     }
 
     void Set_draw_all(SDL_Renderer* renderer, int* Color, int** Obj){
@@ -113,7 +125,7 @@ namespace GameGrphicApi{
     }
 
     void Destroy_imgs(SDL_Texture** IMG){
-        for (SDL_Texture** i = IMG; *i != NULL; i++){
+        for (SDL_Texture** i = IMG; *i != nullptr; i++){
             
         }
     }
@@ -121,6 +133,8 @@ namespace GameGrphicApi{
     void Destroy_window(window_info* window_setting){
         SDL_DestroyRenderer(window_setting->renderer);
         SDL_DestroyWindow(window_setting->window);
+        IMG_Quit();
+        SDL_Quit();
     }
 }
 
@@ -129,8 +143,8 @@ namespace GameGrphicApi{
 int main() {
     GameGrphicApi::window_info window_setting {
         .window_name = "test_game",
-        .window = NULL,
-        .renderer = NULL,
+        .window = nullptr,
+        .renderer = nullptr,
         .Red = 255,
         .Green = 255,
         .Blue = 255,
@@ -145,7 +159,7 @@ int main() {
     
     for(;;) {
         SDL_RenderClear(window_setting.renderer);
-        SDL_RenderCopy(window_setting.renderer, IMG, NULL, &dst);
+        SDL_RenderCopy(window_setting.renderer, IMG, nullptr, &dst);
         SDL_RenderPresent(window_setting.renderer);
         SDL_Delay(500);  // 2초씩
     }
