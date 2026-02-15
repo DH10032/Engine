@@ -105,6 +105,18 @@ namespace GameGrphicApi{
         return Texture;
     }
 
+    // 캐릭터 이미지 전체를 
+    void Create_Anmation(json unit_json){
+        json Data = {};
+        SDL_Texture* mem = (SDL_Texture*)
+        for (int i=0; i<unit_json["parts"].size();i++){
+            SDL
+            for (int j=0; j<unit_json["parts"][i].size();j++){
+
+            }
+        }
+    }
+
     /**
     * @brief 현재 미완 사용하지 말 것
     */
