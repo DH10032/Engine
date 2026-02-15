@@ -1,8 +1,4 @@
-#include <iostream>
-#include <filesystem>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-
+#include "render.h"
  
 // 컴파일
 // g++ render.cpp -o render -lSDL2 -lSDL2_image
@@ -102,14 +98,27 @@ namespace GameGraphicApi{
         return Texture;
     }
 
-    // 캐릭터 이미지 전체를 
-    void Create_Anmation(json unit_json){
-        json Data = {};
-        SDL_Texture* mem = (SDL_Texture*)
-        for (int i=0; i<unit_json["parts"].size();i++){
-            SDL
-            for (int j=0; j<unit_json["parts"][i].size();j++){
+    json Load_Action_json(){
+        std::ifstream file("../../data/action.json");
+        json data = json::parse(file);
+        return data;
+    }
 
+    // 캐릭터 이미지 전체를 
+    void Create_Anmation(SDL_Renderer* renderer, json unit_json){
+        // json Data = {};
+        // std::cout << "JSON 전체: " << unit_json.dump(4) << std::endl;
+        for (const auto& [id, unit] : unit_json.items()){
+            std::cout<< "test" << std::endl;
+            for (const auto& [key, value] : unit["parts"].items()){
+                for (const auto& S : value){
+                    std::cout<< S << std::endl;
+                }
+                // SDL_Texture** mem = (SDL_Texture**)malloc(sizeof(SDL_Texture*) * unit_json["parts"][i].size());
+                // for (int j=0; j<unit_json["parts"][i].size();j++){
+                //     char* path =  unit_json["parts"][i][j];
+                //     mem[j] = Path_to_Texture(renderer, path);
+                // }
             }
         }
     }
@@ -145,9 +154,15 @@ int main() {
         .Blue = 255,
         .Bright = 255
     };
+
+    
+    
     GameGraphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
     SDL_Rect dst = {10, 10, 32, 32};
     SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../character/bug1.png");
+    
+    json Data = GameGraphicApi::Load_Action_json();
+    GameGraphicApi::Create_Anmation(window_setting.renderer, Data);
 
     for(;;) {
         SDL_RenderClear(window_setting.renderer);
