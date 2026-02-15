@@ -105,27 +105,18 @@ namespace GameGrphicApi{
         return Texture;
     }
 
-
     /**
-    * @brief 캐릭터 이미지 전체 변환
+    * @brief 현재 미완 사용하지 말 것
     */
-    void load_action_data(SDL_Texture** ObjLst, SDL_Texture* Obj) {
-        
-        return;
-    }
-
     void Set_draw_all(SDL_Renderer* renderer, int* Color, int** Obj){
         SDL_SetRenderDrawColor(renderer, Color[0], Color[1], Color[2], 255);
         SDL_RenderClear(renderer);
         // 모든 객체 이미지 그리는 for문
     }
 
-    void Destroy_imgs(SDL_Texture** IMG){
-        for (SDL_Texture** i = IMG; *i != nullptr; i++){
-            
-        }
-    }
-
+    /**
+    * @brief 윈도우 내 모든 렌더링 제거및 위도우창 닫기(SDL종료)
+    */
     void Destroy_window(window_info* window_setting){
         SDL_DestroyRenderer(window_setting->renderer);
         SDL_DestroyWindow(window_setting->window);
