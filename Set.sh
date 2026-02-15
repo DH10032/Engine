@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# compile 방법
+# g++ (컴파일 할 코드) -o (실해파일 이름) -l(라이브러리 이름)
+# 예시) g++ render.cpp -o render -lSDL2 -lSDL_image
+
 # Lock 파일 제거
 rm -f /tmp/.X99-lock /tmp/.X11-unix/X99 2>/dev/null
 
