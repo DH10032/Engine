@@ -4,17 +4,17 @@
         "img_size_y" : 128,
         "parts" : {
             "body" : [
-                "character/unit_type1/body1/body1.png"
+                "../../character/unit_type1/body1/body1.png"
             ],
             "chin" : [
-                "character/unit_type1/chin/chin1.png",
-                "character/unit_type1/chin/chin2.png",
-                "character/unit_type1/chin/chin3.png"
+                "../../character/unit_type1/chin/chin1.png",
+                "../../character/unit_type1/chin/chin2.png",
+                "../../character/unit_type1/chin/chin3.png"
             ],
             "leg" : [
-                "character/unit_type1/leg/leg1.png",
-                "character/unit_type1/leg/leg2.png",
-                "character/unit_type1/leg/leg3.png"
+                "../../character/unit_type1/leg/leg1.png",
+                "../../character/unit_type1/leg/leg2.png",
+                "../../character/unit_type1/leg/leg3.png"
             ]
         },
         "action" : {
