@@ -1,3 +1,5 @@
+#include "system.h"
+
 typedef char _1byte;
 typedef unsigned short _2byte;
 typedef unsigned int _4byte;
@@ -12,6 +14,13 @@ struct {
     _4byte action;      // 행동 id
 } Unit;
 
-void Load_Action_json(){
-    
+json Load_Action_json(){
+    std::ifstream file("../../data/action.json");
+    json data = json::parse(file);
+    return data;
+}
+
+int main(){
+    json a = Load_Action_json();
+    std::cout << a.dump(2);
 }
