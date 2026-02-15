@@ -37,6 +37,7 @@ namespace GameGrphicApi{
     void Create_window(GameGrphicApi::window_info* info, SDL_WindowFlags flags){
         std::cout << "run : " << info->window_name << std::endl;
         SDL_Init(SDL_INIT_VIDEO);
+        std::cout << 1;
         SDL_Window* window = SDL_CreateWindow(
             info->window_name,
             SDL_WINDOWPOS_CENTERED,
@@ -120,10 +121,6 @@ namespace GameGrphicApi{
         // 모든 객체 이미지 그리는 for문
     }
 
-    void load_img(int** Obj){
-        char* path = "../../character/test.jpg";
-    }
-
     void Destroy_imgs(SDL_Texture** IMG){
         for (SDL_Texture** i = IMG; *i != nullptr; i++){
             
@@ -151,22 +148,20 @@ int main() {
         .Bright = 255
     };
     GameGrphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
-    SDL_Surface* BMP = IMG_Load("../../character/bug1.png");
-    SDL_Texture* IMG = SDL_CreateTextureFromSurface(window_setting.renderer, BMP);
-    SDL_FreeSurface(BMP);
-
+    std::cout << 1;
     SDL_Rect dst = {10, 10, 32, 32};
-    
+    // IMG = GameGrphicApi::Path_to_Texture( window_setting);
+
     for(;;) {
         SDL_RenderClear(window_setting.renderer);
-        SDL_RenderCopy(window_setting.renderer, IMG, nullptr, &dst);
+        // SDL_RenderCopy(window_setting.renderer, IMG, nullptr, &dst);
         SDL_RenderPresent(window_setting.renderer);
         SDL_Delay(500);  // 2초씩
     }
     
     SDL_DestroyRenderer(window_setting.renderer);
     SDL_DestroyWindow(window_setting.window);
-    SDL_DestroyTexture(IMG);
+    // SDL_DestroyTexture(IMG);
     SDL_Quit();
     
     return 0;
