@@ -89,7 +89,7 @@ namespace GameGrphicApi{
         else if (extension == jpg) BMP = IMG_Load(path);
         else if (extension == bmp) BMP = SDL_LoadBMP(path);
 
-        if (BMP==NULL) {
+        if (BMP!=NULL) {
             Texture = SDL_CreateTextureFromSurface(renderer, BMP);
             SDL_FreeSurface(BMP);
             return Texture;
