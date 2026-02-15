@@ -1,14 +1,14 @@
-#include "render.h"
+#include <iostream>
+#include <filesystem>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
-extern "C" {
-    
-}
+ 
+// 컴파일
+// g++ render.cpp -o render -lSDL2 -lSDL2_image
 
-namespace GameGrphicApi{
-    /**
-    * @brief window와 
-    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, nullptr 입니다.
-    */
+namespace GameGraphicApi{
+
     typedef struct {
         char* window_name;
         SDL_Window* window;
@@ -34,7 +34,7 @@ namespace GameGrphicApi{
      * 
      * @exception renderer혹은 window가 생성되지 않을 경우 에러문구 및 함수 종료
     */
-    void Create_window(GameGrphicApi::window_info* info, SDL_WindowFlags flags){
+    void Create_window(GameGraphicApi::window_info* info, SDL_WindowFlags flags){
         std::cout << "run : " << info->window_name << std::endl;
         SDL_Init(SDL_INIT_VIDEO);
         SDL_Window* window = SDL_CreateWindow(
@@ -76,9 +76,6 @@ namespace GameGrphicApi{
     SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, char* path){
 
         std::filesystem::path p(path);
-        std::string png = ".png";
-        std::string jpg = ".jpg";
-        std::string bmp = ".bmp";
         std::string extension = p.extension().string();
 
         SDL_Texture* Texture = nullptr;
@@ -135,10 +132,11 @@ namespace GameGrphicApi{
         IMG_Quit();
         SDL_Quit();
     }
+
 }
 
 int main() {
-    GameGrphicApi::window_info window_setting {
+    GameGraphicApi::window_info window_setting {
         .window_name = "test_game",
         .window = nullptr,
         .renderer = nullptr,
@@ -147,18 +145,19 @@ int main() {
         .Blue = 255,
         .Bright = 255
     };
-    GameGrphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
+    GameGraphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
     SDL_Rect dst = {10, 10, 32, 32};
-    SDL_Texture* IMG = GameGrphicApi::Path_to_Texture(window_setting.renderer, "../../character/bug1.png");
+    SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../character/bug1.png");
 
     for(;;) {
         SDL_RenderClear(window_setting.renderer);
         SDL_RenderCopy(window_setting.renderer, IMG, nullptr, &dst);
         SDL_RenderPresent(window_setting.renderer);
-        SDL_Delay(500);  // 2초씩
+
+        SDL_Delay(16); // 약 60FPS
     }
     
-    GameGrphicApi::Destroy_window(&window_setting);
+    GameGraphicApi::Destroy_window(&window_setting);
     
     return 0;
 }
