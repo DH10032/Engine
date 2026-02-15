@@ -105,10 +105,11 @@ namespace GameGrphicApi{
         return Texture;
     }
 
+
     /**
     * @brief 캐릭터 이미지 전체 변환
     */
-    void Append(SDL_Texture** ObjLst, SDL_Texture* Obj) {
+    void load_action_data(SDL_Texture** ObjLst, SDL_Texture* Obj) {
         
         return;
     }
@@ -132,8 +133,6 @@ namespace GameGrphicApi{
         SDL_Quit();
     }
 }
-
-// test2.c - 색상 변경
 
 int main() {
     GameGrphicApi::window_info window_setting {
