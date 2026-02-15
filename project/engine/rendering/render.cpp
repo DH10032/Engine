@@ -135,7 +135,7 @@ int main() {
     };
     GameGraphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
     SDL_Rect dst = {10, 10, 32, 32};
-    SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../character/bug1.png");
+    SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/character/bug1.png");
 
     for(;;) {
         SDL_RenderClear(window_setting.renderer);
