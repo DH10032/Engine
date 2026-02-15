@@ -44,11 +44,11 @@ if ! command -v nlohmann-json3-dev &> /dev/null; then
 fi
 
 # DISPLAY 설정 (중요: source로 실행해야 적용됨)
-# 아래 실행하기
+# 아래 실행하기 (!!! 이제 한번에 복붙 가능)
 : '
-export DISPLAY=:99
-export XDG_RUNTIME_DIR=/tmp/runtime-codespace
-export SDL_VIDEODRIVER=x11
-mkdir -p $XDG_RUNTIME_DIR
-chmod 700 $XDG_RUNTIME_DIR
+\export DISPLAY=:99 &&
+\export XDG_RUNTIME_DIR=/tmp/runtime-codespace &&
+\export SDL_VIDEODRIVER=x11 &&
+\mkdir -p $XDG_RUNTIME_DIR &&
+\chmod 700 $XDG_RUNTIME_DIR
 '
