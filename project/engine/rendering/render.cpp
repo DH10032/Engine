@@ -1,5 +1,4 @@
 #include "render.h"
-
  
 // 컴파일
 // cd project/engine/rendering
@@ -16,7 +15,7 @@ const int SCREEN_HEIGHT = 600;
 namespace GameGraphicApi{
 
     typedef struct {
-        const char* window_name;
+        const std::string window_name;
         SDL_Window* window;
         SDL_Renderer* renderer;
         int Red;
@@ -45,7 +44,7 @@ namespace GameGraphicApi{
         SDL_Init(SDL_INIT_VIDEO);
         IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
         SDL_Window* window = SDL_CreateWindow(
-            info->window_name,
+            info->window_name.c_str(),
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
             SCREEN_WIDTH, SCREEN_HEIGHT,
@@ -80,7 +79,7 @@ namespace GameGraphicApi{
     * @param[out] SDL_Texture* 경로를 변환한 Texture
     * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, nullptr
     */
-    SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, const char* path){
+    SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, const std::string path){
 
         std::filesystem::path p(path);
         std::string extension = p.extension().string();
@@ -90,10 +89,10 @@ namespace GameGraphicApi{
 
         // 확장자에 따른 SDL_Surface 변환
         if (extension == ".png" || extension == ".jpg")
-            surface = IMG_Load(path);
+            surface = IMG_Load(path.c_str());
 
         else if (extension == ".bmp")
-            surface = SDL_LoadBMP(path);
+            surface = SDL_LoadBMP(path.c_str());
 
         if (!surface) {
             if (extension == ".bmp")
@@ -110,6 +109,28 @@ namespace GameGraphicApi{
             return nullptr;
 
         return Texture;
+    }
+
+    json Load_Action_json(){
+        std::ifstream file("../../data/asset.json");
+        json data = json::parse(file);
+        return data;
+    }
+
+    // 캐릭터 이미지 전체를 
+    void Load_Asset(SDL_Renderer* renderer, json unit_json){
+        std::string file_name;
+        std::string folder_name;
+        std::string path;
+        for (const auto& [folder, files] : unit_json.items()){
+            for (auto& [idx, f] : files.items()){
+                file_name = f;
+                folder_name = folder;
+                path = "../../assets/"+folder_name+"/"+file_name;
+                std::string path1 = path;
+                Path_to_Texture(renderer, path1);
+            }
+        }
     }
 
     /**
@@ -155,12 +176,17 @@ int main() {
         .Blue = 255,
         .Bright = 255
     };
+
+    
+    
     GameGraphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
 
     img ground { // -> 이것도 위와 같이 JSON서 이미지들 한번에 불러오는 함수 만들면 될듯
         .texture = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/tiles/grass.png"),
         .dst = {0,0,32,32}
     };
+
+    GameGraphicApi::Load_Asset(window_setting.renderer, GameGraphicApi::Load_Action_json());
 
     // ========================================== 기본설정 ==========================================
 
