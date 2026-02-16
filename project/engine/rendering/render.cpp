@@ -3,13 +3,23 @@
  
 // 컴파일
 // cd project/engine/rendering
-// g++ render.cpp -o render -lSDL2 -lSDL2_image
+// g++ render.cpp -o render -lSDL2 -lSDL2_image -lSDL2_ttf
 // ./render -> 실행
 
 
 // 화면 등 기본값
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
+
+// 색깔
+SDL_Color BLACK = { 0, 0, 0 };
+
+
+namespace CreateText { // 미리 선언해두기
+    void TTF_start(SDL_Renderer* renderer);
+    void TTF_end();
+}
+
 
 
 
@@ -40,10 +50,9 @@ namespace GameGraphicApi{
      * 
      * @exception renderer혹은 window가 생성되지 않을 경우 에러문구 및 함수 종료
     */
-    void Create_window(GameGraphicApi::window_info* info, SDL_WindowFlags flags){
+    void Create_window(window_info* info, SDL_WindowFlags flags){
         std::cout << "run : " << info->window_name << std::endl;
-        SDL_Init(SDL_INIT_VIDEO);
-        IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
+
         SDL_Window* window = SDL_CreateWindow(
             info->window_name,
             SDL_WINDOWPOS_CENTERED,
@@ -58,7 +67,7 @@ namespace GameGraphicApi{
             return;
         }
 
-        info->renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        info->renderer = SDL_CreateRenderer(window, -1, 0);
         if (!info->renderer) {
             std::cout << "Renderer Creation Error: " << SDL_GetError() << std::endl;
             return;
@@ -71,6 +80,10 @@ namespace GameGraphicApi{
             info->Blue,
             info->Bright
         );
+
+        SDL_Init(SDL_INIT_VIDEO);
+        IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
+        CreateText::TTF_start(info->renderer); // init 과 동시에 renderer 정의
     }
 
     /**
@@ -127,20 +140,49 @@ namespace GameGraphicApi{
     void Destroy_window(window_info* window_setting){
         SDL_DestroyRenderer(window_setting->renderer);
         SDL_DestroyWindow(window_setting->window);
+        CreateText::TTF_end();
         IMG_Quit();
         SDL_Quit();
     }
 
 }
 
-/* 
-    어따 만들지 몰라서 일단 여기에 만들었는데
-    나중에 data에 json만들고 거기에 이미지 정보들 다 넣은담에 한번에 빼서 구조체로 만드는 함수 만드는게 좋을듯  
-    .                                                                                                           */
-typedef struct{ 
-    SDL_Texture* texture;
-    SDL_Rect dst; // (x,y,tile_width,tile_height)
-}img;
+namespace CreateAssets{
+    typedef struct{ 
+        SDL_Texture* texture;
+        SDL_Rect dst; // (x,y,tile_width,tile_height)
+    }img;
+}
+
+namespace CreateText{
+    SDL_Renderer* TXT_renderer; // init에서 한번 호출 후 쭉 쓸수 있게
+
+    TTF_Font* bitlimFont; // 많아지면 배열로 관리?
+
+    void TTF_start(SDL_Renderer* renderer){
+        TXT_renderer = renderer;
+        if (TTF_Init() == -1){
+            std::cout << "Failed to load font." << std::endl;
+        } else {
+            bitlimFont = TTF_OpenFont("../../assets/fonts/bitlim.ttf", 30); // 30 뭔지 모르겠음
+            if(bitlimFont == NULL) {
+                printf("Could not open font! (%s)\n", TTF_GetError());
+            }
+        }
+
+    }
+
+    void TTF_end(){
+        TTF_CloseFont(bitlimFont); // 많아지면 for 돌릴 예정
+    }
+
+    void TTF_Create(const char* txtContent, int x, int y, int w, int h){ // 글 내용, x,y,width,height (앞으로 간단히 그릴 수 있도록 함수 제작)
+        SDL_Rect Rct = { x, y, w, h };
+        SDL_Surface* FSurface = TTF_RenderText_Blended(bitlimFont, txtContent, BLACK); // 일단 색상을 검정 통일, 이후 수정 예정
+        SDL_Texture* FTexture = SDL_CreateTextureFromSurface(TXT_renderer, FSurface);
+        SDL_RenderCopy(TXT_renderer, FTexture, NULL, &Rct);
+    }
+}
 
 
 
@@ -157,8 +199,8 @@ int main() {
     };
     GameGraphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
 
-    img ground { // -> 이것도 위와 같이 JSON서 이미지들 한번에 불러오는 함수 만들면 될듯
-        .texture = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/tiles/grass.png"),
+    CreateAssets::img ground { // -> 이것도 위와 같이 JSON서 이미지들 한번에 불러오는 함수 만들면 될듯
+        .texture = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/img/tiles/grass.png"),
         .dst = {0,0,32,32}
     };
 
@@ -166,7 +208,7 @@ int main() {
 
 
     SDL_Rect dst = {10, 10, 32, 32};
-    SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/character/bug1.png");
+    SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/img/character/bug1.png");
     if (!IMG) {
         std::cout << "Failed to load texture." << std::endl;
         GameGraphicApi::Destroy_window(&window_setting);
@@ -191,7 +233,7 @@ int main() {
                 }
             }
         }
-        
+        CreateText::TTF_Create("hihi",100,100,100,100); // 테스트 출력
         SDL_RenderPresent(window_setting.renderer);
         SDL_Delay(16); // 약 60FPS
     }

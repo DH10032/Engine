@@ -2,7 +2,7 @@
 
 # compile 방법
 # g++ (컴파일 할 코드) -o (실해파일 이름) -l(라이브러리 이름)
-# 예시) g++ render.cpp -o render -lSDL2 -lSDL_image
+# 예시) g++ render.cpp -o render -lSDL2 -lSDL_image -lSDL2_ttf
 
 # Lock 파일 제거
 rm -f /tmp/.X99-lock /tmp/.X11-unix/X99 2>/dev/null
@@ -40,6 +40,11 @@ fi
 # libsdl2-image-dev -> 이미지 변환 관련 라이브러리 png, jpg등등
 if ! command -v libsdl2-dev &> /dev/null; then
     sudo apt-get install -y libsdl2-image-dev libsdl2-dev
+fi
+
+# libsdl2-ttf-dev -> 폰트 렌더링 (SDL_ttf.h 용도)
+if ! dpkg -s libsdl2-ttf-dev >/dev/null 2>&1; then
+    sudo apt-get install -y libsdl2-ttf-dev
 fi
 
 # cpp에서 json 파싱용 라이브러리
