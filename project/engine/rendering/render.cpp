@@ -112,26 +112,17 @@ namespace GameGraphicApi{
     }
 
     json Load_Action_json(){
-        std::ifstream file("../../data/action.json");
+        std::ifstream file("../../data/asset.json");
         json data = json::parse(file);
         return data;
     }
 
     // 캐릭터 이미지 전체를 
-    void Create_Anmation(SDL_Renderer* renderer, json unit_json){
-        // json Data = {};
-        // std::cout << "JSON 전체: " << unit_json.dump(4) << std::endl;
-        for (const auto& [id, unit] : unit_json.items()){
+    void Load_Asset(SDL_Renderer* renderer, json unit_json){
+        for (const auto& [folder, files] : unit_json.items()){
             std::cout<< "test" << std::endl;
-            for (const auto& [key, value] : unit["parts"].items()){
-                for (const auto& S : value){
-                    std::cout<< S << std::endl;
-                }
-                // SDL_Texture** mem = (SDL_Texture**)malloc(sizeof(SDL_Texture*) * unit_json["parts"][i].size());
-                // for (int j=0; j<unit_json["parts"][i].size();j++){
-                //     char* path =  unit_json["parts"][i][j];
-                //     mem[j] = Path_to_Texture(renderer, path);
-                // }
+            for (auto& [idx, f] : files.items()){
+                std::cout<< f << std::endl;
             }
         }
     }
@@ -188,6 +179,8 @@ int main() {
         .texture = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/tiles/grass.png"),
         .dst = {0,0,32,32}
     };
+
+    GameGraphicApi::Load_Asset(window_setting.renderer, GameGraphicApi::Load_Action_json());
 
     // ========================================== 기본설정 ==========================================
 
