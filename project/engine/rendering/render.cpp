@@ -4,6 +4,7 @@
 // 컴파일
 // cd project/engine/rendering
 // g++ render.cpp -o render -lSDL2 -lSDL2_image
+// ./render -> 실행
 
 
 // 화면 등 기본값
@@ -132,6 +133,17 @@ namespace GameGraphicApi{
 
 }
 
+/* 
+    어따 만들지 몰라서 일단 여기에 만들었는데
+    나중에 data에 json만들고 거기에 이미지 정보들 다 넣은담에 한번에 빼서 구조체로 만드는 함수 만드는게 좋을듯  
+    .                                                                                                           */
+typedef struct{ 
+    SDL_Texture* texture;
+    SDL_Rect dst; // (x,y,tile_width,tile_height)
+}img;
+
+
+
 
 int main() {
     GameGraphicApi::window_info window_setting {
@@ -144,6 +156,11 @@ int main() {
         .Bright = 255
     };
     GameGraphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
+
+    img ground { // -> 이것도 위와 같이 JSON서 이미지들 한번에 불러오는 함수 만들면 될듯
+        .texture = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/tiles/grass.png"),
+        .dst = {0,0,32,32}
+    };
 
     // ========================================== 기본설정 ==========================================
 
@@ -160,10 +177,26 @@ int main() {
     while(running) {
         SDL_RenderClear(window_setting.renderer);
 
-        SDL_RenderCopy(window_setting.renderer, IMG, nullptr, &dst);
-        SDL_RenderPresent(window_setting.renderer);
 
-        SDL_Delay(16);
+        for (int y = 0; y < SCREEN_HEIGHT; y += 32) {
+            for (int x = 0; x < SCREEN_WIDTH; x += 32) {
+
+                ground.dst.x = x;
+                ground.dst.y = y;
+                if (!ground.texture) {
+                    std::cout << "ground texture load failed\n";
+                }
+                else{
+                    SDL_RenderCopy(window_setting.renderer, ground.texture, NULL, &ground.dst);
+                }
+            }
+        }
+
+        SDL_SetRenderDrawColor(window_setting.renderer, 255, 0, 0, 255);
+
+
+        SDL_RenderPresent(window_setting.renderer);
+        SDL_Delay(16); // 약 60FPS
     }
     
     GameGraphicApi::Destroy_window(&window_setting);
