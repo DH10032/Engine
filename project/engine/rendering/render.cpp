@@ -2,7 +2,6 @@
 
  
 // 컴파일
-// cd project/engine/rendering
 // g++ render.cpp -o render -lSDL2 -lSDL2_image
 
 
@@ -40,16 +39,13 @@ namespace GameGraphicApi{
      * @exception renderer혹은 window가 생성되지 않을 경우 에러문구 및 함수 종료
     */
     void Create_window(GameGraphicApi::window_info* info, SDL_WindowFlags flags){
-
-
         std::cout << "run : " << info->window_name << std::endl;
         SDL_Init(SDL_INIT_VIDEO);
-        IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
         SDL_Window* window = SDL_CreateWindow(
             info->window_name,
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
-            600, 800,
+            800, 600,
             flags
         );
 
@@ -59,7 +55,7 @@ namespace GameGraphicApi{
             return;
         }
 
-        info->renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+        info->renderer = SDL_CreateRenderer(window, -1, 0);
         if (!info->renderer) {
             std::cout << "Renderer Creation Error: " << SDL_GetError() << std::endl;
             return;
@@ -81,7 +77,7 @@ namespace GameGraphicApi{
     * @param[out] SDL_Texture* 경로를 변환한 Texture
     * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, nullptr
     */
-    SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, const char* path){
+    SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, char* path){
 
         std::filesystem::path p(path);
         std::string extension = p.extension().string();
@@ -131,6 +127,7 @@ namespace GameGraphicApi{
 
 }
 
+
 int main() {
     GameGraphicApi::window_info window_setting {
         .window_name = "test_game",
@@ -143,22 +140,20 @@ int main() {
     };
     GameGraphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
 
+    // ========================================== 기본설정 ==========================================
 
-    SDL_Rect dst = {10, 10, 32, 32};
+
+    SDL_Rect dst = {-100, -100, 32, 32};
     SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/character/bug1.png");
 
-    bool running = true;
-    while (running) {
-        SDL_Event e;
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT)
-                running = false;
-        }
-
+    for(;;) {
         SDL_RenderClear(window_setting.renderer);
-        SDL_RenderCopy(window_setting.renderer, IMG, NULL, &dst);
+        SDL_RenderCopy(window_setting.renderer, IMG, nullptr, &dst);
         SDL_RenderPresent(window_setting.renderer);
+
+        SDL_Delay(16); // 약 60FPS
     }
+    
     GameGraphicApi::Destroy_window(&window_setting);
     
     return 0;
