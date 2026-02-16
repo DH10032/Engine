@@ -1,30 +1,19 @@
 CC = g++
 Target = run_file
-dll = -lSDL2 -lSDL2_image
-All_C_file = ()
+# 라이브러리 추가되면 여기 넣어주세요
+lib = -lSDL2 -lSDL2_image
 
--d: Debug = 0
--c: Debug = 1
--l: Debig = 2
+SRCS = $(shell find . -name '*.cpp')
+OBJS = $(SRCS:.cpp=.o)
 
-ifeq (Debug, 0)
-	$(CC) -c $< -o $@
-	$(CC) $^ -o $(Target) $(dll)
-endif
-
-ifeq (Debug, 0)
-	$(CC) -c $< -o $@
-	$(CC) $^ -o $(Target) $(dll)
-endif
-
-ifeq (Debug, 0)
-	$(CC) -c $< -o $@
-	$(CC) $^ -o $(Target) $(dll)
-endif
+all: $(Target)
 
 # gcc -c main.c -o main.o
 %.o: %.cpp
 	$(CC) -c $< -o $@
 
-$(Target): %.o
-	$(CC) $^ -o $(Target) $(dll)
+$(Target): $(OBJS)
+	$(CC) $^ -o $@ $(lib)
+
+clean:
+	rm -f $(OBJS) $(Target)
