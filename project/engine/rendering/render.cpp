@@ -33,6 +33,7 @@ namespace GameGraphicApi{
     void Create_window(GameGraphicApi::window_info* info, SDL_WindowFlags flags){
         std::cout << "run : " << info->window_name << std::endl;
         SDL_Init(SDL_INIT_VIDEO);
+        IMG_Init(IMG_INIT_JPG||IMG_INIT_PNG);
         SDL_Window* window = SDL_CreateWindow(
             info->window_name,
             SDL_WINDOWPOS_CENTERED,
