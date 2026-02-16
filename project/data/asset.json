@@ -1,0 +1,6 @@
+{
+    "buildings": ["hive.png"],
+    "character" : ["bug1.png"],
+    "interactives" : ["apple.png"],
+    "tiles" : ["grass.png"]
+}
