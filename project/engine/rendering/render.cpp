@@ -2,7 +2,15 @@
 
  
 // 컴파일
+// cd project/engine/rendering
 // g++ render.cpp -o render -lSDL2 -lSDL2_image
+
+
+// 화면 등 기본값
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
+
+
 
 namespace GameGraphicApi{
 
@@ -34,11 +42,12 @@ namespace GameGraphicApi{
     void Create_window(GameGraphicApi::window_info* info, SDL_WindowFlags flags){
         std::cout << "run : " << info->window_name << std::endl;
         SDL_Init(SDL_INIT_VIDEO);
+        IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
         SDL_Window* window = SDL_CreateWindow(
             info->window_name,
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
-            800, 600,
+            SCREEN_WIDTH, SCREEN_HEIGHT,
             flags
         );
 
@@ -48,7 +57,7 @@ namespace GameGraphicApi{
             return;
         }
 
-        info->renderer = SDL_CreateRenderer(window, -1, 0);
+        info->renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
         if (!info->renderer) {
             std::cout << "Renderer Creation Error: " << SDL_GetError() << std::endl;
             return;
@@ -86,7 +95,10 @@ namespace GameGraphicApi{
             surface = SDL_LoadBMP(path);
 
         if (!surface) {
-            std::cout << "Image Load Error: " << IMG_GetError() << std::endl;
+            if (extension == ".bmp")
+                std::cout << "BMP Load Error: " << SDL_GetError() << std::endl;
+            else
+                std::cout << "Image Load Error: " << IMG_GetError() << std::endl;
             return nullptr;
         }
         
@@ -138,22 +150,14 @@ int main() {
 
     SDL_Rect dst = {10, 10, 32, 32};
     SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/character/bug1.png");
-
     if (!IMG) {
-        std::cout << "Failed to load IMG\n";
-        return 1;
+        std::cout << "Failed to load texture." << std::endl;
+        GameGraphicApi::Destroy_window(&window_setting);
+        return -1;
     }
 
-    window_setting.renderer = SDL_CreateRenderer(window_setting.window, -1, SDL_RENDERER_SOFTWARE);
-
     bool running = true;
-    SDL_Event e;
     while(running) {
-        while(SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) running = false;
-        }
-
-        SDL_SetRenderDrawColor(window_setting.renderer, 0, 0, 0, 255);
         SDL_RenderClear(window_setting.renderer);
 
         SDL_RenderCopy(window_setting.renderer, IMG, nullptr, &dst);

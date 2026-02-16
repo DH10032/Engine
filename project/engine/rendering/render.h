@@ -5,7 +5,3 @@
 #include <SDL2/SDL_image.h>
 
 using json = nlohmann::json;
-
-/*
-buffer
-*/
