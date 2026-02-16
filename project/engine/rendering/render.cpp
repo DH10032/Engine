@@ -4,10 +4,17 @@
 // 컴파일
 // g++ render.cpp -o render -lSDL2 -lSDL2_image
 
+
+// 화면 등 기본값
+int SCREEN_WIDTH = 800;
+int SCREEN_HEIGHT = 600;
+
+
+
 namespace GameGraphicApi{
 
     typedef struct {
-        char* window_name;
+        const char* window_name;
         SDL_Window* window;
         SDL_Renderer* renderer;
         int Red;
@@ -32,13 +39,16 @@ namespace GameGraphicApi{
      * @exception renderer혹은 window가 생성되지 않을 경우 에러문구 및 함수 종료
     */
     void Create_window(GameGraphicApi::window_info* info, SDL_WindowFlags flags){
+
+
         std::cout << "run : " << info->window_name << std::endl;
         SDL_Init(SDL_INIT_VIDEO);
+        IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
         SDL_Window* window = SDL_CreateWindow(
             info->window_name,
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
-            800, 600,
+            SCREEN_WIDTH, SCREEN_HEIGHT,
             flags
         );
 
@@ -48,7 +58,7 @@ namespace GameGraphicApi{
             return;
         }
 
-        info->renderer = SDL_CreateRenderer(window, -1, 0);
+        info->renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
         if (!info->renderer) {
             std::cout << "Renderer Creation Error: " << SDL_GetError() << std::endl;
             return;
@@ -57,8 +67,8 @@ namespace GameGraphicApi{
         SDL_SetRenderDrawColor(
             info->renderer,
             info->Red,
-            info->Blue,
             info->Green,
+            info->Blue,
             info->Bright
         );
     }
@@ -70,7 +80,7 @@ namespace GameGraphicApi{
     * @param[out] SDL_Texture* 경로를 변환한 Texture
     * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, nullptr
     */
-    SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, char* path){
+    SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, const char* path){
 
         std::filesystem::path p(path);
         std::string extension = p.extension().string();
@@ -121,6 +131,17 @@ namespace GameGraphicApi{
 }
 
 
+/* 
+    어따 만들지 몰라서 일단 여기에 만들었는데
+    나중에 data에 json만들고 거기에 이미지 정보들 다 넣은담에 한번에 빼서 구조체로 만드는 함수 만드는게 좋을듯  
+    .                                                                                                           */
+typedef struct{ 
+    SDL_Texture* texture;
+    SDL_Rect dst; // (x,y,tile_width,tile_height)
+}img;
+
+
+
 int main() {
     GameGraphicApi::window_info window_setting {
         .window_name = "test_game",
@@ -133,19 +154,65 @@ int main() {
     };
     GameGraphicApi::Create_window(&window_setting, SDL_WINDOW_SHOWN);
 
-    // ========================================== 기본설정 ==========================================
+
+    img ground {
+        .texture = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/tiles/grass.png"),
+        .dst = {0,0,32,32}
+    };
+
+
+
 
 
     SDL_Rect dst = {-100, -100, 32, 32};
     SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/character/bug1.png");
 
-    for(;;) {
-        SDL_RenderClear(window_setting.renderer);
-        SDL_RenderCopy(window_setting.renderer, IMG, nullptr, &dst);
-        SDL_RenderPresent(window_setting.renderer);
+    bool running = true;
+while (running) {
 
+    SDL_Event e;
+    while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_QUIT)
+            running = false;
+    }
+
+    SDL_SetRenderDrawColor(window_setting.renderer, 0, 0, 0, 255);
+    SDL_RenderClear(window_setting.renderer);
+
+    SDL_SetRenderDrawColor(window_setting.renderer, 255, 0, 0, 255);
+    SDL_Rect r = {100, 100, 200, 200};
+    SDL_RenderFillRect(window_setting.renderer, &r);
+
+    SDL_RenderPresent(window_setting.renderer);
+}
+    /*
+    while(running) {
+        SDL_RenderClear(window_setting.renderer);
+
+
+        for (int y = 0; y < SCREEN_HEIGHT; y += 32) {
+            for (int x = 0; x < SCREEN_WIDTH; x += 32) {
+
+                ground.dst.x = x;
+                ground.dst.y = y;
+                if (!ground.texture) {
+                    std::cout << "ground texture load failed\n";
+                }
+                else{
+                    std::cout << ground.dst.x;
+                    std::cout << ground.dst.y;
+                    SDL_RenderCopy(window_setting.renderer, ground.texture, NULL, &ground.dst);
+                }
+            }
+        }
+
+        SDL_SetRenderDrawColor(window_setting.renderer, 255, 0, 0, 255);
+
+
+        SDL_RenderPresent(window_setting.renderer);
         SDL_Delay(16); // 약 60FPS
     }
+        */
     
     GameGraphicApi::Destroy_window(&window_setting);
     
