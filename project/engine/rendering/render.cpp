@@ -2,11 +2,12 @@
 
  
 // 컴파일
+// cd project/engine/rendering
 // g++ render.cpp -o render -lSDL2 -lSDL2_image
 
 
 // 화면 등 기본값
-const int SCREEN_WIDTH = 800;
+const int SCREEN_WIDTH = 600;
 const int SCREEN_HEIGHT = 600;
 
 
@@ -48,8 +49,7 @@ namespace GameGraphicApi{
             info->window_name,
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
-            SCREEN_WIDTH,
-            SCREEN_HEIGHT,
+            600, 800,
             flags
         );
 
