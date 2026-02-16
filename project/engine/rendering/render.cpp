@@ -7,7 +7,7 @@
 namespace GameGraphicApi{
 
     typedef struct {
-        char* window_name;
+        const char* window_name;
         SDL_Window* window;
         SDL_Renderer* renderer;
         int Red;
@@ -57,8 +57,8 @@ namespace GameGraphicApi{
         SDL_SetRenderDrawColor(
             info->renderer,
             info->Red,
-            info->Blue,
             info->Green,
+            info->Blue,
             info->Bright
         );
     }
@@ -70,7 +70,7 @@ namespace GameGraphicApi{
     * @param[out] SDL_Texture* 경로를 변환한 Texture
     * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, nullptr
     */
-    SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, char* path){
+    SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, const char* path){
 
         std::filesystem::path p(path);
         std::string extension = p.extension().string();
@@ -136,15 +136,30 @@ int main() {
     // ========================================== 기본설정 ==========================================
 
 
-    SDL_Rect dst = {-100, -100, 32, 32};
+    SDL_Rect dst = {10, 10, 32, 32};
     SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/character/bug1.png");
 
-    for(;;) {
+    if (!IMG) {
+        std::cout << "Failed to load IMG\n";
+        return 1;
+    }
+
+    window_setting.renderer = SDL_CreateRenderer(window_setting.window, -1, SDL_RENDERER_SOFTWARE);
+
+    bool running = true;
+    SDL_Event e;
+    while(running) {
+        while(SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) running = false;
+        }
+
+        SDL_SetRenderDrawColor(window_setting.renderer, 0, 0, 0, 255);
         SDL_RenderClear(window_setting.renderer);
+
         SDL_RenderCopy(window_setting.renderer, IMG, nullptr, &dst);
         SDL_RenderPresent(window_setting.renderer);
 
-        SDL_Delay(16); // 약 60FPS
+        SDL_Delay(16);
     }
     
     GameGraphicApi::Destroy_window(&window_setting);
