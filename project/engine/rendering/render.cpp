@@ -2,11 +2,12 @@
 
  
 // 컴파일
+// cd project/engine/rendering
 // g++ render.cpp -o render -lSDL2 -lSDL2_image
 
 
 // 화면 등 기본값
-const int SCREEN_WIDTH = 600;
+const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
 
@@ -45,7 +46,7 @@ namespace GameGraphicApi{
             info->window_name,
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
-            800, 600,
+            SCREEN_WIDTH, SCREEN_HEIGHT,
             flags
         );
 
@@ -143,7 +144,7 @@ int main() {
     // ========================================== 기본설정 ==========================================
 
 
-    SDL_Rect dst = {-100, -100, 32, 32};
+    SDL_Rect dst = {10, 10, 32, 32};
     SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/character/bug1.png");
 
     for(;;) {
