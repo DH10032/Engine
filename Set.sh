@@ -34,6 +34,7 @@ else
     fi
     
     echo "VNC 서버 시작 완료!"
+
 fi
 
 # libsdl2-dev -> sdl 라이브러리(윈도우 화면 여는 용도 및 렌더링 용도)
