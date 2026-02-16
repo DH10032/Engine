@@ -24,6 +24,13 @@ namespace GameGraphicApi{
         int Bright;
     } window_info;
 
+    typedef struct {
+        std::vector<SDL_Texture*> buildings;
+        std::vector<SDL_Texture*> character;
+        std::vector<SDL_Texture*> interactives;
+        std::vector<SDL_Texture*> tiles;
+    } Asset;
+
     /**
      * @date 26/2/15
      * @author 이동훈
@@ -111,26 +118,50 @@ namespace GameGraphicApi{
         return Texture;
     }
 
-    json Load_Action_json(){
-        std::ifstream file("../../data/asset.json");
+    /**
+     * @brief json을 읽어주는 함수
+     * @param[in] path 읽고 싶은 json 경로 입력하면 됨
+     * 
+     * @note 임시 함수 원래는 memory.cpp에 있어야 함
+     * @note core.cpp 기준으로 입력하면 됨(자동으로 변환 기능이 있음)
+     * 
+     * @verbatim Load_Action_json("data/asset.json");
+     * 
+    */
+    json Load_Action_json(const std::string path){
+        std::ifstream file(("../../"+path).c_str());
         json data = json::parse(file);
         return data;
     }
 
-    // 캐릭터 이미지 전체를 
-    void Load_Asset(SDL_Renderer* renderer, json unit_json){
+    /**
+     * @brief Asset 폴더 내부 png파일들을 변환 후, 분리해서 반환
+     * @param[in] renderer 이미지를 렌더리할 렌더
+     * @param[in] json_file 읽을 json 파일
+     * @return Asset(SDL_Texture vector)
+     * @note asset.json에 등록해야 함
+     * 
+    */
+    Asset Load_Asset(SDL_Renderer* renderer, json json_file){
         std::string file_name;
         std::string folder_name;
         std::string path;
-        for (const auto& [folder, files] : unit_json.items()){
+        Asset asset;
+        for (const auto& [folder, files] : json_file.items()){
+            int Imgs_count = files.size();
+            std::vector<SDL_Texture*> IMGs;
             for (auto& [idx, f] : files.items()){
                 file_name = f;
                 folder_name = folder;
                 path = "../../assets/"+folder_name+"/"+file_name;
-                std::string path1 = path;
-                Path_to_Texture(renderer, path1);
+                IMGs.push_back(Path_to_Texture(renderer, path)); 
             }
+            if (folder == "buildings") asset.buildings = IMGs;
+            else if (folder == "character") asset.character = IMGs;
+            else if (folder == "interactives") asset.interactives = IMGs;
+            else if (folder == "tiles") asset.tiles = IMGs;
         }
+        return asset;
     }
 
     /**
@@ -186,18 +217,18 @@ int main() {
         .dst = {0,0,32,32}
     };
 
-    GameGraphicApi::Load_Asset(window_setting.renderer, GameGraphicApi::Load_Action_json());
-
+    GameGraphicApi::Asset data = GameGraphicApi::Load_Asset(window_setting.renderer, GameGraphicApi::Load_Action_json("data/asset.json"));
+    
     // ========================================== 기본설정 ==========================================
 
 
     SDL_Rect dst = {10, 10, 32, 32};
-    SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/character/bug1.png");
-    if (!IMG) {
-        std::cout << "Failed to load texture." << std::endl;
-        GameGraphicApi::Destroy_window(&window_setting);
-        return -1;
-    }
+    // SDL_Texture* IMG = GameGraphicApi::Path_to_Texture(window_setting.renderer, "../../assets/character/bug1.png");
+    // if (!IMG) {
+    //     std::cout << "Failed to load texture." << std::endl;
+    //     GameGraphicApi::Destroy_window(&window_setting);
+    //     return -1;
+    // }
 
     bool running = true;
     while(running) {
@@ -213,7 +244,7 @@ int main() {
                     std::cout << "ground texture load failed\n";
                 }
                 else{
-                    SDL_RenderCopy(window_setting.renderer, ground.texture, NULL, &ground.dst);
+                    SDL_RenderCopy(window_setting.renderer, data.buildings[0], NULL, &ground.dst);
                 }
             }
         }
