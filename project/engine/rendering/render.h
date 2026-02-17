@@ -7,6 +7,7 @@
 #include <nlohmann/json.hpp>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <cstring>
 
 using json = nlohmann::json;
@@ -105,6 +106,12 @@ namespace GameGraphicApi{
     * @brief 윈도우 내 모든 렌더링 제거및 위도우창 닫기(SDL종료)
     */
     void Destroy_window(window_info* window_setting);
+}
+
+namespace CreateText { // 미리 선언해두기
+    void TTF_start(SDL_Renderer* renderer);
+    void TTF_Create(const char* txtContent, int x, int y, int w, int h);
+    void TTF_end();
 }
 
 #endif
