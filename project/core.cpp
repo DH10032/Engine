@@ -46,7 +46,7 @@ int main() {
         SDL_SetRenderDrawColor(window_setting.renderer, 255, 255, 255, 255);
 
         SDL_RenderPresent(window_setting.renderer);
-        SDL_Delay(16); // 약 60FPS
+        SDL_Delay(8); // 약 120FPS
     }
     
     GameGraphicApi::Destroy_window(&window_setting);
