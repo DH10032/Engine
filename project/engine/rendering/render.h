@@ -48,6 +48,10 @@ typedef struct {
     std::vector<SDL_Texture*> tiles;
 } Asset;
 
+typedef struct {
+    SDL_Texture* IMG;
+}Action;
+
 /**
  * @brief 타일의 정보를 저장한 구조체
  * 

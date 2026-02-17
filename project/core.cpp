@@ -38,7 +38,7 @@ int main() {
 
                 ground.dst.x = x;
                 ground.dst.y = y;
-                SDL_RenderCopy(window_setting.renderer, data.tiles[ground.type], NULL, &ground.dst);
+                SDL_RenderCopy(window_setting.renderer, data.character[ground.type], NULL, &ground.dst);
 
             }
         }

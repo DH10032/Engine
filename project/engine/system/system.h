@@ -46,17 +46,17 @@ struct {
     _2byte HP;          // HP
     _2byte attack;      // 공격력
     _2byte debuff;      // 디버프 관리
-    _2byte buff;        // 디버프 관리
+    _2byte buff;        // 버프 관리
 
-    _2byte x;           // unit 위치
-    _2byte y;           // unit type
+    _2byte x;           // unit_x 위치
+    _2byte y;           // unit_y 위치
     _2byte size_x;      // 이미지 x
     _2byte size_y;      // 이미지 y
 
     _1byte v_x;         // x방향 속도
     _1byte v_y;         // y방향 속도
-    _2byte angle;        // 이미지 뒤집기
-    _4byte Img;         // 이미지 ID, 이미지 뒤집기
+    _2byte angle;       // 이미지 각도
+    _4byte ActionID;    // 이미지 ID, 이미지 뒤집기
 
     _4byte trait_1;     // 기원1 특성
     _4byte trait_2;     // 기원2 특성
@@ -74,8 +74,8 @@ struct {
     _2byte size_x;      // 이미지 x
     _2byte size_y;      // 이미지 y
 
-    _1byte v_x;         // 남는 공간 (padding)
-    _1byte v_y;         // 이미지 뒤집기
+    _1byte v_x;         // x방향 속도
+    _1byte v_y;         // y방향 속도
     _2byte angle;       // 이미지 각도
     _4byte Img;         // 이미지 ID, 이미지 뒤집기
 } Object;
