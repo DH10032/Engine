@@ -3,7 +3,7 @@ CC = g++
 # 실행파일 이름
 Target = core
 # 라이브러리 추가되면 여기 넣어주세요
-lib = -lSDL2 -lSDL2_image
+lib = -lSDL2 -lSDL2_image -lSDL2_ttf
 
 # 루트 폴더 하위 폴대 내부에 있는 모든 cpp 파일 탐색
 SRCS = $(shell find . -name '*.cpp')

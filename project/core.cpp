@@ -38,12 +38,11 @@ int main() {
 
                 ground.dst.x = x;
                 ground.dst.y = y;
-                SDL_RenderCopy(window_setting.renderer, data.tiles[ground.type], NULL, &ground.dst);
-
+                if (!ground.type) std::cout << "ground texture load failed\n";
+                else SDL_RenderCopy(window_setting.renderer, data.tiles[ground.type], NULL, &ground.dst);
             }
         }
-
-        SDL_SetRenderDrawColor(window_setting.renderer, 255, 255, 255, 255);
+        CreateText::TTF_Create("hihi",100,100,100,100); // 테스트 출력
 
         SDL_RenderPresent(window_setting.renderer);
         SDL_Delay(8); // 약 120FPS
