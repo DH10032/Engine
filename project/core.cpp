@@ -26,12 +26,24 @@ int main() {
     // ========================================== 기본설정 ==========================================
 
 
-    SDL_Rect dst = {10, 10, 32, 32};
+    SDL_Rect dst = {400, 400, 128, 128};
 
     bool running = true;
+    int i = 0;
+    int j = 1;
+    uint32_t prev_time = SDL_GetTicks();
     while(running) {
-        SDL_RenderClear(window_setting.renderer);
 
+        uint32_t curr_time = SDL_GetTicks();
+        uint32_t delta = curr_time - prev_time;  // 경과 시간(ms)
+        prev_time = curr_time;
+
+        SDL_Delay(delta);
+
+        SDL_RenderClear(window_setting.renderer);
+        i = i+j;
+
+<<<<<<< Updated upstream
 
         for (int y = 0; y < SCREEN_HEIGHT; y += 32) {
             for (int x = 0; x < SCREEN_WIDTH; x += 32) {
@@ -46,6 +58,20 @@ int main() {
 
         SDL_RenderPresent(window_setting.renderer);
         SDL_Delay(8); // 약 120FPS
+=======
+        SDL_RenderCopy(window_setting.renderer, data.character[ground.type], NULL, &dst);
+        SDL_RenderCopy(window_setting.renderer, data.character[i], NULL, &dst);
+        
+        if (i>=3){
+            j = -1;
+        }
+        else if (i<=1){
+            j = 1;
+        }
+        SDL_SetRenderDrawColor(window_setting.renderer, 255, 255, 255, 255);
+
+        SDL_RenderPresent(window_setting.renderer);
+>>>>>>> Stashed changes
     }
     
     GameGraphicApi::Destroy_window(&window_setting);
