@@ -1,4 +1,5 @@
 #include "engine/rendering/render.h"
+#include "engine/system/system.h"
 
 int main() {
     window_info window_setting {
@@ -20,7 +21,7 @@ int main() {
         .dst = {0,0,32,32}
     };
 
-    Asset data = GameGraphicApi::Load_Asset(window_setting.renderer, GameGraphicApi::Load_Action_json("data/asset.json"));
+    Asset data = GameGraphicApi::Load_Asset(window_setting.renderer, memory::Load_Action_json("project/data/asset.json"));
     
     // ========================================== 기본설정 ==========================================
 

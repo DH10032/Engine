@@ -1,5 +1,5 @@
-#ifndef Render
-#define Render
+#ifndef RENDER
+#define RENDER
 
 #include <iostream>
 #include <fstream>
@@ -90,17 +90,6 @@ namespace GameGraphicApi{
     * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, nullptr
     */
     SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, const std::string path);
-    
-    /**
-     * @brief json을 읽어주는 함수
-     * @param[in] path 읽고 싶은 json 경로 입력하면 됨
-     * 
-     * @note 임시 함수 원래는 memory.cpp에 있어야 함
-     * @note core.cpp 기준으로 입력하면 됨(자동으로 변환 기능이 있음)
-     * 
-     * @verbatim Load_Action_json("data/asset.json");
-    */
-    json Load_Action_json(const std::string path);
     
     /**
      * @brief Asset 폴더 내부 png파일들을 변환 후, 분리해서 반환

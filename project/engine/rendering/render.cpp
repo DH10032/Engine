@@ -73,12 +73,6 @@ namespace GameGraphicApi{
         return Texture;
     }
 
-    json Load_Action_json(const std::string path){
-        std::ifstream file(("../../"+path).c_str());
-        json data = json::parse(file);
-        return data;
-    }
-
     Asset Load_Asset(SDL_Renderer* renderer, json json_file){
         std::string file_name;
         std::string folder_name;
@@ -90,7 +84,7 @@ namespace GameGraphicApi{
             for (auto& [idx, f] : files.items()){
                 file_name = f;
                 folder_name = folder;
-                path = "../../assets/"+folder_name+"/"+file_name;
+                path = "project/assets/"+folder_name+"/"+file_name;
                 IMGs.push_back(Path_to_Texture(renderer, path)); 
             }
             if (folder == "buildings") asset.buildings = IMGs;
@@ -115,8 +109,3 @@ namespace GameGraphicApi{
     }
 
 }
-
-/* 
-    어따 만들지 몰라서 일단 여기에 만들었는데
-    나중에 data에 json만들고 거기에 이미지 정보들 다 넣은담에 한번에 빼서 구조체로 만드는 함수 만드는게 좋을듯  
-*/

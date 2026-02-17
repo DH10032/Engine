@@ -12,7 +12,7 @@ if pgrep -x "Xvfb" > /dev/null; then
     echo "VNC가 이미 실행 중입니다."
 # 패키지가 없으면 설치
 else
-    sudo apt-get update
+    sudo apt-get update -qq
     # xvfb x11vnc novnc websockify -> remote 서버 연결
     if ! command -v x11vnc &> /dev/null; then
         sudo apt-get install -y xvfb x11vnc novnc websockify -qq
