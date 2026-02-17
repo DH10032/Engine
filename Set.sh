@@ -12,10 +12,10 @@ if pgrep -x "Xvfb" > /dev/null; then
     echo "VNC가 이미 실행 중입니다."
 # 패키지가 없으면 설치
 else
-    sudo apt-get update
+    sudo apt-get update -qq
     # xvfb x11vnc novnc websockify -> remote 서버 연결
     if ! command -v x11vnc &> /dev/null; then
-        sudo apt-get install -y xvfb x11vnc novnc websockify
+        sudo apt-get install -y xvfb x11vnc novnc websockify -qq
     fi
     
     # 서비스 시작
@@ -33,20 +33,20 @@ else
         websockify 6080 localhost:5900 > /dev/null 2>&1 &
     fi
     
-    echo "VNC 서버 시작 완료!"
-
 fi
 
 # libsdl2-dev -> sdl 라이브러리(윈도우 화면 여는 용도 및 렌더링 용도)
 # libsdl2-image-dev -> 이미지 변환 관련 라이브러리 png, jpg등등
 if ! command -v libsdl2-dev &> /dev/null; then
-    sudo apt-get install -y libsdl2-image-dev libsdl2-dev
+    sudo apt-get install -y libsdl2-image-dev libsdl2-dev -qq
 fi
 
 # cpp에서 json 파싱용 라이브러리
 if ! command -v nlohmann-json3-dev &> /dev/null; then
-    sudo apt-get install -y nlohmann-json3-dev
+    sudo apt-get install -y nlohmann-json3-dev -qq
 fi
+
+echo "VNC 서버 시작 완료!"
 
 # DISPLAY 설정 (중요: source로 실행해야 적용됨)
 # 아래 실행하기 (!!! 이제 한번에 복붙 가능)
