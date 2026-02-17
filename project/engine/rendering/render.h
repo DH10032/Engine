@@ -101,7 +101,7 @@ namespace GameGraphicApi{
      * 
     */
     Asset Load_Asset(SDL_Renderer* renderer, json json_file);
-    
+
     /**
     * @brief 윈도우 내 모든 렌더링 제거및 위도우창 닫기(SDL종료)
     */
