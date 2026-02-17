@@ -5,7 +5,28 @@
 #include <fstream>
 #include <iostream>
 
+typedef char _1byte;
+typedef unsigned short _2byte;
+typedef unsigned int _4byte;
+typedef unsigned long _8byte;
+
 using json = nlohmann::json;
+
+
+struct {
+    _4byte status;      // HP 및 공격력 등
+    _2byte debuff;      // 디버프 관리
+    _2byte buff;        // 디버프 관리
+
+    _4byte trait_1;     // 기원1 특성
+    _4byte trait_2;     // 기원2 특성
+
+    _4byte trait_3;     // 기원3 특성
+    _4byte trait_4;     // 기원4 특성
+
+    _4byte action;      // 행동 id
+    _4byte command;     // 명령 데이터
+} Unit;
 
 namespace memory{
     /**
