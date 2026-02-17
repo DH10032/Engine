@@ -4,6 +4,9 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
+
+#define unit_count_max 5000
 
 typedef signed char _1byte;
 typedef unsigned short _2byte;
@@ -30,7 +33,7 @@ SDL_RenderCopyEx(
 [체력 8bit][공격력 8bit]
 
 // IMG
-[이미지 ID 18bit][특수효과 8bit][진영 4bit][Flip 2bit]
+[Flip 2bit][2bit 남음][진영 4bit][특수효과 8bit][이미지 ID 16bit]
 
 // command 4바이트 구조
 [명령타입 8bit][우선순위 8bit][목표타입 8bit][진행상태 8bit]
@@ -42,7 +45,7 @@ SDL_RenderCopyEx(
 - 진행상태: IDLE=0, MOVING=1, EXECUTING=2, COMPLETE=3
 */
 
-struct {
+typedef struct {
     _2byte HP;          // HP
     _2byte attack;      // 공격력
     _2byte debuff;      // 디버프 관리
@@ -68,7 +71,7 @@ struct {
     _4byte command;     // 명령 데이터
 } Unit;
 
-struct {
+typedef struct {
     _2byte x;           // unit 위치
     _2byte y;           // unit type
     _2byte size_x;      // 이미지 x
@@ -79,6 +82,12 @@ struct {
     _2byte angle;       // 이미지 각도
     _4byte Img;         // 이미지 ID
 } Object;
+
+typedef struct {
+    Unit* data;
+    int count;
+    int capacity;
+} UnitStorage;
 
 namespace memory{
     /**
