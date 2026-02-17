@@ -1,16 +1,16 @@
 #include "render.h"
  
-// 컴파일
-// cd project/engine/rendering
-// g++ render.cpp -o render -lSDL2 -lSDL2_image -lSDL2_ttf
-// ./render -> 실행
+/* 컴파일
 
+cd project/engine/rendering
+g++ render.cpp -o render -lSDL2 -lSDL2_image -lSDL2_ttf
+./render -> 실행
 
-// 화면 등 기본값
-// const int SCREEN_WIDTH = 800;
-// const int SCREEN_HEIGHT = 600;
+-> make로 바뀜
 
-// 색깔
+*/
+
+// 색깔 
 SDL_Color BLACK = { 0, 0, 0 };
 
 
@@ -171,7 +171,7 @@ namespace CreateText{
 
     void TTF_Create(const char* txtContent, int x, int y, int w, int h){ // 글 내용, x,y,width,height (앞으로 간단히 그릴 수 있도록 함수 제작)
         SDL_Rect Rct = { x, y, w, h };
-        SDL_Surface* FSurface = TTF_RenderText_Blended(bitlimFont, txtContent, BLACK); // 일단 색상을 검정 통일, 이후 수정 예정
+        SDL_Surface* FSurface = TTF_RenderText_Blended(bitlimFont, txtContent, BLACK); // 일단 색상은 검정 통일, 이후 수정 예정
         SDL_Texture* FTexture = SDL_CreateTextureFromSurface(TXT_renderer, FSurface);
         SDL_RenderCopy(TXT_renderer, FTexture, NULL, &Rct);
     }
