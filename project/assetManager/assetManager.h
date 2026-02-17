@@ -1,9 +1,72 @@
 #ifndef SYSTEM
 #define SYSTEM
 
-#include <nlohmann/json.hpp>
-#include <fstream>
 #include <iostream>
+#include <fstream>
+#include <filesystem>
+#include <nlohmann/json.hpp>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <cstring>
+
+
+
+
+/**
+ * @brief Asset을 변환해 폴더별로 분류해 저장가능한 자료
+ * 
+ * @par buildings (std::vector<SDL_Texture*>)
+ * 
+ * @par character (std::vector<SDL_Texture*>)
+ * 
+ * @par interactives (std::vector<SDL_Texture*>)
+ * 
+ * @par tiles (std::vector<SDL_Texture*>)
+ * 
+ * @note 수정될 수도 있음
+ */
+typedef struct {
+    std::vector<SDL_Texture*> buildings;
+    std::vector<SDL_Texture*> character;
+    std::vector<SDL_Texture*> interactives;
+    std::vector<SDL_Texture*> tiles;
+} Asset;
+
+/**
+* @brief Asset 폴더 내부 png파일들을 변환 후, 분리해서 반환
+* @param[in] renderer 이미지를 렌더리할 렌더
+* @param[in] json_file 읽을 json 파일
+* @return Asset(SDL_Texture vector)
+* @note asset.json에 등록해야 함
+* 
+*/
+Asset Load_Asset(SDL_Renderer* renderer, json json_file);
+
+
+/**
+ * @brief 타일의 정보를 저장한 구조체
+ * 
+ * @par type (int)
+ * 타일의 종류 (0, 1, ..)
+ * 
+ * @par dst (SDL_Rect)
+ * 화면에 렌더링될 위치와 크기 (x, y, w, h)
+ * 
+ * @note 수정될 수도 있음
+ */
+
+
+
+
+
+
+
+
+
+
+// 일단 여기로 뺴놨는데 나중에 units.cpp 같은거 하나 만들어야될듯
+
 
 typedef signed char _1byte;
 typedef unsigned short _2byte;
