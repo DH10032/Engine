@@ -69,15 +69,15 @@ struct {
 } Unit;
 
 struct {
-    _2byte x;           // unit 위치
-    _2byte y;           // unit type
+    _2byte x;           // object 위치
+    _2byte y;           // object type
     _2byte size_x;      // 이미지 x
     _2byte size_y;      // 이미지 y
 
-    _1byte reserved;    // 남는 공간 (padding)
-    _1byte Flip;        // 이미지 뒤집기
+    _1byte v_x;         // 남는 공간 (padding)
+    _1byte v_y;         // 이미지 뒤집기
     _2byte angle;       // 이미지 각도
-    _4byte Img;         // 이미지 ID
+    _4byte Img;         // 이미지 ID, 이미지 뒤집기
 } Object;
 
 namespace memory{
