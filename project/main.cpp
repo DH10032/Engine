@@ -37,6 +37,8 @@ int main()
         SDL_WINDOW_SHOWN
     );
 
+    SDL_Rect destRect = {128, 128, 300, 300};
+
     window_setting.window = window;
     if (!window_setting.window) {
         std::cout << "Window Creation Error: " << SDL_GetError() << std::endl;
@@ -57,10 +59,65 @@ int main()
         window_setting.Bright
     );
 
+
     SDL_Init(SDL_INIT_VIDEO);
     IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
-    CreateText::TTF_start(window_setting.renderer); // init 과 동시에 renderer 정의
+    CreateText::TTF_start(window_setting.renderer);
     Asset data = AssetManager::Load_Asset(window_setting.renderer, "project/data/asset.json");
+
+
+    
+
+
+    int i = 5;
+    int j = 1;
+    // i = 6 7 8 7 6 7 8 ...
+    for(;;){
+        
+        if (i == 7)
+            j = -1;
+        else if (i == 5)
+            j = 1;
+        std::cout<< i <<std::endl;
+        SDL_RenderClear(window_setting.renderer);
+        // 사슴벌레 몸 렌더링
+        SDL_RenderCopyEx(
+            window_setting.renderer,       // 렌더러
+            data.character[1],        // 텍스처
+            NULL,           // 소스 영역 (NULL = 전체)
+            &destRect,      // 목적지 영역
+            0,           // 각도 (도 단위, 시계방향)
+            NULL,           // 회전 중심점 (NULL = 중앙)
+            SDL_FLIP_NONE   // 뒤집기 옵션
+        );
+
+        // 사슴벌레 집게 렌더링
+        SDL_RenderCopyEx(
+            window_setting.renderer,       // 렌더러
+            data.character[2],        // 텍스처
+            NULL,           // 소스 영역 (NULL = 전체)
+            &destRect,      // 목적지 영역
+            0,           // 각도 (도 단위, 시계방향)
+            NULL,           // 회전 중심점 (NULL = 중앙)
+            SDL_FLIP_NONE   // 뒤집기 옵션
+        );
+
+        // 사슴벌레 몸 렌더링
+        SDL_RenderCopyEx(
+            window_setting.renderer,       // 렌더러
+            data.character[i],        // 텍스처
+            NULL,           // 소스 영역 (NULL = 전체)
+            &destRect,      // 목적지 영역
+            0,           // 각도 (도 단위, 시계방향)
+            NULL,           // 회전 중심점 (NULL = 중앙)
+            SDL_FLIP_NONE   // 뒤집기 옵션
+        );
+        
+        SDL_RenderPresent(window_setting.renderer);
+
+        i = i + j;
+        SDL_Delay(30);
+    }
 }
 
 
