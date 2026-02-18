@@ -4,13 +4,10 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
-#include <nlohmann/json.hpp>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <cstring>
-
-using json = nlohmann::json;
 
 // 화면 등 기본값
 #define  SCREEN_WIDTH 800
@@ -19,6 +16,7 @@ using json = nlohmann::json;
 /**
  * @brief 윈도우 설정을 위해 필요한 데이터
  */
+
 typedef struct {
     const std::string window_name;
     SDL_Window* window;
@@ -28,7 +26,6 @@ typedef struct {
     int Blue;
     int Bright;
 } window_info;
-
 
 namespace GameGraphicApi{
     /**

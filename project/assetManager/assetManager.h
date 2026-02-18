@@ -1,5 +1,5 @@
-#ifndef SYSTEM
-#define SYSTEM
+#ifndef ASSET_MANAGER
+#define ASSET_MANAGER
 
 #include <iostream>
 #include <fstream>
@@ -10,8 +10,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <cstring>
 
-
-
+using json = nlohmann::json;
 
 /**
  * @brief Asset을 변환해 폴더별로 분류해 저장가능한 자료

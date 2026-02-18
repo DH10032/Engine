@@ -41,13 +41,13 @@ int main()
     window_setting.window = window;
     if (!window_setting.window) {
         std::cout << "Window Creation Error: " << SDL_GetError() << std::endl;
-        return;
+        return 0;
     }
 
     window_setting.renderer = SDL_CreateRenderer(window, -1, 0);
     if (!window_setting.renderer) {
         std::cout << "Renderer Creation Error: " << SDL_GetError() << std::endl;
-        return;
+        return 0;
     }
 
     SDL_SetRenderDrawColor(

@@ -1,13 +1,4 @@
 #include "assetManager.h"
-#include "../main.h"
-
-
-int main(){
-
-    Load_Asset();
-
-    return 0;
-}
 
 
 SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, const std::string path){
@@ -43,7 +34,7 @@ SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, const std::string path){
     return Texture;
 }
 
-Asset Load_Asset(){
+Asset Load_Asset(SDL_Renderer* renderer, json json_file){
     std::string file_name;
     std::string folder_name;
     std::string path;
@@ -55,13 +46,14 @@ Asset Load_Asset(){
             file_name = f;
             folder_name = folder;
             path = "project/assets/"+folder_name+"/"+file_name;
-            IMGs.push_back(Path_to_Texture(window_setting->renderer, path)); 
+            IMGs.push_back(Path_to_Texture(renderer, path)); 
         }
         if (folder == "buildings") asset.buildings = IMGs;
         else if (folder == "character") asset.character = IMGs;
         else if (folder == "interactives") asset.interactives = IMGs;
         else if (folder == "tiles") asset.tiles = IMGs;
     }
+    return asset;
 }
 
 

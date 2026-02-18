@@ -63,3 +63,4 @@ project/
 │
 └── tools/                     # 개발용 툴 (Python)
     └── ...
+```

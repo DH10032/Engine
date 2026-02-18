@@ -1,34 +1,21 @@
-#pragma once
+#ifndef MAIN
+#define MAIN
 
+#include "world/world.h"
 #include "graphic/font/font.h"
-#include <iostream>
-#include <fstream>
-#include <filesystem>
-#include <nlohmann/json.hpp>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <cstring>
-
+#include "graphic/renderer/render.h"
+#include "graphic/renderer/shader.h"
+#include "assetManager/assetManager.h"
+#include "core/types.h"
 
 // 화면 등 기본값
 #define SCREEN_WIDTH    800
 #define SCREEN_HEIGHT   600
 
 
-typedef struct {
-const std::string window_name;
-SDL_Window* window;
-SDL_Renderer* renderer;
-int Red;
-int Green;
-int Blue;
-int Bright;
-} window_info;
+
 
 window_info* window_setting;
-
-
 
 
 /**
@@ -53,3 +40,5 @@ void Create_window(window_info* info, SDL_WindowFlags flags);
 * @brief 윈도우 내 모든 렌더링 제거및 위도우창 닫기(SDL종료)
 */
 void Destroy_window(window_info* window_setting);
+
+#endif
