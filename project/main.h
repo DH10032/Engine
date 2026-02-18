@@ -8,7 +8,7 @@
 #include "graphic/renderer/render.h"
 #include "graphic/renderer/shader.h"
 #include "assetManager/assetManager.h"
-#include "core/types.h"
+#include "core/Object.h"
 
 // 화면 등 기본값
 #define SCREEN_WIDTH    800
