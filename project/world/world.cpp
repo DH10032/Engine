@@ -1,6 +1,6 @@
 #include "world.h"
 
-namespace worldspace{
+// namespace worldspace{
     // int main() {
     //     typedef struct{
     //         int type;
@@ -26,4 +26,4 @@ namespace worldspace{
 
     //     return 0;
     // }
-}
+// }
