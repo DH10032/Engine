@@ -1,10 +1,7 @@
-#ifndef SYSTEM
-#define SYSTEM
-
-#include <nlohmann/json.hpp>
-#include <fstream>
 #include <iostream>
 #include <algorithm>
+#include <fstream>
+#include <nlohmann/json.hpp>
 
 #define unit_count_max 5000
 
@@ -12,6 +9,7 @@ typedef signed char _1byte;
 typedef unsigned short _2byte;
 typedef unsigned int _4byte;
 typedef unsigned long _8byte;
+
 
 using json = nlohmann::json;
 
@@ -81,7 +79,7 @@ typedef struct {
     _1byte Flip;        // 이미지 뒤집기
     _2byte angle;       // 이미지 각도
     _4byte Img;         // 이미지 ID
-} Object;
+} Tile;
 
 typedef struct {
     Unit* data;
@@ -89,7 +87,7 @@ typedef struct {
     int capacity;
 } UnitStorage;
 
-namespace memory{
+namespace Object{
     /**
      * @brief json을 읽어주는 함수
      * @param[in] path 읽고 싶은 json 경로 입력하면 됨
@@ -99,8 +97,6 @@ namespace memory{
      * 
      * @verbatim Load_Action_json("data/asset.json");
     */
-    json Load_Action_json(std::string path);
+    json Load_Action_json(const std::string path);
 
 }
-
-#endif

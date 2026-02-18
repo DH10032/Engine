@@ -1,6 +1,15 @@
 {
     "buildings": ["hive.png"],
-    "character" : ["bug1.png"],
+    "character" : [
+        "bug1.png",
+        "unit_type1/body/body1.png",
+        "unit_type1/chin/chin1.png",
+        "unit_type1/chin/chin2.png",
+        "unit_type1/chin/chin3.png",
+        "unit_type1/leg/leg1.png",
+        "unit_type1/leg/leg2.png",
+        "unit_type1/leg/leg3.png"
+    ],
     "interactives" : ["apple.png"],
     "tiles" : ["grass.png"]
 }

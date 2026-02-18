@@ -1,7 +1,7 @@
 # 컴파일러 종류
 CC = g++
 # 실행파일 이름
-Target = core
+Target = main
 # 라이브러리 추가되면 여기 넣어주세요
 lib = -lSDL2 -lSDL2_image -lSDL2_ttf
 
