@@ -14,7 +14,6 @@ int main()
     //      - AI 업데이트
     //      - 렌더링
     //      - 프레임 제한
-
     // 7. 리소스 정리
 
 
@@ -61,6 +60,7 @@ int main()
     SDL_Init(SDL_INIT_VIDEO);
     IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
     CreateText::TTF_start(window_setting.renderer); // init 과 동시에 renderer 정의
+    Asset data = Object::Load_Asset();
 }
 
 
