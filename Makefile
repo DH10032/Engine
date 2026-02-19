@@ -12,7 +12,6 @@ OBJS = $(SRCS:.cpp=.o)
 
 all: $(Target)
 
-
 # =====================      빌드     =======================
 # 컴파일 과정, .cpp -> .o로 변환, g++ -c main.cpp -o main.o
 %.o: %.cpp

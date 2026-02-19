@@ -41,41 +41,44 @@ int main()
     SDL_Rect destRect = {128, 128, 300, 300};
     Asset data = AssetManager::Load_Asset(window_setting.renderer, "Game/data/asset.json");
     
+    int size = 64;
+
     std::vector<Parts> p = {
         {
-            {8, 8, 16, 16},
-            {200, 200, 16, 16},
-            {8, 0},
+            {0, 0, 16, 16},
+            {200, 200, size, size},
+            {size/2, 0},
             0
         },
         {
-            {8, 24, 16, 16},
-            {200, 216, 16, 16},
-            {8, 16},
-            0
-        },
-        {
-            {8, 40, 16, 16},
-            {200, 232, 16, 16},
-            {8, 32},
-            45
-        },
-        {
-            {8, 56, 16, 16},
-            {200, 248, 16, 16},
-            {8, 48},
-            0
-        },
-        {
-            {56, 56, 16, 16},
-            {200, 2064, 16, 16},
-            {56, 48},
+            {0, 16, 16, 32},
+            {200, 265, size, size},
+            {size/2, 0},
             0
         }
+        // {
+        //     {8, 40, 16, 16},
+        //     {200, 232, 16, 16},
+        //     {8, 32},
+        //     45
+        // },
+        // {
+        //     {8, 56, 16, 16},
+        //     {200, 248, 16, 16},
+        //     {8, 48},
+        //     0
+        // },
+        // {
+        //     {56, 56, 16, 16},
+        //     {200, 2064, 16, 16},
+        //     {56, 48},
+        //     0
+        // }
     };
 
 
     for(;;){
+        p[1].angle = p[1].angle + 3;
         SDL_RenderClear(window_setting.renderer);
         Animation::Assemble_Texture(window_setting.renderer, data.character[8], p);
         SDL_RenderPresent(window_setting.renderer);
