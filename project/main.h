@@ -7,6 +7,7 @@
 #include "graphic/font/font.h"
 #include "graphic/renderer/render.h"
 #include "graphic/renderer/shader.h"
+#include "graphic/window/window.h"
 #include "assetManager/assetManager.h"
 #include "core/Object.h"
 
