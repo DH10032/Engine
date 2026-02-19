@@ -8,7 +8,8 @@
         "unit_type1/chin/chin3.png",
         "unit_type1/leg/leg1.png",
         "unit_type1/leg/leg2.png",
-        "unit_type1/leg/leg3.png"
+        "unit_type1/leg/leg3.png",
+        "earthworm.png"
     ],
     "interactives" : ["apple.png"],
     "tiles" : ["grass.png"]
