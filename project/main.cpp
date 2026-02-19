@@ -73,7 +73,7 @@ int main()
     int j = 1;
     // i = 6 7 8 7 6 7 8 ...
     for(;;){
-        
+
         if (i == 7)
             j = -1;
         else if (i == 5)
