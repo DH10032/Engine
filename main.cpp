@@ -39,7 +39,7 @@ int main()
 
     // 2. AssetManager 초기화
     SDL_Rect destRect = {128, 128, 300, 300};
-    Asset data = AssetManager::Load_Asset(window_setting.renderer, "project/data/asset.json");
+    Asset data = AssetManager::Load_Asset(window_setting.renderer, "Game/data/asset.json");
 
 
     int i = 5;
