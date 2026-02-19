@@ -15,10 +15,22 @@ g++ render.cpp -o render -lSDL2 -lSDL2_image -lSDL2_ttf
 
 namespace GameGraphicApi{
 
-    void Set_draw_all(SDL_Renderer* renderer, int* Color, int** Obj){
-        SDL_SetRenderDrawColor(renderer, Color[0], Color[1], Color[2], 255);
+    void Set_draw_all(SDL_Renderer* renderer){
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        // 모든 객체 이미지 그리는 for문
+        worldspace::worldInit();
+
+        for (int x = 0; x < 99; x++) {
+            for (int y = 0; y < 99; y++) {
+
+                
+                float bright = worldspace::GetTile(x,y).bright * 255;
+                SDL_SetRenderDrawColor(renderer, 30, 255, 30, bright);
+                SDL_RenderFillRect(renderer, &worldspace::GetTile(x,y).dst);
+            }
+        }
+
+        SDL_RenderPresent(renderer);
     }
 }
 

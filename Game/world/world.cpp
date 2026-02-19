@@ -1,29 +1,31 @@
 #include "world.h"
 
-// namespace worldspace{
-    // int main() {
-    //     typedef struct{
-    //         int type;
-    //         SDL_Rect dst;
-    //     }tile;
+namespace worldspace{
+    tile world[width][height]{};
+    int worldInit() {
 
-    //     tile world[100][100] = {NULL};
+        PerlinNoiseSpace::PerlinNoise perlin(1024);
 
-    //     int idx = 0;
-    //     for (int i = 0; i < 10; i++) {
-    //         for (int j = 0; j < 10; j++) {
+        std::vector<std::vector<double>> heightMap(width,
+            std::vector<double>(height));
 
-    //             world[0][i].type = 0;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
 
-    //             world[0][i].dst.x = i * 32;
-    //             world[0][i].dst.y = j * 32;
-    //             world[0][i].dst.w = 32;
-    //             world[0][i].dst.h = 32;
+                double nx = x / 100;
+                double ny = y / 100;
+        
+                world[x][y].dst = {x*3,y*3,3,3};
+                world[x][y].bright = PerlinNoiseSpace::fbm(perlin, nx, ny, 6, 0.5, 2.0);
+                std::cout << world[x][y].bright;
+            }
+            std::cout << std::endl;
+        }
+        
 
-    //             idx++;
-    //         }
-    //     }
-
-    //     return 0;
-    // }
-// }
+        return 0;
+    }
+    tile& GetTile(int x, int y){
+        return world[x][y];
+    }
+}

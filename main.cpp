@@ -38,59 +38,60 @@ int main()
     );
 
     // 2. AssetManager 초기화
-    SDL_Rect destRect = {128, 128, 300, 300};
-    Asset data = AssetManager::Load_Asset(window_setting.renderer, "Game/data/asset.json");
+    // SDL_Rect destRect = {128, 128, 300, 300};
+    // Asset data = AssetManager::Load_Asset(window_setting.renderer, "Game/data/asset.json");
 
 
-    int i = 5;
-    int j = 1;
-    // i = 6 7 8 7 6 7 8 ...
-    for(;;){
+    // int i = 5;
+    // int j = 1;
+    // // i = 6 7 8 7 6 7 8 ...
+    // for(;;){
 
-        if (i == 7)
-            j = -1;
-        else if (i == 5)
-            j = 1;
-        std::cout<< i <<std::endl;
-        SDL_RenderClear(window_setting.renderer);
-        // 사슴벌레 몸 렌더링
-        SDL_RenderCopyEx(
-            window_setting.renderer,       // 렌더러
-            data.character[1],        // 텍스처
-            NULL,           // 소스 영역 (NULL = 전체)
-            &destRect,      // 목적지 영역
-            0,           // 각도 (도 단위, 시계방향)
-            NULL,           // 회전 중심점 (NULL = 중앙)
-            SDL_FLIP_NONE   // 뒤집기 옵션
-        );
+    //     if (i == 7)
+    //         j = -1;
+    //     else if (i == 5)
+    //         j = 1;
+    //     std::cout<< i <<std::endl;
+    //     SDL_RenderClear(window_setting.renderer);
+    //     // 사슴벌레 몸 렌더링
+    //     SDL_RenderCopyEx(
+    //         window_setting.renderer,       // 렌더러
+    //         data.character[1],        // 텍스처
+    //         NULL,           // 소스 영역 (NULL = 전체)
+    //         &destRect,      // 목적지 영역
+    //         0,           // 각도 (도 단위, 시계방향)
+    //         NULL,           // 회전 중심점 (NULL = 중앙)
+    //         SDL_FLIP_NONE   // 뒤집기 옵션
+    //     );
 
-        // 사슴벌레 집게 렌더링
-        SDL_RenderCopyEx(
-            window_setting.renderer,       // 렌더러
-            data.character[2],        // 텍스처
-            NULL,           // 소스 영역 (NULL = 전체)
-            &destRect,      // 목적지 영역
-            0,           // 각도 (도 단위, 시계방향)
-            NULL,           // 회전 중심점 (NULL = 중앙)
-            SDL_FLIP_NONE   // 뒤집기 옵션
-        );
+    //     // 사슴벌레 집게 렌더링
+    //     SDL_RenderCopyEx(
+    //         window_setting.renderer,       // 렌더러
+    //         data.character[2],        // 텍스처
+    //         NULL,           // 소스 영역 (NULL = 전체)
+    //         &destRect,      // 목적지 영역
+    //         0,           // 각도 (도 단위, 시계방향)
+    //         NULL,           // 회전 중심점 (NULL = 중앙)
+    //         SDL_FLIP_NONE   // 뒤집기 옵션
+    //     );
 
-        // 사슴벌레 몸 렌더링
-        SDL_RenderCopyEx(
-            window_setting.renderer,       // 렌더러
-            data.character[i],        // 텍스처
-            NULL,           // 소스 영역 (NULL = 전체)
-            &destRect,      // 목적지 영역
-            0,           // 각도 (도 단위, 시계방향)
-            NULL,           // 회전 중심점 (NULL = 중앙)
-            SDL_FLIP_NONE   // 뒤집기 옵션
-        );
+    //     // 사슴벌레 몸 렌더링
+    //     SDL_RenderCopyEx(
+    //         window_setting.renderer,       // 렌더러
+    //         data.character[i],        // 텍스처
+    //         NULL,           // 소스 영역 (NULL = 전체)
+    //         &destRect,      // 목적지 영역
+    //         0,           // 각도 (도 단위, 시계방향)
+    //         NULL,           // 회전 중심점 (NULL = 중앙)
+    //         SDL_FLIP_NONE   // 뒤집기 옵션
+    //     );
         
-        SDL_RenderPresent(window_setting.renderer);
+    //     SDL_RenderPresent(window_setting.renderer);
 
-        i = i + j;
-        SDL_Delay(30);
-    }
+    //     i = i + j;
+    while(true){
+    GameGraphicApi::Set_draw_all(window_setting.renderer);
+    SDL_Delay(30);}
 }
 
 
