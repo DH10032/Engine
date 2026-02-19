@@ -1,58 +1,67 @@
 # Engine - Game Architecture
 
 ```
-project/
-├── main.cpp
+engine/
+├── graphic/
+│   ├── window/
+│   │   ├── window.h
+│   │   └── window.cpp        # window_info, Create_window, Destroy_window
+│   ├── renderer/
+│   │   ├── render.h
+│   │   ├── render.cpp        # SDL 렌더링 파이프라인, Set_draw_all
+│   │   ├── shader.h
+│   │   └── shader.cpp        # OpenGL 셰이더
+│   ├── camera/
+│   │   ├── camera.h
+│   │   └── camera.cpp        # 카메라 뷰
+│   ├── font/
+│   │   ├── font.h
+│   │   └── font.cpp          # TTF_start, TTF_Create, TTF_end
+│   ├── color/
+│   │   └── color.h           # SDL_Color 상수
+│   └── animation/
+│       ├── animation.h
+│       └── animation.cpp     # 각속도 신호 기반 애니메이션
 │
-├── core/                        # 순수 데이터/로직 (렌더링 무관)
-│   ├── core.h
-│   ├── core.cpp                 # 메모리 관리, ECS
-│   ├── types.h                  # 구조체 정의 (Unit, Tile 등)
-│   │
-│   ├── systems/                 # 게임 로직
-│   │   ├── combat_system.cpp    # 전투
-│   │   ├── save_system.cpp      # 저장/로드
-│   │   └── physics_system.cpp   # 충돌, 이동
-│   │
-│   └── ai/                      # 하이브마인드
-│       ├── hive_system.cpp      # 목표 결정
-│       ├── ai_system.cpp        # 유닛 제어
-│       ├── decision.cpp         # 의사결정
-│       └── action_loader.cpp    # JSON 파싱
+├── asset/
+│   ├── asset.h
+│   └── asset.cpp             # 파일 → SDL_Texture* 변환 (Path_to_Texture)
 │
-├── render/                      # 렌더링만 담당
-│   ├── render.h                 # 외부 API
-│   ├── render.cpp               # 렌더링 파이프라인
-│   ├── camera.cpp               # 카메라
-│   ├── animation.cpp            # 애니메이션
-│   ├── font.cpp                 # 폰트
-│   └── shader/                  # 쉐이더
-│       └── ...
-│
-├── world/                       # 맵/월드 관련
+└── core/
+    ├── core.h
+    ├── core.cpp              # ECS, 게임루프 연결
+    ├── memory.h
+    └── memory.cpp            # UnitStorage, append_unit, set_memory_unit
+
+game/
+├── units/
+│   ├── units.h
+│   └── units.cpp             # Unit/Tile 구조체, 스탯 정의
+├── world/
 │   ├── world.h
-│   ├── world.cpp
-│   ├── seed.cpp                 # 맵 생성 (Perlin)
-│   └── tile.cpp                 # 타일 관리
-│
-├── asset/                       # 리소스 관리
-│   ├── asset_manager.h
-│   ├── asset_manager.cpp        # 텍스처/사운드 로드
-│   └── texture/
-│       └── ...
-│
-├── data/                        # JSON 데이터
-│   ├── actions.json
-│   ├── unit_types.json
-│   ├── hive_config.json
-│   └── balance.json
-│
-├── mods/                        # 모드 지원
-│   └── ...
-│
-├── save/                        # 세이브 파일
-│   └── ...
-│
-└── tools/                       # 개발 도구 (Python)
-    └── ...
+│   ├── world.cpp             # 타일 맵 생성 및 렌더링
+│   └── seed.cpp              # Perlin 노이즈 맵 생성
+├── ai/
+│   ├── ai.h
+│   ├── ai.cpp                # 유닛 제어
+│   ├── hive.h
+│   └── hive.cpp              # 하이브마인드, 목표 결정
+├── action/
+│   ├── action.h
+│   ├── action.cpp            # 함수 포인터 테이블
+│   └── action_loader.cpp     # action.json 파싱
+├── asset/
+│   ├── game_asset.h
+│   └── game_asset.cpp        # buildings/character/tiles 분류 (Load_Asset)
+└── data/
+    ├── asset.json
+    ├── action.json
+    ├── balance.json
+    └── hive_config.json
+
+tools/
+└── action_tool.py
+
+main.cpp
+main.h
 ```

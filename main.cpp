@@ -17,7 +17,7 @@ int main()
     // 7. 리소스 정리
 
 
-    // 1. SDL 초기화
+    // 1. Window / Renderer 생성 및 SDL 초기화
     window_info window_setting {
         .window_name = "test_game",
         .window = nullptr,
@@ -27,30 +27,8 @@ int main()
         .Blue = 255,
         .Bright = 255
     };
-
-    SDL_Window* window = SDL_CreateWindow(
-        "test_game",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        SCREEN_WIDTH,
-        SCREEN_HEIGHT,
-        SDL_WINDOW_SHOWN
-    );
-
-    SDL_Rect destRect = {128, 128, 300, 300};
-
-    window_setting.window = window;
-    if (!window_setting.window) {
-        std::cout << "Window Creation Error: " << SDL_GetError() << std::endl;
-        return 0;
-    }
-
-    window_setting.renderer = SDL_CreateRenderer(window, -1, 0);
-    if (!window_setting.renderer) {
-        std::cout << "Renderer Creation Error: " << SDL_GetError() << std::endl;
-        return 0;
-    }
-
+    window::Create_window(&window_setting, SDL_WINDOW_SHOWN);
+    CreateText::TTF_start(window_setting.renderer);
     SDL_SetRenderDrawColor(
         window_setting.renderer,
         window_setting.Red,
@@ -59,14 +37,9 @@ int main()
         window_setting.Bright
     );
 
-
-    SDL_Init(SDL_INIT_VIDEO);
-    IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
-    CreateText::TTF_start(window_setting.renderer);
-    Asset data = AssetManager::Load_Asset(window_setting.renderer, "project/data/asset.json");
-
-
-    
+    // 2. AssetManager 초기화
+    SDL_Rect destRect = {128, 128, 300, 300};
+    Asset data = AssetManager::Load_Asset(window_setting.renderer, "Game/data/asset.json");
 
 
     int i = 5;

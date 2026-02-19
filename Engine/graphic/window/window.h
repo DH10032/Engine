@@ -1,5 +1,5 @@
-#ifndef RENDER
-#define RENDER
+#ifndef WINDOW
+#define WINDOW
 
 #include <iostream>
 #include <fstream>
@@ -13,21 +13,18 @@
 #define  SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
-/**
- * @brief 윈도우 설정을 위해 필요한 데이터
- */
-
 typedef struct {
-    const std::string window_name;
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-    int Red;
-    int Green;
-    int Blue;
-    int Bright;
+   const char* window_name;
+   SDL_Window* window;
+   SDL_Renderer* renderer;
+   int Red;
+   int Green;
+   int Blue;
+   int Bright;
 } window_info;
 
-namespace GameGraphicApi{
+namespace window{
+
     /**
      * @date 26/2/15
      * @author 이동훈
@@ -45,27 +42,12 @@ namespace GameGraphicApi{
     */
     void Create_window(window_info* info, SDL_WindowFlags flags);
     
-    /**
-    * @brief jpg,png,bmp를 SDL_Texture*로 변환해주는 함수
-    * @param[in] renderer window에 렌러딩할 객체들
-    * @param[in] path Texture로 바꿀 path
-    * @param[out] SDL_Texture* 경로를 변환한 Texture
-    * @return 확장자가 정상적일 경우, Texture, 확장자가 지원하지 않을 경우, nullptr
-    */
-    SDL_Texture* Path_to_Texture(SDL_Renderer* renderer, const std::string path);
-    
-
 
     /**
     * @brief 윈도우 내 모든 렌더링 제거및 위도우창 닫기(SDL종료)
     */
     void Destroy_window(window_info* window_setting);
-}
 
-namespace CreateText { // 미리 선언해두기
-    void TTF_start(SDL_Renderer* renderer);
-    void TTF_Create(const char* txtContent, int x, int y, int w, int h);
-    void TTF_end();
 }
 
 #endif
