@@ -4,14 +4,14 @@
 namespace Animation{
     void Assemble_Texture(SDL_Renderer* renderer, SDL_Texture* picture ,std::vector<Parts> p){
 
-        for(Parts& part:p){
+        for(Parts part:p){
             SDL_RenderCopyEx(
                 renderer,       // 렌더러
                 picture,        // 텍스처
-                NULL,           // 소스 영역 (NULL = 전체)
+                &(part.src),           // 소스 영역 (NULL = 전체)
                 &(part.dst),      // 목적지 영역
-                0,           // 각도 (도 단위, 시계방향)
-                NULL,           // 회전 중심점 (NULL = 중앙)
+                part.angle,        // 각도 (도 단위, 시계방향)
+                &(part.center),    // 회전 중심점 (NULL = 중앙)
                 SDL_FLIP_NONE   // 뒤집기 옵션
             );
         }

@@ -13,7 +13,6 @@ namespace AssetManager{
         // 확장자에 따른 SDL_Surface 변환
         if (extension == ".png" || extension == ".jpg"){
             surface = IMG_Load(path.c_str());
-            std::cout << surface << std::endl;
         }
     
         else if (extension == ".bmp")

@@ -40,6 +40,7 @@ int main()
     // 2. AssetManager 초기화
     SDL_Rect destRect = {128, 128, 300, 300};
     Asset data = AssetManager::Load_Asset(window_setting.renderer, "Game/data/asset.json");
+    
     std::vector<Parts> p = {
         {
             {8, 8, 16, 16},
@@ -75,6 +76,7 @@ int main()
 
 
     for(;;){
+        SDL_RenderClear(window_setting.renderer);
         Animation::Assemble_Texture(window_setting.renderer, data.character[8], p);
         SDL_RenderPresent(window_setting.renderer);
         SDL_Delay(30);
