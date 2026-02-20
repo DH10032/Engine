@@ -17,6 +17,7 @@ namespace worldspace{
 
 
     int worldInit();
+    int waterInit();
 
     typedef struct{
             double bright;
@@ -81,5 +82,5 @@ namespace PerlinNoiseSpace{
             return (lerp(x1, x2, v) + 1.0) / 2.0; // 0~1 정규화
         }
     };
-    double fbm(const PerlinNoise& perlin, double x, double y, int octaves, double persistence, double lacunarity);
+    double fbm(const PerlinNoise& perlin, double x, double y, int octaves, double persistence, double lacunarity, double amplitude = 1.0, double frequency = 1.0);
 }

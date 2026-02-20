@@ -3,10 +3,8 @@
 namespace PerlinNoiseSpace{
 
 
-    double fbm(const PerlinNoise& perlin, double x, double y, int octaves, double persistence, double lacunarity)
+    double fbm(const PerlinNoise& perlin, double x, double y, int octaves, double persistence, double lacunarity, double amplitude = 1.0, double frequency = 1.0)
     {
-        double amplitude = 1.0;
-        double frequency = 1.0;
         double total = 0.0;
         double maxValue = 0.0;
 
