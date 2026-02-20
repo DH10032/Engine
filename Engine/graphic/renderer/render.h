@@ -1,7 +1,6 @@
 #ifndef RENDER
 #define RENDER
 
-#include "../../../Game/world/world.h"
 #include "../../../main.h"
 #include <iostream>
 #include <fstream>

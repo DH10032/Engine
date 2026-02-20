@@ -12,8 +12,8 @@
 
 namespace worldspace{
 
-    const int width = 1000;
-    const int height = 1000;
+    const int width = 1280;
+    const int height = 720;
 
 
     int worldInit();
@@ -23,9 +23,8 @@ namespace worldspace{
             SDL_Rect dst;
         }tile;
 
-    tile& GetTile(int x, int y);
-
     extern tile world[width][height];
+    extern tile water[width][height];
 }
 
 namespace PerlinNoiseSpace{
