@@ -52,6 +52,9 @@ namespace PerlinNoiseSpace{
 
             std::default_random_engine engine(seed);
             std::shuffle(p.begin(), p.end(), engine);
+            for (size_t i = 0; i < p.size(); ++i) {
+                std::cout << p[i] << std::endl;
+            }
 
             p.insert(p.end(), p.begin(), p.end());
         }
@@ -77,6 +80,7 @@ namespace PerlinNoiseSpace{
             double x2 = lerp(grad(ab, xf, yf - 1),
                             grad(bb, xf - 1, yf - 1), u);
 
+                            
             return (lerp(x1, x2, v) + 1.0) / 2.0; // 0~1 정규화
         }
     };

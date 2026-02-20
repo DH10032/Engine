@@ -24,8 +24,11 @@ namespace GameGraphicApi{
             for (int y = 0; y < 99; y++) {
 
                 
-                float bright = worldspace::GetTile(x,y).bright * 255;
-                SDL_SetRenderDrawColor(renderer, 30, 255, 30, bright);
+                //Uint8 bright = static_cast<Uint8>(worldspace::GetTile(x,y).bright);
+                int bright = worldspace::GetTile(x,y).bright;
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                SDL_RenderFillRect(renderer, &worldspace::GetTile(x,y).dst);
+                SDL_SetRenderDrawColor(renderer, 0, bright, 0, 255);
                 SDL_RenderFillRect(renderer, &worldspace::GetTile(x,y).dst);
             }
         }
