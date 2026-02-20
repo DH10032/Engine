@@ -7,11 +7,17 @@ namespace Animation{
         int x = 0;
         int y = 0;
         int r = 16;
+        float s = sin(1);
+        float c = cos(1);
+
         for(Parts part:p){
-            // part.dst.x = x;
-            // part.dst.y = y;
-            // r sin theta
-            // r cosin theta
+
+            glm::mat3 m = glm::mat3(
+                1, 0, 0,  // 1열
+                0, 1, 0,  // 2열
+                0, 0, 1   // 3열
+            );
+
             SDL_RenderCopyEx(
                 renderer,           // 렌더러
                 picture,            // 텍스처
