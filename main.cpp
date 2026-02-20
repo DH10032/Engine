@@ -90,8 +90,9 @@ int main()
 
     //     i = i + j;
     while(true){
-    GameGraphicApi::Set_draw_all(window_setting.renderer);
-    SDL_Delay(30);}
+        GameGraphicApi::Set_draw_all(window_setting.renderer);
+        SDL_Delay(30);
+    }
 }
 
 
