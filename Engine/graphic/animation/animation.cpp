@@ -4,19 +4,19 @@
 namespace Animation{
 
     void Assemble_Texture(SDL_Renderer* renderer, SDL_Texture* picture ,std::vector<Parts> p){
-        int x = 0;
-        int y = 0;
-        int r = 16;
-        float s = sin(1);
-        float c = cos(1);
-
+        // int x = 0;
+        // int y = 0;
+        // int r = 16;
+        // float s = sin(1);
+        // float c = cos(1);
+        // float radian = M_PI;
         for(Parts part:p){
 
-            glm::mat3 m = glm::mat3(
-                1, 0, 0,  // 1열
-                0, 1, 0,  // 2열
-                0, 0, 1   // 3열
-            );
+            // glm::mat3 m = glm::mat3(
+            //     c, -s, 0,  // 1열
+            //     s, c, 0,  // 2열
+            //     0, 0, 1   // 3열
+            // );
 
             SDL_RenderCopyEx(
                 renderer,           // 렌더러
