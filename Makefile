@@ -31,3 +31,4 @@ clean:
 # 목적어 파일만 정리
 rm:
 	rm -f $(OBJS)
+	git rm -f $(OBJS)

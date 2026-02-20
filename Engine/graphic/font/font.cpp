@@ -12,7 +12,7 @@ namespace CreateText{
         if (TTF_Init() == -1){
             std::cout << "Failed to load font." << std::endl;
         } else {
-            bitlimFont = TTF_OpenFont("project/assets/fonts/bitlim.ttf", 30); // 30 뭔지 모르겠음
+            bitlimFont = TTF_OpenFont("Game/assets/fonts/bitlim.ttf", 30); // 30 뭔지 모르겠음
             if(bitlimFont == NULL) {
                 printf("Could not open font! (%s)\n", TTF_GetError());
             }

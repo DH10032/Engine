@@ -48,7 +48,7 @@ namespace AssetManager{
             for (auto& [idx, f] : files.items()){
                 file_name = f;
                 folder_name = folder;
-                path = "project/assets/img/"+folder_name+"/"+file_name;
+                path = "Game/assets/img/"+folder_name+"/"+file_name;
                 IMGs.push_back(Path_to_Texture(renderer, path)); 
             }
             if (folder == "buildings") asset.buildings = IMGs;
