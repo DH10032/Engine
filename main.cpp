@@ -60,30 +60,16 @@ int main()
             {48, 48, 64, 64},
             {200, 328, size, size},
             {size/2, 0},
-            45
+            0
         }
-        // {
-        //     {8, 56, 16, 16},
-        //     {200, 248, 16, 16},
-        //     {8, 48},
-        //     0
-        // },
-        // {
-        //     {56, 56, 16, 16},
-        //     {200, 2064, 16, 16},
-        //     {56, 48},
-        //     0
-        // }
     };
 
-    int j = 1;
+    std::vector<int> action={0, 20, 30};
+    int tmp = 5;
+
     for(;;){
-        if (p[1].angle > 30)
-            j = -1;
-        else if (p[1].angle < -30)
-            j = 1;
-        p[1].angle = p[1].angle + j;
         SDL_RenderClear(window_setting.renderer);
+        Animation::UpdateTraslation(p, action, tmp);
         Animation::Assemble_Texture(window_setting.renderer, data.character[8], p);
         SDL_RenderPresent(window_setting.renderer);
         SDL_Delay(30);

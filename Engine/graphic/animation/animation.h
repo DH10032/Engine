@@ -25,6 +25,8 @@ namespace Animation{
      * @brief Parts를 통해 이미지 조립
      */
     void Assemble_Texture(SDL_Renderer* renderer, SDL_Texture* picture ,std::vector<Parts> p);
+
+    void UpdateTraslation(std::vector<Parts>& part, std::vector<int> action, int tmp);
 }
 
 #endif
