@@ -4,6 +4,9 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <vector>
+#include <glm/glm.hpp>
+#include <cmath>
+
 /*
 1. 이미지에 떨어져있는 몸체 조립
 SDL_Rect

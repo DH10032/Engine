@@ -4,7 +4,14 @@
 namespace Animation{
 
     void Assemble_Texture(SDL_Renderer* renderer, SDL_Texture* picture ,std::vector<Parts> p){
+        int x = 0;
+        int y = 0;
+        int r = 16;
         for(Parts part:p){
+            // part.dst.x = x;
+            // part.dst.y = y;
+            // r sin theta
+            // r cosin theta
             SDL_RenderCopyEx(
                 renderer,           // 렌더러
                 picture,            // 텍스처

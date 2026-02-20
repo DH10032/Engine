@@ -52,16 +52,16 @@ int main()
         },
         {
             {0, 16, 16, 32},
-            {200, 265, size, size},
+            {200, 264, size, size},
             {size/2, 0},
             0
+        },
+        {
+            {48, 48, 64, 64},
+            {200, 328, size, size},
+            {size/2, 0},
+            45
         }
-        // {
-        //     {8, 40, 16, 16},
-        //     {200, 232, 16, 16},
-        //     {8, 32},
-        //     45
-        // },
         // {
         //     {8, 56, 16, 16},
         //     {200, 248, 16, 16},
@@ -76,9 +76,13 @@ int main()
         // }
     };
 
-
+    int j = 1;
     for(;;){
-        p[1].angle = p[1].angle + 3;
+        if (p[1].angle > 30)
+            j = -1;
+        else if (p[1].angle < -30)
+            j = 1;
+        p[1].angle = p[1].angle + j;
         SDL_RenderClear(window_setting.renderer);
         Animation::Assemble_Texture(window_setting.renderer, data.character[8], p);
         SDL_RenderPresent(window_setting.renderer);

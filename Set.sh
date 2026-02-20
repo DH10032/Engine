@@ -51,6 +51,11 @@ if ! command -v nlohmann-json3-dev &> /dev/null; then
     sudo apt-get install -y nlohmann-json3-dev -qq
 fi
 
+# 행렬 연산 용도 라이브러리
+if ! command -v libglm-dev &> /dev/null; then
+    sudo apt-get install -y libglm-dev -qq
+fi
+
 echo "VNC 서버 시작 완료!"
 
 # DISPLAY 설정 (중요: source로 실행해야 적용됨)
