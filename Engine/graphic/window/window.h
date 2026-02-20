@@ -10,8 +10,8 @@
 #include <cstring>
 
 // 화면 등 기본값
-#define  SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#define  SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
 
 typedef struct {
    const char* window_name;

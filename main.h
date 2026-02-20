@@ -13,10 +13,5 @@
 #include "Game/world/world.h"
 
 
-// 화면 등 기본값
-#define SCREEN_WIDTH    800
-#define SCREEN_HEIGHT   600
-
-
 
 #endif

@@ -11,6 +11,11 @@
 
 
 namespace worldspace{
+
+    const int width = 1000;
+    const int height = 1000;
+
+
     int worldInit();
 
     typedef struct{
@@ -20,8 +25,6 @@ namespace worldspace{
 
     tile& GetTile(int x, int y);
 
-    const int width = 100;
-    const int height = 100;
     extern tile world[width][height];
 }
 
@@ -49,13 +52,8 @@ namespace PerlinNoiseSpace{
         PerlinNoise(unsigned int seed = 1024) {
             p.resize(256);
             std::iota(p.begin(), p.end(), 0);
-
             std::default_random_engine engine(seed);
             std::shuffle(p.begin(), p.end(), engine);
-            for (size_t i = 0; i < p.size(); ++i) {
-                std::cout << p[i] << std::endl;
-            }
-
             p.insert(p.end(), p.begin(), p.end());
         }
 

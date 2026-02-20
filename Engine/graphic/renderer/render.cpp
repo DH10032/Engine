@@ -20,14 +20,14 @@ namespace GameGraphicApi{
         SDL_RenderClear(renderer);
         worldspace::worldInit();
 
-        for (int x = 0; x < 99; x++) {
-            for (int y = 0; y < 99; y++) {
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_Rect rect = {0, 0, 600, 600};
+        SDL_RenderFillRect(renderer, &rect);
 
-                
-                //Uint8 bright = static_cast<Uint8>(worldspace::GetTile(x,y).bright);
+        for (int x = 0; x < worldspace::width; x++) {
+            for (int y = 0; y < worldspace::width; y++) {
+
                 int bright = worldspace::GetTile(x,y).bright;
-                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-                SDL_RenderFillRect(renderer, &worldspace::GetTile(x,y).dst);
                 SDL_SetRenderDrawColor(renderer, 0, bright, 0, 255);
                 SDL_RenderFillRect(renderer, &worldspace::GetTile(x,y).dst);
             }

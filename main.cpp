@@ -37,6 +37,14 @@ int main()
         window_setting.Bright
     );
 
+
+    int w, h;
+    SDL_GetRendererOutputSize(window_setting.renderer, &w, &h);
+    printf("Output size: %d x %d\n", w, h);
+
+    SDL_GetWindowSize(window_setting.window, &w, &h);
+    printf("Window size: %d x %d\n", w, h);
+
     // 2. AssetManager 초기화
     // SDL_Rect destRect = {128, 128, 300, 300};
     // Asset data = AssetManager::Load_Asset(window_setting.renderer, "Game/data/asset.json");
