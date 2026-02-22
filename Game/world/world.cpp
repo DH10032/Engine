@@ -7,11 +7,8 @@ namespace worldspace{
         
         PerlinNoiseSpace::PerlinNoise perlin(1024);
 
-        std::vector<std::vector<double>> heightMap(width, std::vector<double>(height));
-
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-
 
                 double nx = (double)x / width;
                 double ny = (double)y / height;
@@ -23,33 +20,47 @@ namespace worldspace{
 
         return 0;
     }
-    
-    tile water[width][height]{};
-    int waterInit() {
+/*
+    ## 바이옴 변수
+        높이
+        습기
+        온도
+        습도
 
-        
-        PerlinNoiseSpace::PerlinNoise perlin(1024);
+    ## 바이옴 리스트
 
-        std::vector<std::vector<double>> heightMap(width, std::vector<double>(height));
+    - 산
+        - 높이 높음
 
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+    - 고산호수
+        - 높이 매우 높음
+        - 습기 매우 높음
 
-                double nx = (double)x / width;
-                double ny = (double)y / height;
+    - 바다
+        - 높이 낮음
+        - 습기 매우 높음
 
-                water[x][y].dst = {x, y, 1, 1};
+    - 숲
+        - 온도 중간
+        - 습기 중간
 
-                double watered = PerlinNoiseSpace::fbm(perlin, nx, ny, 4, 0.7, 2, 1, 6);
-                if (0.6 < watered){
-                    water[x][y].bright = watered * watered * watered * watered * 400;
-                }else{
-                    water[x][y].bright = 0.0;
-                }
-            }
-        }
-        
+    - 사막
+        - 온도 높음
+        - 습기 낮음
 
-        return 0;
-    }
+    - 정글
+        - 온도 높음
+        - 습기 높음
+
+    - 사바나
+        - 온도 높음
+        - 습기 중간
+
+    - 타이가
+        - 온도 낮음
+        - 습기 낮음
+
+    - 툰드라
+        - 온도 매우 낮음
+.                           */
 }

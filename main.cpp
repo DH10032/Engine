@@ -48,7 +48,6 @@ int main()
 
     // 3. World 생성
     worldspace::worldInit();
-    worldspace::waterInit();
     SDL_SetRenderDrawBlendMode(window_setting.renderer, SDL_BLENDMODE_BLEND);
 
 
@@ -60,13 +59,6 @@ int main()
                 int bright = worldspace::world[x][y].bright;
                 SDL_SetRenderDrawColor(window_setting.renderer, 0, 255, 0, bright);
                 SDL_RenderFillRect(window_setting.renderer, &worldspace::world[x][y].dst);
-            }
-        }
-        for (int x = 0; x < worldspace::width; x++){ // 물 표현
-            for (int y = 0; y < worldspace::height; y++){
-                int watered = worldspace::water[x][y].bright;
-                SDL_SetRenderDrawColor(window_setting.renderer, 0, 0, 255 - watered, watered);
-                SDL_RenderFillRect(window_setting.renderer, &worldspace::water[x][y].dst);
             }
         }
 

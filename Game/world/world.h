@@ -20,7 +20,7 @@ namespace worldspace{
     int waterInit();
 
     typedef struct{
-            double bright;
+            int bright;
             SDL_Rect dst;
         }tile;
 
