@@ -5,10 +5,16 @@
 #include <SDL2/SDL_image.h>
 #include <vector>
 #include <numeric>
+#include <string>
 #include <random>
 #include <cmath>
+#include <array>
 #include <algorithm>
 #include <stdio.h>
+#include <nlohmann/json.hpp>
+#include <fstream>
+
+using json = nlohmann::json;
 
 
 namespace worldspace{
@@ -24,8 +30,8 @@ namespace worldspace{
             double height;
             double temperature;
             double humidity;
-            int color[4];
-            char* tileType;
+            std::array<int,4> color;
+            std::string tileType;
             SDL_Rect dst;
         }tile;
 

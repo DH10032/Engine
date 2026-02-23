@@ -70,10 +70,6 @@ int main()
                 //std::cout  << "[" << color[0] << "," << color[1] << "," << color[2] << "," << color[3] << "]" << std::endl;
                 SDL_SetRenderDrawColor(window_setting.renderer, color[0], color[1], color[2], color[3]);
                 SDL_RenderFillRect(window_setting.renderer, &worldspace::world[x][y].dst);
-
-                SDL_Rect test = {100,100,100,100};
-                SDL_SetRenderDrawColor(window_setting.renderer, 255,0,0,255);
-                SDL_RenderFillRect(window_setting.renderer, &test);
             }
         }
 
