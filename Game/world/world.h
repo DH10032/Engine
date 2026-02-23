@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <vector>
 #include <numeric>
 #include <random>
@@ -20,7 +21,11 @@ namespace worldspace{
     int waterInit();
 
     typedef struct{
-            int bright;
+            double height;
+            double temperature;
+            double humidity;
+            int color[4];
+            char* tileType;
             SDL_Rect dst;
         }tile;
 

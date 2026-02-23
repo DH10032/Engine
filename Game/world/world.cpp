@@ -1,11 +1,12 @@
 #include "world.h"
 
 namespace worldspace{
+    int SEED = 1024;
     tile world[width][height]{};
     int worldInit() {
 
         
-        PerlinNoiseSpace::PerlinNoise perlin(1024);
+        PerlinNoiseSpace::PerlinNoise perlin(SEED);
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -13,7 +14,8 @@ namespace worldspace{
                 double nx = (double)x / width;
                 double ny = (double)y / height;
                 world[x][y].dst = {x, y, 1, 1};
-                world[x][y].bright = PerlinNoiseSpace::fbm(perlin, nx, ny, 6, 0.4, 3) * 255.0;
+                world[x][y].color[1] = PerlinNoiseSpace::fbm(perlin, nx, ny, 6, 0.4, 3) * 255.0;
+                world[x][y].color[3] = 255;
             }
         }
         
@@ -23,7 +25,6 @@ namespace worldspace{
 /*
     ## 바이옴 변수
         높이
-        습기
         온도
         습도
 

@@ -28,7 +28,6 @@ int main()
         .Bright = 255
     };
     window::Create_window(&window_setting, SDL_WINDOW_SHOWN);
-    CreateText::TTF_start(window_setting.renderer);
     SDL_SetRenderDrawColor(
         window_setting.renderer,
         window_setting.Red,
@@ -36,14 +35,23 @@ int main()
         window_setting.Blue,
         window_setting.Bright
     );
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) {
+        printf("SDL Init Error: %s\n", SDL_GetError());
+        return -1;
+    }
 
+    // SDL_image 초기화
+    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+        printf("IMG Init Error: %s\n", IMG_GetError());
+        return -1;
+    }
 
-    int w, h;
-    SDL_GetRendererOutputSize(window_setting.renderer, &w, &h);
-    printf("Output size: %d x %d\n", w, h);
-
-    SDL_GetWindowSize(window_setting.window, &w, &h);
-    printf("Window size: %d x %d\n", w, h);
+    // SDL_ttf 초기화
+    if (TTF_Init() == -1) {
+        printf("TTF Init Error: %s\n", TTF_GetError());
+        return -1;
+    }
+    CreateText::TTF_start(window_setting.renderer);
 
 
     // 3. World 생성
@@ -52,13 +60,20 @@ int main()
 
 
     while(true) {
-        GameGraphicApi::Set_draw_all(window_setting.renderer);
+        SDL_SetRenderDrawColor(window_setting.renderer, 255,255,255,255);
+        SDL_RenderClear(window_setting.renderer);
+
         
         for (int x = 0; x < worldspace::width; x++){ // 지형 높이 표현
             for (int y = 0; y < worldspace::height; y++){
-                int bright = worldspace::world[x][y].bright;
-                SDL_SetRenderDrawColor(window_setting.renderer, 0, 255, 0, bright);
+                auto color = worldspace::world[x][y].color;
+                //std::cout  << "[" << color[0] << "," << color[1] << "," << color[2] << "," << color[3] << "]" << std::endl;
+                SDL_SetRenderDrawColor(window_setting.renderer, color[0], color[1], color[2], color[3]);
                 SDL_RenderFillRect(window_setting.renderer, &worldspace::world[x][y].dst);
+
+                SDL_Rect test = {100,100,100,100};
+                SDL_SetRenderDrawColor(window_setting.renderer, 255,0,0,255);
+                SDL_RenderFillRect(window_setting.renderer, &test);
             }
         }
 
@@ -72,6 +87,7 @@ void Destroy_window(window_info* window_setting){
     SDL_DestroyRenderer(window_setting->renderer);
     SDL_DestroyWindow(window_setting->window);
     CreateText::TTF_end();
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
 }
