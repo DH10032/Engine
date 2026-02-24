@@ -67,7 +67,6 @@ int main()
         for (int x = 0; x < worldspace::width; x++){ // 지형 높이 표현
             for (int y = 0; y < worldspace::height; y++){
                 auto color = worldspace::world[x][y].color;
-                //std::cout  << "[" << color[0] << "," << color[1] << "," << color[2] << "," << color[3] << "]" << std::endl;
                 SDL_SetRenderDrawColor(window_setting.renderer, color[0], color[1], color[2], color[3]);
                 SDL_RenderFillRect(window_setting.renderer, &worldspace::world[x][y].dst);
             }
