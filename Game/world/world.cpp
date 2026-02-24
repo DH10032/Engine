@@ -22,39 +22,17 @@ namespace worldspace{
 
         for (int x = 0; x < width; x++) { // 펄린 변수 부여, 기본값 초기화
             for (int y = 0; y < height; y++) {
-                double nx = (double)x / width;
-                double ny = (double)y / height;
+                double nx = (double)x / width * 5;
+                double ny = (double)y / height * 5;
                 world[x][y].dst = {x, y, 1, 1};
-                world[x][y].height = PerlinNoiseSpace::fbm(perlin1, nx, ny, 6, 0.5, 2); // 6,0.5,2 -> min = 8, MAX = 40, average = 22
-                world[x][y].temperature = PerlinNoiseSpace::fbm(perlin1, nx, ny, 6, 0.5, 3);
-                world[x][y].humidity = PerlinNoiseSpace::fbm(perlin1, nx, ny, 6, 0.4, 3);
-
-                world[x][y].height = (world[x][y].height * world[x][y].height) * 100.0; // 0 ~ 100
-                world[x][y].temperature = (world[x][y].temperature * world[x][y].temperature) * 60.0 - 20.0; // -20 ~ 40
-                world[x][y].humidity = (world[x][y].humidity * world[x][y].humidity) * 200.0 - 100.0; // -100 ~ 100
+                world[x][y].height = PerlinNoiseSpace::fbm(perlin1, nx, ny, 10, 0.5, 2); //6,0.5,2 -> min = 0.02, MAX = 0.7, average = 0.26 graph = _/\_
+                world[x][y].temperature = PerlinNoiseSpace::fbm(perlin2, nx, ny, 6, 0.5, 3);
+                world[x][y].humidity = PerlinNoiseSpace::fbm(perlin3, nx, ny, 6, 0.4, 3);
 
                 world[x][y].tileType = "plain";
                 world[x][y].color = {0,255,0,255};
             }
         }
-
-        double mh = 22;
-        double Mh = 22;
-        int totalh = 0;
-        int num = 0;
-        for (int x = 0; x < width; x++) { // test
-            for (int y = 0; y < height; y++) {
-                if (world[x][y].height < mh) mh = world[x][y].height;
-                if (world[x][y].height > Mh) Mh = world[x][y].height;
-                totalh += world[x][y].height;
-                num++;
-            }
-        }
-        std::cout << mh << std::endl;
-        std::cout << Mh << std::endl;
-        std::cout << totalh << std::endl;
-        std::cout << num << std::endl;
-        std::cout << (totalh / num) << std::endl;
 
         for (int x = 0; x < width; x++) { // 타일 설정
             for (int y = 0; y < height; y++) {
@@ -62,25 +40,27 @@ namespace worldspace{
                 double temp = world[x][y].temperature;
                 double hum = world[x][y].humidity;
                 std::string& t = world[x][y].tileType;
-                if (54 < h){           // 산
-                    if (temp < 10){
-                        t = "ice";
-                    }else if(57.5 < h){
-                        t = "water";
-                    }else{
-                        t = "mountain";
-                    }
+                if (0.58 < h){           // 산
+                    t = "mountain";
+                    if      (temp < 0.4)     t = "ice";
+                    else if (0.7 < h)        t = "water";
                 }
-                else if (36.3 < h <= 54){  // 평지
-                    if (10 < temp){
-                        if      (20 < hum)  t = "jungle";
-                        else if (hum < 0)   t = "dessert";
-                        else                t = "savanna";
+                else if (0.38 < h && h <= 0.58){  // 평지
+                    if (0.53 < temp){
+                        if      (0.52 < hum)  t = "jungle";
+                        else if (hum < 0.4)   t = "dessert";
+                        else if (0.55 < temp) t = "savanna";
+                    }
+                    else if (0.4 < temp && temp <= 0.53){
+                        t = "plain";
+                    }
+                    else{
+                        t = "forest";
                     }
                 }
                 else{                      // 바다
-                    if (h < 35) t = "water";
-                    else        t = "sand";
+                    if (h < 0.355) t = "water";
+                    else           t = "sand";
                 }
             }
         }        
