@@ -69,8 +69,7 @@ int main()
 
     for(;;){
         SDL_RenderClear(window_setting.renderer);
-        Animation::UpdateTraslation(p, action, tmp);
-        Animation::Assemble_Texture(window_setting.renderer, data.character[8], p);
+        Animation::Render_Entity(window_setting.renderer, data.character[8], p);
         SDL_RenderPresent(window_setting.renderer);
         SDL_Delay(30);
     }
