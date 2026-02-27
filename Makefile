@@ -1,6 +1,6 @@
 CC = g++
 Target = main
-lib = -lSDL2 -lSDL2_image -lSDL2_ttf -lEngine
+lib = -lEngine -lSDL2 -lSDL2_image -lSDL2_ttf
 
 Game_SRCS = $(shell find ./Game/ -name '*.cpp')
 Engine_SRCS = $(shell find ./Engine/ -name '*.cpp')
@@ -24,5 +24,5 @@ $(Target): $(Game_OBJS)
 clean:
 	rm -f $(Game_OBJS) $(Engine_OBJS) libEngine.a $(Target)
 
-gitClean:
+gitclean:
 	git rm -f $(Game_OBJS) $(Engine_OBJS) libEngine.a $(Target)

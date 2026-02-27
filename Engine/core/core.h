@@ -1,4 +1,5 @@
-
+#ifndef CORE
+#define CORE
 
 struct
 {
@@ -9,3 +10,5 @@ struct
 {
     /* data */
 }Entity;
+
+#endif

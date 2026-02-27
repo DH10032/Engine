@@ -1,27 +1,11 @@
 #ifndef WINDOW
 #define WINDOW
 
-#include <iostream>
-#include <fstream>
-#include <filesystem>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <cstring>
+#include "../../hal/HAL.h"
 
 // 화면 등 기본값
 #define  SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
-
-typedef struct {
-   const char* window_name;
-   SDL_Window* window;
-   SDL_Renderer* renderer;
-   int Red;
-   int Green;
-   int Blue;
-   int Bright;
-} window_info;
 
 namespace window{
 

@@ -18,59 +18,11 @@ int main()
 
 
     // 1. Window / Renderer 생성 및 SDL 초기화
-    window_info window_setting {
-        .window_name = "test_game",
-        .window = nullptr,
-        .renderer = nullptr,
-        .Red = 255,
-        .Green = 255,
-        .Blue = 255,
-        .Bright = 255
-    };
-    window::Create_window(&window_setting, SDL_WINDOW_SHOWN);
-    CreateText::TTF_start(window_setting.renderer);
-    SDL_SetRenderDrawColor(
-        window_setting.renderer,
-        window_setting.Red,
-        window_setting.Green,
-        window_setting.Blue,
-        window_setting.Bright
-    );
-
-    // 2. AssetManager 초기화
-    SDL_Rect destRect = {128, 128, 300, 300};
-    Asset data = AssetManager::Load_Asset(window_setting.renderer, "Game/data/asset.json");
-    
-    int size = 64;
-
-    std::vector<Parts> p = {
-        {
-            {0, 0, 16, 16},
-            {200, 200, size, size},
-            {size/2, 0},
-            0
-        },
-        {
-            {0, 16, 16, 32},
-            {200, 264, size, size},
-            {size/2, 0},
-            0
-        },
-        {
-            {48, 48, 64, 64},
-            {200, 328, size, size},
-            {size/2, 0},
-            0
-        }
-    };
-
-    std::vector<int> action={0, 20, 30};
-    int tmp = 5;
+    Engine::Canvas Window;
+    Window.LoadAsset("Game/data/asset.json");
 
     for(;;){
-        SDL_RenderClear(window_setting.renderer);
-        Animation::Render_Entity(window_setting.renderer, data.character[8], p);
-        SDL_RenderPresent(window_setting.renderer);
+        Window.DrawObject();
         SDL_Delay(30);
     }
 }
