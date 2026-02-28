@@ -5,7 +5,7 @@
 */
 namespace Animation{
 
-    void Render_Entity(SDL_Renderer* renderer, SDL_Texture* picture ,std::vector<Parts> p){
+    void Render_Entity(SDL_Renderer* renderer, Texture picture ,std::vector<Parts> p){
 
         for(Parts part:p){
             SDL_RenderCopyEx(

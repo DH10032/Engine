@@ -14,6 +14,8 @@
 
 using json = nlohmann::json;
 
+typedef SDL_Texture* Texture;
+
 /**
  * @brief Asset을 변환해 폴더별로 분류해 저장가능한 자료
  * 

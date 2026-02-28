@@ -4,6 +4,7 @@
 #include "../graphic/window/window.h"
 #include "../graphic/font/font.h"
 #include "../core/assetManager/assetManager.h"
+#include "../graphic/animation/animation.h"
 
 namespace Engine{
     class Canvas{
@@ -17,6 +18,8 @@ namespace Engine{
             .Blue = 255,
             .Bright = 255
         };
+
+        Asset data;
 
         void ShowWindow(){
             window::Create_window(&window_setting, SDL_WINDOW_SHOWN);
@@ -35,12 +38,12 @@ namespace Engine{
         }
 
         void LoadAsset(std::string path){
-            AssetManager::Load_Asset(window_setting.renderer, path);
+            data = AssetManager::Load_Asset(window_setting.renderer, path);
         }
 
         void DrawObject(){
             SDL_RenderClear(window_setting.renderer);
-            //Animation::Render_Entity(window_setting.renderer, data.character[8], p);
+            Animation::Render_Entity(window_setting.renderer, data.character[8], p);
             SDL_RenderPresent(window_setting.renderer);
         }
 
