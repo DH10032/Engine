@@ -20,6 +20,30 @@ namespace Engine{
         };
 
         Asset data;
+        int size = 64;
+        std::vector<Parts> p = {
+            {
+                9,
+                {0, 0, 16, 16},
+                {200, 200, size, size},
+                {size/2, 0},
+                0
+            },
+            {
+                9,
+                {0, 16, 16, 32},
+                {200, 264, size, size},
+                {size/2, 0},
+                0
+            },
+            {
+                9,
+                {48, 48, 64, 64},
+                {200, 328, size, size},
+                {size/2, 0},
+                0
+            }
+        };
 
         void ShowWindow(){
             window::Create_window(&window_setting, SDL_WINDOW_SHOWN);
@@ -43,8 +67,16 @@ namespace Engine{
 
         void DrawObject(){
             SDL_RenderClear(window_setting.renderer);
-            Animation::Render_Entity(window_setting.renderer, data.character[8], p);
+            Animation::Render_Entity(window_setting.renderer, data, p);
             SDL_RenderPresent(window_setting.renderer);
+        }
+
+        void Destroy_Object(){
+            SDL_DestroyRenderer(window_setting.renderer);
+            SDL_DestroyWindow(window_setting.window);
+            CreateText::TTF_end();
+            IMG_Quit();
+            SDL_Quit();
         }
 
         private:

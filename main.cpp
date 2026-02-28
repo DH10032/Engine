@@ -19,19 +19,13 @@ int main()
 
     // 1. Window / Renderer 생성 및 SDL 초기화
     Engine::Canvas Window;
+    Window.ShowWindow();
     Window.LoadAsset("Game/data/asset.json");
 
     for(;;){
         Window.DrawObject();
         SDL_Delay(30);
     }
-}
 
-
-void Destroy_window(window_info* window_setting){
-    SDL_DestroyRenderer(window_setting->renderer);
-    SDL_DestroyWindow(window_setting->window);
-    CreateText::TTF_end();
-    IMG_Quit();
-    SDL_Quit();
+    Window.Destroy_Object();
 }

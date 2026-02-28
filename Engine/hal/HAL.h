@@ -30,10 +30,7 @@ typedef SDL_Texture* Texture;
  * @note 수정될 수도 있음
  */
 typedef struct {
-    std::vector<SDL_Texture*> buildings;
-    std::vector<SDL_Texture*> character;
-    std::vector<SDL_Texture*> interactives;
-    std::vector<SDL_Texture*> tiles;
+    std::vector<SDL_Texture*> IMGS;
 } Asset;
 
 typedef struct {
@@ -46,7 +43,11 @@ typedef struct {
    int Bright;
 } window_info;
 
+/**
+ * 
+ */
 typedef struct{
+    unsigned int id;
     SDL_Rect src;
     SDL_Rect dst;
     SDL_Point center;
