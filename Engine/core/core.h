@@ -1,14 +1,19 @@
 #ifndef CORE
 #define CORE
+/*
+컴포넌틑 매니저 정리 중
+*/
 
 struct
 {
-    /* data */
-}Component;
+    int UUID;
+    union a;
+}TranseformComponent;
 
 struct
 {
-    /* data */
+    int Texture_id;
+
 }Entity;
 
 #endif
