@@ -12,6 +12,9 @@
 #include <cstring>
 #include <glm/glm.hpp>
 
+#include <map>
+#include <typeindex>
+
 using json = nlohmann::json;
 
 typedef SDL_Texture* Texture;
