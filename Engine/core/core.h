@@ -1,19 +1,48 @@
 #ifndef CORE
 #define CORE
+
 /*
 컴포넌틑 매니저 정리 중
 */
 
-struct
-{
+class Registry{
+    private:
+    enum flag{
+        Dense,
+        Saprse
+    };
+    public:
+    map<std::type_index, void*> Components;
+    template <typename T>
+    void CreateComponent(flag f){
+        switch(f){
+            case Dense:
+                Components[typeid(T)] = new vector<DenseComponent> Data;
+                break;
+
+            case Sparse:
+                Components[typeid(T)] = new vector<SaprseComponent> Data;
+                break;
+        }
+    };
+
+};
+
+template <typename T>
+class SaprseComponent{
+    private:
+
+    public:
     int UUID;
-    union a;
-}TranseformComponent;
+    T data;
+};
 
-struct
-{
-    int Texture_id;
+template <typename T>
+class DenseComponent{
+    private:
 
-}Entity;
+    public:
+    T data;
+};
 
 #endif
