@@ -1,48 +1,62 @@
+#ifndef _HAL_
+#define _HAL_
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
+
+#include <nlohmann/json.hpp>
 #include <iostream>
 #include <fstream>
 #include <filesystem>
 #include <cstring>
+#include <glm/glm.hpp>
 
 #include <map>
 #include <typeindex>
 #include <vector>
 
-template <typename T>
-class SparseComponent{
-    private:
+using json = nlohmann::json;
 
-    public:
-    int UUID;
-    T data;
-};
+typedef SDL_Texture* Texture;
 
-template <typename T>
-class DenseComponent{
-    private:
+/**
+ * @brief Asset을 변환해 폴더별로 분류해 저장가능한 자료
+ * 
+ * @par buildings (std::vector<SDL_Texture*>)
+ * 
+ * @par character (std::vector<SDL_Texture*>)
+ * 
+ * @par interactives (std::vector<SDL_Texture*>)
+ * 
+ * @par tiles (std::vector<SDL_Texture*>)
+ * 
+ * @note 수정될 수도 있음
+ */
+typedef struct {
+    std::vector<SDL_Texture*> IMGS;
+} Asset;
 
-    public:
-    T data;
-};
+typedef struct {
+   const char* window_name;
+   SDL_Window* window;
+   SDL_Renderer* renderer;
+   int Red;
+   int Green;
+   int Blue;
+   int Bright;
+} window_info;
 
-class Registry{
-    private:
-    enum flag{
-        Dense,
-        Sparse
-    };
-    public:
-    std::map<std::type_index, void*> Components;
-    template <typename T>
-    void CreateComponent(flag f){
-        switch(f){
-            case Dense:
-                Components[typeid(T)] = new std::vector<DenseComponent<T>>();
-                break;
+/**
+ * 
+ */
+typedef struct{
+    unsigned int id;
+    SDL_Rect src;
+    SDL_Rect dst;
+    SDL_Point center;
+    int angle;
+}Parts;
 
-            case Sparse:
-                Components[typeid(T)] = new std::vector<SparseComponent<T>>();
-                break;
-        }
-    };
 
-};
+#endif
