@@ -8,7 +8,7 @@
  */
 
 namespace GameGraphicApi{
-
+    void Set_draw_all(SDL_Renderer* renderer);
 }
 
 namespace CreateText { // 미리 선언해두기
