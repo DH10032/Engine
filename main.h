@@ -9,9 +9,5 @@
 #include "Game/world/world.h"
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> Features/Create_Map
 
 #endif

@@ -11,7 +11,11 @@
 #include <filesystem>
 #include <cstring>
 #include <glm/glm.hpp>
+#include <algorithm>
 
+#include <cmath>
+#include <array>
+#include <numeric>
 #include <map>
 #include <typeindex>
 #include <vector>

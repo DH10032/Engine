@@ -1,24 +1,9 @@
 #pragma once
 
-<<<<<<< HEAD
 #include "../../Engine/Interface/Interface.h"
-=======
-#include <iostream>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <vector>
-#include <numeric>
-#include <string>
 #include <random>
-#include <cmath>
-#include <array>
-#include <algorithm>
 #include <stdio.h>
-#include <nlohmann/json.hpp>
-#include <fstream>
->>>>>>> Features/Create_Map
 
-using json = nlohmann::json;
 
 // const double p[101] = { // 정규분포표에서 각 누적확률을 나타내는 숫자표
 //     0,
