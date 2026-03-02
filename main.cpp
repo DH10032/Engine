@@ -15,9 +15,6 @@ int main()
     //      - 렌더링
     //      - 프레임 제한
     // 7. 리소스 정리
-
-
-    // 1. Window / Renderer 생성 및 SDL 초기화
     Engine::Canvas Window;
     Window.ShowWindow();
     Window.LoadAsset("Game/data/asset.json");

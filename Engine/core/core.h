@@ -22,19 +22,24 @@ class DenseComponent{
     T data;
 };
 
+/*
+    복사자 생성 금지 코드 필요
+*/
 template <typename T>
 class SmartPointer{
     private:
 
     public:
-    unique_ptr(A, ~A())
-    void ~A(){
+    ~SmartPointer(){
         delete(Data)
     }
     
-    void A(){
+    SmartPointer(){
         new std::vector<T> Data;
     }
+
+    SmartPointer(const SmartPointer&) = delete;
+    SmartPointer& operater=const SmartPointer& = delete;
 }
 
 class Registry{
@@ -46,20 +51,19 @@ class Registry{
     };
 
     public:
-    std::map<std::type_index, void*> Components;
+    std::map<std::type_index, SmartPointer> Components;
     template <typename T>
     void CreateComponent(flag f){
         switch(f){
             case Dense:
-                Components[typeid(T)] = new std::vector<DenseComponent<T>>();
+                Components[typeid(T)] = SmartPointer<DenseComponent<T>>();
                 break;
 
             case Sparse:
-                Components[typeid(T)] = new std::vector<SparseComponent<T>>();
+                Components[typeid(T)] = SmartPointer<SparseComponent<T>>();
                 break;
         }
     };
-
 };
 
 #endif
