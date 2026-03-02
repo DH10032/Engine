@@ -1,7 +1,5 @@
-#include <iostream>
-#include <algorithm>
-#include <fstream>
-#include <nlohmann/json.hpp>
+#pragma once
+#include "../../Engine/Interface/Interface.h"
 
 #define unit_count_max 5000
 

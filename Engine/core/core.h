@@ -17,17 +17,34 @@ class SparseComponent{
 template <typename T>
 class DenseComponent{
     private:
-
+    
     public:
     T data;
 };
 
+template <typename T>
+class SmartPointer{
+    private:
+
+    public:
+    unique_ptr(A, ~A())
+    void ~A(){
+        delete(Data)
+    }
+    
+    void A(){
+        new std::vector<T> Data;
+    }
+}
+
 class Registry{
     private:
+
     enum flag{
         Dense,
         Sparse
     };
+
     public:
     std::map<std::type_index, void*> Components;
     template <typename T>
@@ -44,6 +61,5 @@ class Registry{
     };
 
 };
-
 
 #endif
