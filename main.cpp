@@ -15,7 +15,7 @@ int main()
     //      - 렌더링
     //      - 프레임 제한
     // 7. 리소스 정리
-    Engine::Canvas Window;
+    Engine::GameManager Window;
     Window.ShowWindow();
     Window.LoadAsset("Game/data/asset.json");
 

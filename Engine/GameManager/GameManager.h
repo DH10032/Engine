@@ -5,10 +5,12 @@
 #include "../graphic/font/font.h"
 #include "../core/assetManager/assetManager.h"
 #include "../graphic/animation/animation.h"
+#include "../core/core.h"
 
 namespace Engine{
-    class Canvas{
+    class GameManager{
         public:
+        
         window_info window_setting = {
             .window_name = "test_game",
             .window = nullptr,
@@ -18,7 +20,7 @@ namespace Engine{
             .Blue = 255,
             .Bright = 255
         };
-
+        Registry Reg;
         Asset data;
         int size = 64;
         std::vector<Parts> p = {
@@ -45,39 +47,39 @@ namespace Engine{
             }
         };
 
-        void ShowWindow(){
-            window::Create_window(&window_setting, SDL_WINDOW_SHOWN);
-            CreateText::TTF_start(window_setting.renderer);
-            SDL_SetRenderDrawColor(
-                window_setting.renderer,
-                window_setting.Red,
-                window_setting.Green,
-                window_setting.Blue,
-                window_setting.Bright
-            );
-        }
+        /**
+         * @brief core내부 컴포넌트 매니저 초기화
+         */
+        void init();
 
-        void DeleteWindow(){
-            window::Destroy_window(&window_setting);
-        }
+        /**
+         * @brief 내장 윈도우 호출 함수
+         */
+        void ShowWindow();
 
-        void LoadAsset(std::string path){
-            data = AssetManager::Load_Asset(window_setting.renderer, path);
-        }
+        /**
+         * @brief 위도우 닫기 함수
+         */
+        void DeleteWindow();
 
-        void DrawObject(){
-            SDL_RenderClear(window_setting.renderer);
-            Animation::Render_Entity(window_setting.renderer, data, p);
-            SDL_RenderPresent(window_setting.renderer);
-        }
+        /**
+         * @brief Asset 불러오기 함수
+         * @param[in] path json 경로
+         * @note 해당 json에 Asset들이 등록이 되어 있어야 함
+         */
+        void LoadAsset(std::string path);
 
-        void Destroy_Object(){
-            SDL_DestroyRenderer(window_setting.renderer);
-            SDL_DestroyWindow(window_setting.window);
-            CreateText::TTF_end();
-            IMG_Quit();
-            SDL_Quit();
-        }
+        /**
+         * @brief Entity 중 업데이트가 필요한 Entity만 업데이트
+         * @note 
+         */
+        void DrawObject();
+
+        /**
+         * @brief 
+         * @note 현재 스마트 포인터 도입으로 크게 신경쓰지 않아도 됨
+         */
+        void Destroy_Object();
 
         private:
         

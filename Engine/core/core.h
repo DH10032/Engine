@@ -3,10 +3,6 @@
 
 #include "../hal/HAL.h"
 
-/*
-컴포넌틑 매니저 정리 중
-*/
-
 template <typename T>
 class SparseComponent{
     private:
@@ -24,9 +20,6 @@ class DenseComponent{
     T data;
 };
 
-/*
-    스마트 포인터 추상화
-*/
 class BaseComponent {};
 template <typename T>
 class SmartPointer : BaseComponent{
@@ -38,16 +31,18 @@ class SmartPointer : BaseComponent{
 };
 
 
+enum flag{
+    Dense,
+    Sparse
+};
+
 class Registry{
     private:
 
-    enum flag{
-        Dense,
-        Sparse
-    };
+    
+    public:
     std::map<std::type_index, BaseComponent*> Components;
 
-    public:
 
     template <typename T>
     void CreateComponent(flag f){
