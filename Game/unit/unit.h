@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Engine/Interface/Interface.h"
+#include "../../Engine/GameManager/GameManager.h"
 
 #define unit_count_max 5000
 

@@ -9,8 +9,12 @@
 
 namespace Engine{
     class GameManager{
+        private:
+        Registry Reg;
+        Asset data;
+        int size = 64;
+
         public:
-        
         window_info window_setting = {
             .window_name = "test_game",
             .window = nullptr,
@@ -20,9 +24,7 @@ namespace Engine{
             .Blue = 255,
             .Bright = 255
         };
-        Registry Reg;
-        Asset data;
-        int size = 64;
+
         std::vector<Parts> p = {
             {
                 9,
@@ -71,7 +73,7 @@ namespace Engine{
 
         /**
          * @brief Entity 중 업데이트가 필요한 Entity만 업데이트
-         * @note 
+         * @note Entity에 렌더링 관련 컴포넌트 필수
          */
         void DrawObject();
 
@@ -80,8 +82,6 @@ namespace Engine{
          * @note 현재 스마트 포인터 도입으로 크게 신경쓰지 않아도 됨
          */
         void Destroy_Object();
-
-        private:
         
     };
 }
