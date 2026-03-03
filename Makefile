@@ -1,6 +1,6 @@
 CC = g++
 Target = main
-staticlib = Engine
+staticlib = libEngine.a
 lib = -lEngine -lSDL2 -lSDL2_image -lSDL2_ttf
 
 Game_SRCS = $(shell find ./Game/ -name '*.cpp')

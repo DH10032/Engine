@@ -1,5 +1,10 @@
 #include "main.h"
 
+struct test{
+    int a;
+    int b;
+};
+
 int main()
 {
     // 1. Window / Renderer 생성 및 SDL 초기화
@@ -19,8 +24,13 @@ int main()
     system.ShowWindow();
     system.LoadAsset("Game/data/asset.json");
     
-    system.Reg.CreateComponent<worldspace::tile>(Dense);
+    test d = {
+        .a = 1,
+        .b = 2
+    };
 
+    system.Reg.CreateComponent<test>(Dense);
+    system.Reg.push<test>(d);
     for(;;){
         system.DrawObject();
         SDL_Delay(30);

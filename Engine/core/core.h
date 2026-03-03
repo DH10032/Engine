@@ -3,11 +3,23 @@
 
 #include "../hal/HAL.h"
 /*
-추상화를 어디까지 해야할까???????????????????????????
 ECS 패턴을 위한 자료형
 RAII 패턴 포함
 */
+/**
+ * @brief 밀도가 높은 컴포넌트
+ * @note 해당 자료형은 UUID가 Entity ID입니다.
+ * @code
+```
+class SparseComponent{
+    private:
 
+    public:
+    int UUID;
+    T data;
+};
+```
+ */
 template <typename T>
 class SparseComponent{
     private:
@@ -17,6 +29,20 @@ class SparseComponent{
     T data;
 };
 
+/**
+ * @brief 밀도가 높은 컴포넌트
+ * @note 해당 자료형은 index가 Entity ID입니다.
+ * @code
+```
+template <typename T>
+class DenseComponent{
+    private:
+
+    public:
+    T data;
+};
+```
+ */
 template <typename T>
 class DenseComponent{
     private:
@@ -42,7 +68,7 @@ class SmartPointer : public BaseComponent{
     /**
      * @brief 소유권 이전 오퍼레이터 함수
      * @note  왼쪽 스마트 포인터로 소유권이 이전 됨
-     * @note  단, 타입이 동일해야 함. 
+     * @note  단, 타입이 동일해야 함.
      */
     void operator=(SmartPointer B){
         Data = std::move(B.Data);
@@ -51,8 +77,8 @@ class SmartPointer : public BaseComponent{
     /**
      * @brief Data 삽입 함수
      */
-    void push(){
-
+    void push_back(int id, T data){
+        Data.push_back(data);
     }
 
     T circuit(){
@@ -90,10 +116,11 @@ class Registry{
         }
     };
 
-    // template <typename T>
-    // void push(T data){
-    //     Components[typeid(T)].Data;
-    // }
+    template <typename T>
+    void push(T data){
+        SmartPointer<T>* Data = &Components[typeid(T)];
+        Data.push_back(0, data);
+    };
 };
 
 #endif
