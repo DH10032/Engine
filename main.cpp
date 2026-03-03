@@ -18,7 +18,7 @@ int main()
     Engine::GameManager system;
     system.ShowWindow();
     system.LoadAsset("Game/data/asset.json");
-
+    
     system.Reg.CreateComponent<worldspace::tile>(Dense);
 
     for(;;){
