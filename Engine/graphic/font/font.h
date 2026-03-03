@@ -1,3 +1,6 @@
+#ifndef FONT
+#define FONT
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <string>
@@ -28,3 +31,5 @@ namespace CreateText { // 미리 선언해두기
     */
     void TTF_end();
 }
+
+#endif

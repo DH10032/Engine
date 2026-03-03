@@ -1,14 +1,7 @@
 #ifndef RENDER
 #define RENDER
 
-#include "../../../main.h"
-#include <iostream>
-#include <fstream>
-#include <filesystem>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <cstring>
+#include "../../hal/HAL.h"
 
 /**
  * @brief 윈도우 설정을 위해 필요한 데이터

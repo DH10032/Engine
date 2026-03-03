@@ -1,20 +1,9 @@
 #pragma once
 
-#include <iostream>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <vector>
-#include <numeric>
-#include <string>
+#include "../../Engine/GameManager/GameManager.h"
 #include <random>
-#include <cmath>
-#include <array>
-#include <algorithm>
 #include <stdio.h>
-#include <nlohmann/json.hpp>
-#include <fstream>
 
-using json = nlohmann::json;
 
 // const double p[101] = { // 정규분포표에서 각 누적확률을 나타내는 숫자표
 //     0,
@@ -39,14 +28,14 @@ namespace worldspace{
     int worldInit();
     int waterInit();
 
-    typedef struct{
-            double height;
-            double temperature;
-            double humidity;
-            std::array<int,4> color;
-            std::string tileType;
-            SDL_Rect dst;
-        }tile;
+    struct tile{
+        double height;
+        double temperature;
+        double humidity;
+        std::array<int,4> color;
+        std::string tileType;
+        SDL_Rect dst;
+    };
 
     extern tile world[width][height];
     extern tile water[width][height];
@@ -102,7 +91,7 @@ namespace PerlinNoiseSpace{
             double x2 = lerp(grad(ab, xf, yf - 1),
                             grad(bb, xf - 1, yf - 1), u);
 
-                            
+
             return (lerp(x1, x2, v) + 1.0) / 2.0; // 0~1 정규화
         }
     };

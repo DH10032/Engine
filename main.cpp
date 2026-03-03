@@ -15,74 +15,51 @@ int main()
     //      - 렌더링
     //      - 프레임 제한
     // 7. 리소스 정리
+    Engine::GameManager system;
+    system.ShowWindow();
+    system.LoadAsset("Game/data/asset.json");
 
+    system.Reg.CreateComponent<worldspace::tile>(Dense);
 
-    // 1. Window / Renderer 생성 및 SDL 초기화
-    window_info window_setting {
-        .window_name = "test_game",
-        .window = nullptr,
-        .renderer = nullptr,
-        .Red = 255,
-        .Green = 255,
-        .Blue = 255,
-        .Bright = 255
-    };
-    window::Create_window(&window_setting, SDL_WINDOW_SHOWN);
-    SDL_SetRenderDrawColor(
-        window_setting.renderer,
-        window_setting.Red,
-        window_setting.Green,
-        window_setting.Blue,
-        window_setting.Bright
-    );
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) {
-        printf("SDL Init Error: %s\n", SDL_GetError());
-        return -1;
-    }
-
-    // SDL_image 초기화
-    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-        printf("IMG Init Error: %s\n", IMG_GetError());
-        return -1;
-    }
-
-    // SDL_ttf 초기화
-    if (TTF_Init() == -1) {
-        printf("TTF Init Error: %s\n", TTF_GetError());
-        return -1;
-    }
-    CreateText::TTF_start(window_setting.renderer);
-
-
-    // 3. World 생성
-    worldspace::worldInit();
-    SDL_SetRenderDrawBlendMode(window_setting.renderer, SDL_BLENDMODE_BLEND);
-
-
-    while(true) {
-        SDL_SetRenderDrawColor(window_setting.renderer, 255,255,255,255);
-        SDL_RenderClear(window_setting.renderer);
-
-        
-        for (int x = 0; x < worldspace::width; x++){ // 지형 높이 표현
-            for (int y = 0; y < worldspace::height; y++){
-                auto color = worldspace::world[x][y].color;
-                SDL_SetRenderDrawColor(window_setting.renderer, color[0], color[1], color[2], color[3]);
-                SDL_RenderFillRect(window_setting.renderer, &worldspace::world[x][y].dst);
-            }
-        }
-
-        SDL_RenderPresent(window_setting.renderer);
+    for(;;){
+        system.DrawObject();
         SDL_Delay(30);
     }
+
+    system.Destroy_Object();
 }
 
 
-void Destroy_window(window_info* window_setting){
-    SDL_DestroyRenderer(window_setting->renderer);
-    SDL_DestroyWindow(window_setting->window);
-    CreateText::TTF_end();
-    TTF_Quit();
-    IMG_Quit();
-    SDL_Quit();
+/*
+// 3. World 생성
+worldspace::worldInit();
+SDL_SetRenderDrawBlendMode(window_setting.renderer, SDL_BLENDMODE_BLEND);
+
+
+while(true) {
+    SDL_SetRenderDrawColor(window_setting.renderer, 255,255,255,255);
+    SDL_RenderClear(window_setting.renderer);
+
+    
+    for (int x = 0; x < worldspace::width; x++){ // 지형 높이 표현
+        for (int y = 0; y < worldspace::height; y++){
+            auto color = worldspace::world[x][y].color;
+            SDL_SetRenderDrawColor(window_setting.renderer, color[0], color[1], color[2], color[3]);
+            SDL_RenderFillRect(window_setting.renderer, &worldspace::world[x][y].dst);
+        }
+    }
+
+    SDL_RenderPresent(window_setting.renderer);
+    SDL_Delay(30);
 }
+
+struct tile{
+    double height;
+    double temperature;
+    double humidity;
+    std::array<int,4> color;
+    std::string tileType;
+    SDL_Rect dst;
+};
+
+*/

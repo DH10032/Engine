@@ -1,22 +1,5 @@
 #include "world.h"
 
-/*
-그냥 제 생각입니다.
-"mountain" 대신
-
-enume environment{
-      mountain,
-      ...
-      sand
-};
-를 이용해서 string 대신 상수로 분류가 가능합니다.
-ex) void fuction1(environment e)
-function(mountain)
-
-else if (0.38 < h && h <= 0.58)에서 뒤에 0.58같은 부분은 지워도 될 것 같습니다.
-이유는 0.58보다 크면 바로 위 if에서 걸러지기에 간단한게 쓰면 좋을 것 같습니다.(성능에 영향 제로에 가까움)
-
-*/
 
 namespace worldspace{
 
