@@ -1,5 +1,6 @@
 CC = g++
 Target = main
+staticlib = Engine
 lib = -lEngine -lSDL2 -lSDL2_image -lSDL2_ttf
 
 Game_SRCS = $(shell find ./Game/ -name '*.cpp')
@@ -10,15 +11,17 @@ Engine_OBJS = $(Engine_SRCS:.cpp=.o)
 
 all: $(Target)
 
+Engine: $(staticlib)
+
 %.o: %.cpp
 	$(CC) -c $< -o $@
 
 # 엔진 → 라이브러리로 묶기
-Engine: $(Engine_OBJS)
+$(staticlib): $(Engine_OBJS)
 	ar rcs libEngine.a $(Engine_OBJS)
 
 # 게임 → 엔진 라이브러리 링크
-$(Target): $(Game_OBJS)
+$(Target): $(staticlib) $(Game_OBJS)
 	$(CC) $(Game_OBJS) $@.cpp -L. -o $@ $(lib)
 
 clean:
