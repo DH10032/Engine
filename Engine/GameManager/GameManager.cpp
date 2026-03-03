@@ -1,8 +1,5 @@
 #include "GameManager.h"
 
-void Engine::GameManager::init(){
-    Reg.CreateComponent<int>(Dense);
-}
 
 
 void Engine::GameManager::ShowWindow(){

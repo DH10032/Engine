@@ -1,7 +1,5 @@
 #include "font.h"
 
-
-
 SDL_Renderer* TXT_renderer; // init에서 한번 호출 후 쭉 쓸수 있게
 
 TTF_Font* bitlimFont; // 많아지면 배열로 관리?
@@ -9,7 +7,8 @@ TTF_Font* bitlimFont; // 많아지면 배열로 관리?
 namespace CreateText{
     void TTF_start(SDL_Renderer* renderer){
         TXT_renderer = renderer;
-        bitlimFont = TTF_OpenFont("Game/assets/fonts/bitlim.ttf", 30); // 30 뭔지 모르겠음
+        TTF_Init();
+        bitlimFont = TTF_OpenFont("Game/assets/fonts/bitlim.ttf", 30); // 30 뭔지 모르겠음 (새롭게 열고자 하는 font 파일에서 폰트 사이즈)
         if(bitlimFont == NULL) {
             printf("Could not open font!! (%s)\n", TTF_GetError());
         }

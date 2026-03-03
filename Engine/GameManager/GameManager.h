@@ -1,5 +1,5 @@
-#ifndef INTERFACE
-#define INTERFACE
+#ifndef _GameManager_
+#define _GameManager_
 
 #include "../graphic/window/window.h"
 #include "../graphic/font/font.h"
@@ -10,11 +10,11 @@
 namespace Engine{
     class GameManager{
         private:
-        Registry Reg;
         Asset data;
         int size = 64;
-
+        
         public:
+        Registry Reg;
         window_info window_setting = {
             .window_name = "test_game",
             .window = nullptr,
@@ -48,11 +48,6 @@ namespace Engine{
                 0
             }
         };
-
-        /**
-         * @brief core내부 컴포넌트 매니저 초기화
-         */
-        void init();
 
         /**
          * @brief 내장 윈도우 호출 함수
