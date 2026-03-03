@@ -14,7 +14,6 @@ namespace Engine{
         int size = 64;
         
         public:
-        Registry Reg;
         window_info window_setting = {
             .window_name = "test_game",
             .window = nullptr,
