@@ -29,6 +29,8 @@ class BaseComponent{
     public:
     virtual ~BaseComponent() = default;
 };
+
+
 template <typename T>
 class SmartPointer : public BaseComponent{
     private:
