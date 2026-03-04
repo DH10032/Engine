@@ -3,17 +3,24 @@
 
 namespace worldspace{
 
+    std::vector<double> t_steps;
+    std::vector<double> h_steps;
+    std::vector<std::vector<std::string>> matrix;
 
     int SEED = 1024;
     tile world[width][height]{};
     int worldInit() {
 
-        std::ifstream file("Game/data/terrain.json");
-        if (!file.is_open()){
+        std::ifstream terrainFile("Game/data/terrain.json");
+        if (!terrainFile.is_open()){
             std::cout << "can't open file!" << std::endl;
         }
-        json j;
-        file >> j;
+        json terrainData;
+        terrainFile >> terrainData;
+
+        t_steps = terrainData["setting"]["temp_steps"].get<std::vector<double>>();
+        h_steps = terrainData["setting"]["humid_steps"].get<std::vector<double>>();
+        matrix = terrainData["setting"]["matrix"].get<std::vector<std::vector<std::string>>>();
 
         
         PerlinNoiseSpace::PerlinNoise perlin1(SEED);
@@ -22,12 +29,16 @@ namespace worldspace{
 
         for (int x = 0; x < width; x++) { // 펄린 변수 부여, 기본값 초기화
             for (int y = 0; y < height; y++) {
-                double nx = (double)x / width * 5;
-                double ny = (double)y / height * 5;
+                double nx = (double)x / width * 10;
+                double ny = (double)y / height * 10;
                 world[x][y].dst = {x, y, 1, 1};
-                world[x][y].height = PerlinNoiseSpace::fbm(perlin1, nx, ny, 10, 0.5, 2); //6,0.5,2 -> min = 0.02, MAX = 0.7, average = 0.26 graph = _/\_
-                world[x][y].temperature = PerlinNoiseSpace::fbm(perlin2, nx, ny, 6, 0.5, 3);
-                world[x][y].humidity = PerlinNoiseSpace::fbm(perlin3, nx, ny, 6, 0.4, 3);
+                //Perlin(6, 0.5, 2) -> min = 0.02, MAX = 0.7, average = 0.26 graph = _/\_
+                world[x][y].height = PerlinNoiseSpace::fbm(perlin1, nx, ny, 4, 0.5, 2);
+                world[x][y].temperature = PerlinNoiseSpace::fbm(perlin2, nx, ny, 4, 0.5, 3);
+                world[x][y].humidity = PerlinNoiseSpace::fbm(perlin3, nx, ny, 4, 0.4, 3);
+                
+                world[x][y].temperature = world[x][y].temperature - (world[x][y].height * 0.3); 
+                world[x][y].temperature = std::clamp(world[x][y].temperature, 0.0, 1.0);
 
                 world[x][y].tileType = "plain";
                 world[x][y].color = {0,255,0,255};
@@ -36,92 +47,61 @@ namespace worldspace{
 
         for (int x = 0; x < width; x++) { // 타일 설정
             for (int y = 0; y < height; y++) {
-                double h = world[x][y].height;
+                // 변수 이름들 단축
+                double height = world[x][y].height;
                 double temp = world[x][y].temperature;
-                double hum = world[x][y].humidity;
-                std::string& t = world[x][y].tileType;
-                if (0.58 < h){           // 산
-                    t = "mountain";
-                    if      (temp < 0.4)     t = "ice";
-                    else if (0.7 < h)        t = "water";
-                }
-                else if (0.38 < h && h <= 0.58){  // 평지
-                    if (0.53 < temp){
-                        if      (0.52 < hum)  t = "jungle";
-                        else if (hum < 0.4)   t = "dessert";
-                        else if (0.55 < temp) t = "savanna";
-                    }
-                    else if (0.4 < temp && temp <= 0.53){
-                        t = "plain";
-                    }
-                    else{
-                        t = "forest";
-                    }
-                }
-                else{                      // 바다
-                    if (h < 0.355) t = "water";
-                    else           t = "sand";
-                }
-            }
-        }        
-        
-        for (int x = 0; x < width; x++) { // 색 지정
-            for (int y = 0; y < height; y++) {
-                std::string type = world[x][y].tileType;
-                auto colorJson = j[type];  // JSON에서 배열 가져오기
+                double humid = world[x][y].humidity;
+
+                // upper_bound를 이용해 인덱스 추출
+                int t_idx = std::lower_bound(t_steps.begin(), t_steps.end(), temp) - t_steps.begin();
+                int h_idx = std::lower_bound(h_steps.begin(), h_steps.end(), humid) - h_steps.begin();
+                
+                // 범위 초과 방지 
+                t_idx = std::min((int)t_steps.size() - 1, t_idx);
+                h_idx = std::min((int)h_steps.size() - 1, h_idx);
+
+                // matrix배열에 따른 tileType 부여
+                world[x][y].tileType = matrix[h_idx][t_idx];
+                if (height < 0.3) world[x][y].tileType = "water";
+                
+                // JSON에서 배열 통한 색 지정
+                std::string type = world[x][y].tileType; // 이름 단축 + type오류 방지
+                auto colorJson = terrainData["color"][type];
 
                 for (int i = 0; i < 4; i++) {
-                    world[x][y].color[i] = colorJson[i];
-                }           
+                    world[x][y].color[i] = colorJson[i]; 
+                }
+                if (0.6 < height) world[x][y].color[3] = 200;
+            }
+        }        
+
+        for (int x = 0; x < 100; x++) { // 휘태커 도표 UI로 출력
+            for (int y = 0; y < 100; y++) {
+                double nx = x / 100.0; 
+                double ny = y / 100.0; 
+                
+                // upper_bound를 이용해 인덱스 추출
+                int t_idx2 = std::lower_bound(t_steps.begin(), t_steps.end(), nx) - t_steps.begin();
+                int h_idx2 = std::lower_bound(h_steps.begin(), h_steps.end(), ny) - h_steps.begin();
+                
+                // 범위 초과 방지 
+                t_idx2 = std::min((int)t_steps.size() - 1, t_idx2);
+                h_idx2 = std::min((int)h_steps.size() - 1, h_idx2);
+
+
+                // matrix배열에 따른 tileType 부여
+                world[x][y].tileType = matrix[h_idx2][t_idx2];
+
+                // JSON에서 배열 통한 색 지정
+                std::string type = world[x][y].tileType; // 이름 단축 + type오류 방지
+                auto colorJson = terrainData["color"][type];
+
+                for (int i = 0; i < 4; i++) {
+                    world[x][y].color[i] = colorJson[i]; 
+                }
             }
         }
 
-
-
-        
-
         return 0;
     }
-/*
-    ## 바이옴 변수
-        높이
-        온도
-        습도
-
-    ## 바이옴 리스트
-
-    - 산
-        - 높이 높음
-
-    - 고산호수
-        - 높이 매우 높음
-        - 습기 매우 높음
-
-    - 바다
-        - 높이 낮음
-        - 습기 매우 높음
-
-    - 숲
-        - 온도 중간
-        - 습기 중간
-
-    - 사막
-        - 온도 높음
-        - 습기 낮음
-
-    - 정글
-        - 온도 높음
-        - 습기 높음
-
-    - 사바나
-        - 온도 높음
-        - 습기 중간
-
-    - 타이가
-        - 온도 낮음
-        - 습기 낮음
-
-    - 툰드라
-        - 온도 매우 낮음
-.                           */
 }

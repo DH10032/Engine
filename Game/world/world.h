@@ -24,7 +24,6 @@ namespace worldspace{
     const int width = 1280;
     const int height = 720;
 
-
     int worldInit();
     int waterInit();
 
@@ -38,7 +37,6 @@ namespace worldspace{
     };
 
     extern tile world[width][height];
-    extern tile water[width][height];
 }
 
 namespace PerlinNoiseSpace{
