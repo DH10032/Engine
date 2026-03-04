@@ -1,34 +1,31 @@
-# 컴파일러 종류
 CC = g++
-# 실행파일 이름
 Target = main
-# 라이브러리 추가되면 여기 넣어주세요
-lib = -lSDL2 -lSDL2_image -lSDL2_ttf
+staticlib = Engine
+lib = -lEngine -lSDL2 -lSDL2_image -lSDL2_ttf
 
-# 루트 폴더 하위 폴대 내부에 있는 모든 cpp 파일 탐색
-SRCS = $(shell find . -name '*.cpp')
-# SRCS .cpp 대신 .o로 기입한 목록 (목적어 파일)
-OBJS = $(SRCS:.cpp=.o)
+Game_SRCS = $(shell find ./Game/ -name '*.cpp')
+Engine_SRCS = $(shell find ./Engine/ -name '*.cpp')
+
+Game_OBJS = $(Game_SRCS:.cpp=.o)
+Engine_OBJS = $(Engine_SRCS:.cpp=.o)
 
 all: $(Target)
 
+Engine: $(staticlib)
 
-# =====================      빌드     =======================
-# 컴파일 과정, .cpp -> .o로 변환, g++ -c main.cpp -o main.o
 %.o: %.cpp
 	$(CC) -c $< -o $@
 
-# 링킹 과정
-# 예시 g++ memory.o ai_system.o render.o core.o -o core -lSDL2 -lSDL2_image
-$(Target): $(OBJS)
-	$(CC) $^ -o $@ $(lib)
+# 엔진 → 라이브러리로 묶기
+$(staticlib): $(Engine_OBJS)
+	ar rcs libEngine.a $(Engine_OBJS)
 
-# =====================파일 정리 플래그=======================
-# 파일 전체 삭제
+# 게임 → 엔진 라이브러리 링크
+$(Target): $(staticlib) $(Game_OBJS)
+	$(CC) $(Game_OBJS) $@.cpp -L. -o $@ $(lib)
+
 clean:
-	rm -f $(OBJS) $(Target)
+	rm -f $(Game_OBJS) $(Engine_OBJS) libEngine.a $(Target)
 
-# 목적어 파일만 정리
-rm:
-	rm -f $(OBJS)
-	git rm -f $(OBJS)
+gitclean:
+	git rm -f $(Game_OBJS) $(Engine_OBJS) libEngine.a $(Target)
