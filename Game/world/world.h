@@ -27,6 +27,65 @@ namespace worldspace{
     int worldInit();
     int waterInit();
 
+    enum TileType : uint8_t {
+        water,
+        plain,
+        forest,
+        jungle,
+        dessert,
+        savanna,
+        taiga,
+        meadow,
+        tundra,
+        karst,
+        swamp,
+        iced_plain,
+        iced_karst,
+        snow,
+        glacier,
+        volcano
+    };
+
+    enum TILE_FLAGS : uint8_t {
+        TILE_TYPE     = 0x0F, // 0000 1111 : 지형 정보
+        TILE_EX       = 0x30, // 0011 0000 : 타일의 자원 종류 (0 : 없음 / 1 : 시야 보임 / 2 : 시야 차단 3 : 길 차단)
+        TILE_WALKABLE = 0x40, // 0100 0000 : 지형 이동 가능 유무
+        TILE_HEIGHT   = 0x80, // 1000 0000 : 지형 높이
+    };
+    /*
+        비트 5 (Height),    비트 4 (Walkable),  지형 의미,              게임 내 역할
+        0 (Low) ,           0 (No) ,           물 (Water),             저지대 장애물, 이동 불가
+        0 (Low) ,           1 (Yes),           평지 (Ground),          일반적인 저지대 이동 구역
+        1 (High),           1 (Yes),           언덕 (Slope),           저지대 ↔ 고지대 연결 통로
+        1 (High),           0 (No) ,           고지대 (Cliff/High),    고지대 본토 (저지대 유닛 진입 불가)
+    .                                                                                                      */
+
+    enum EX_TYPE : uint8_t {
+        EX_OWNER    = 0x0f // 0000 1111 : 15개 팀 -> 0 : 중립
+        EX_DROP     = 0x30 // 0011 0000 : 드랍 유무 (0 : NONE / 1 : DNA / 2 : FOOD / 3 : URANIUM)
+        EX_REGEN    = 0x40 // 0100 0000 : 리젠 유무
+        EX_ISBUILD  = 0x80 // 1000 0000 : BUILDING or RESOURCE
+    };
+
+    struct EX_DATA {
+        enum EX_TYPE TYPE;
+        unit16_t health;
+        unit16_t health;
+    }
+    /*
+    // 타일 데이터 조작 (인라인 함수로 오버헤드 제거)
+    inline bool IsTileOccupied(uint8_t data) { return data & TILE_OCCUPIED; }
+    inline bool IsHighGround(uint8_t data)   { return data & TILE_HEIGHT; }
+    inline uint8_t GetType(uint8_t data)     { return data & TILE_TYPE; }
+
+    // 데이터 수정 (Set)
+    inline void SetOccupied(uint8_t& data, bool occupied) {
+        if (occupied) data |= TILE_OCCUPIED;
+        else data &= ~TILE_OCCUPIED;
+    }
+    */
+
+
     struct tile{
         double height;
         double temperature;

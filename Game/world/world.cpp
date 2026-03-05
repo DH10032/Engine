@@ -20,15 +20,15 @@ namespace worldspace{
 
         t_steps = terrainData["setting"]["temp_steps"].get<std::vector<double>>();
         h_steps = terrainData["setting"]["humid_steps"].get<std::vector<double>>();
-        matrix = terrainData["setting"]["matrix"].get<std::vector<std::vector<std::string>>>();
+        matrix  = terrainData["setting"]["matrix"].get<std::vector<std::vector<std::string>>>();
 
         
         PerlinNoiseSpace::PerlinNoise perlin1(SEED);
         PerlinNoiseSpace::PerlinNoise perlin2(SEED+1);
         PerlinNoiseSpace::PerlinNoise perlin3(SEED+2);
 
-        for (int x = 0; x < width; x++) { // 펄린 변수 부여, 기본값 초기화
-            for (int y = 0; y < height; y++) {
+        for (int y = 0; y < height; y++) { // 펄린 변수 부여, 기본값 초기화
+            for (int x = 0; x < width; x++) {
                 double nx = (double)x / width * 10;
                 double ny = (double)y / height * 10;
                 world[x][y].dst = {x, y, 1, 1};
@@ -45,8 +45,8 @@ namespace worldspace{
             }
         }
 
-        for (int x = 0; x < width; x++) { // 타일 설정
-            for (int y = 0; y < height; y++) {
+        for (int y = 0; y < height; y++) { // 타일 설정
+            for (int x = 0; x < width; x++) {
                 // 변수 이름들 단축
                 double height = world[x][y].height;
                 double temp = world[x][y].temperature;
@@ -75,8 +75,8 @@ namespace worldspace{
             }
         }        
 
-        for (int x = 0; x < 100; x++) { // 휘태커 도표 UI로 출력
-            for (int y = 0; y < 100; y++) {
+        for (int y = 0; y < 100; y++) { // 휘태커 도표 UI로 출력
+            for (int x = 0; x < 100; x++) {
                 double nx = x / 100.0; 
                 double ny = y / 100.0; 
                 
