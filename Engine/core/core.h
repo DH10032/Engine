@@ -48,23 +48,43 @@ class DenseComponent{
     T data;
 };
 
+enum flag{
+    Dense,
+    Spase
+};
 
 
 template <typename T>
 class ComponentPool{
     private:
-    std::unique_ptr<std::vector<T>> Data;
-
+    std::variant
+        std::unique_ptr<std::vector<DenseComponent<T>>>,
+        std::unique_ptr<std::vector<SparseComponent<T>>>
+    > Data;
+    
     public:
-    ComponentPool() : Data(std::make_unique<std::vector<T>>()) {}
+    
+    ComponentPool(flag f) {
+        switch(f){
+            case Dense:
+                std::unique_ptr<std::vector<DenseComponent<T>> Data;
+                Data = std::make_unique<std::vector<DenseComponent<T>>();
+                break;
+
+            case Spase:
+                std::unique_ptr<std::vector<SpaseComponent<T>> Data;
+                Data = std::make_unique<std::vector<SpaseComponent<T>>();
+                break;
+        }
+    }
 
     /**
      * @brief 소유권 이전 오퍼레이터 함수
      * @note  왼쪽 스마트 포인터로 소유권이 이전 됨
      * @note  단, 타입이 동일해야 함.
      */
-    void operator=(ComponentPool B){
-        Data = std::move(B.Data);
+    void operator=(ComponentPool<T>&& B){
+        Data = B.Data.get();
     }
 
     /**
@@ -77,8 +97,13 @@ class ComponentPool{
         Data->push_back(input);
     }
 
+    template <typename A>
+    void Del(A data){
+
+    }
+
     T operator[](int index){
-        T r = Data->at(index);
+        T r = Data->at(index).data;
         return r;
     }
 };
