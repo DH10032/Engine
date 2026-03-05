@@ -32,10 +32,10 @@ int main()
     };
 
     // 컴포넌트 A 선언 타입 DenseComponent
-    ComponentPool<test> A(Dense);
+    ComponentPool<DenseComponent<test>> A;
 
     // A에 d삽입
-    A.push_back(d);
+    A.add(d);
 
     // operator를 통해 배열처럼 접근되는 것처럼 보이게 했습니다.
     // 연사자 []를 통해 접근하면 됩니다.
@@ -45,11 +45,12 @@ int main()
     std::cout << r.a << std::endl;
     std::cout << r.b << std::endl;
 
-    ComponentPool<test> B(Dense);
+    ComponentPool<DenseComponent<test>> B;
 
-    B = A;
 
-    test r = B[0];
+    B=A;
+
+    r = B[0];
     std::cout << r.a << std::endl;
     std::cout << r.b << std::endl;
 
