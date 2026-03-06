@@ -17,7 +17,7 @@ namespace mapspace
     std::vector<double> h_steps = terrainData["setting"]["humid_steps"].get<std::vector<double>>();
     std::vector<std::vector<std::string>> matrix= terrainData["setting"]["matrix"].get<std::vector<std::vector<std::string>>>();
     
-    TerrainType MapInit(int x, int y) 
+    TT MapInit(int x, int y) 
     {
         // ===================================
         // 휘태커 도표 UI 출력
@@ -37,7 +37,7 @@ namespace mapspace
     
     
             // matrix배열에 따른 tileType 부여
-            return terrainMap[matrix[h_idx][t_idx]];
+            return StringToTT(matrix[h_idx][t_idx]);
         }
     
     
@@ -62,7 +62,7 @@ namespace mapspace
         // ====================================
     
         // 높이 낮으면 물 고정
-        if (height < 0.3) { return terrainMap["water"]; }
+        if (height < 0.3) { return StringToTT("water"); }
     
         // lower_bound를 이용해 인덱스 추출
         int t_idx = std::lower_bound(t_steps.begin(), t_steps.end(), temp) - t_steps.begin();
@@ -73,7 +73,7 @@ namespace mapspace
         h_idx = std::min((int)h_steps.size() - 1, h_idx);
     
         // matrix배열에 따른 TerrainType 부여
-        return terrainMap[matrix[h_idx][t_idx]];
+        return StringToTT(matrix[h_idx][t_idx]);
         
         // JSON에서 배열 통한 색 지정
         /*
