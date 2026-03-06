@@ -44,7 +44,7 @@ PerlinNoiseSpace::PerlinNoise perlin3(SEED+2);
 // -------------------------------
 // TerrainType & Extra
 // -------------------------------
-enum class TerrainType : uint8_t
+enum class TT : uint8_t // TerrainType
 {
     water = 0,
     plain,
@@ -65,6 +65,34 @@ enum class TerrainType : uint8_t
     // ... 최대 64종류
     MAX = 64
 };
+
+constexpr const char* TTStrings[] = {
+    "water", "plain", "forest", "jungle", "dessert", "savanna", "taiga", "meadow", "tundra", "karst", "swamp", "iced_plain", "iced_karst", "snow", "glacier", "volcano"
+};
+
+inline TT StringToTT(const std::string& str)
+{
+    if (str == "Water")  	 return TT::Water;
+    if (str == "plain")  	 return TT::plain;
+    if (str == "forest")   	 return TT::forest;
+    if (str == "jungle")   	 return TT::jungle;
+    if (str == "dessert") 	 return TT::dessert;
+    if (str == "savanna")    return TT::savanna;
+    if (str == "taiga") 	 return TT::taiga;
+    if (str == "meadow") 	 return TT::meadow;
+    if (str == "tundra") 	 return TT::tundra;
+    if (str == "karst") 	 return TT::karst;
+    if (str == "swamp") 	 return TT::swamp;
+    if (str == "iced_plain") return TT::iced_plain;
+    if (str == "iced_karst") return TT::iced_karst;
+    if (str == "snow") 		 return TT::snow;
+    if (str == "glacier") 	 return TT::glacier;
+    if (str == "volcano") 	 return TT::volcano;
+
+    return TT::Water; // 기본값
+}
+
+inline const char* TTToString(Biome b) { return TTStrings[static_cast<uint8_t>(b)]; }
 
 struct ResourceStack
 {
