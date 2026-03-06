@@ -7,6 +7,12 @@ namespace PerlinNoiseSpace {
 // ----------------------
 PerlinNoise::PerlinNoise(unsigned int seed)
 {
+    if(seed == 1024)
+    {
+        std::random_device rd;
+        std::mt19937::result_type seed = rd();
+        unsigned int seed = seed_dist(temp);
+    }
     p.resize(256);
     std::iota(p.begin(), p.end(), 0);
     std::mt19937 engine(seed);
