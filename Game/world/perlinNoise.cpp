@@ -7,7 +7,7 @@ namespace PerlinNoiseSpace {
 // ----------------------
 PerlinNoise::PerlinNoise(unsigned int seed)
 {
-    if(seed == 1024)
+    if(seed == 1024) // 기본 시드일 경우
     {
         std::random_device rd;
         std::mt19937::result_type seed = rd();
