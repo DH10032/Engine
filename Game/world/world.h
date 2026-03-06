@@ -4,7 +4,10 @@
 #include "perlinNoise.h"
 #include <random>
 #include <stdio.h>
-
+#include <vector>
+#include <cstdint>
+#include <unordered_map>
+#include <algorithm>
 
 // const double p[101] = { // 정규분포표에서 각 누적확률을 나타내는 숫자표
 //     0,
@@ -20,81 +23,124 @@
 //     0.9272, 0.9350, 0.9409, 0.9500, 0.9599, 0.9697, 0.9798, 0.9901, 0.9901, 0.9990
 // };
 
-namespace worldspace{
+// -------------------------------
+// 비트 마스크 정의
+// -------------------------------
+constexpr uint8_t TILE_TYPE_MASK = 0b00111111; // bit0~5
+constexpr uint8_t HEIGHT_MASK    = 0b11000000; // bit6~7
+constexpr uint8_t HEIGHT_SHIFT   = 6;
 
-    const int width = 1280;
-    const int height = 720;
+// -------------------------------
+// TerrainType & Extra
+// -------------------------------
+enum class TerrainType : uint8_t
+{
+    water = 0,
+    plain,
+    forest,
+    jungle,
+    dessert,
+    savanna,
+    taiga,
+    meadow,
+    tundra,
+    karst,
+    swamp,
+    iced_plain,
+    iced_karst,
+    snow,
+    glacier,
+    volcano,
+    // ... 최대 64종류
+    MAX = 64
+};
 
-    int worldInit();
-    int waterInit();
+struct ResourceStack
+{
+    DropType type;
+    uint16_t amount;
+};
 
-    enum TileType : uint8_t {
-        water,
-        plain,
-        forest,
-        jungle,
-        dessert,
-        savanna,
-        taiga,
-        meadow,
-        tundra,
-        karst,
-        swamp,
-        iced_plain,
-        iced_karst,
-        snow,
-        glacier,
-        volcano
-    };
+struct TileExtra
+{
+    uint16_t hp;
+    std::vector<ResourceStack> resources; // 여러 종류 표현 위해
+    uint8_t owner;
+    DropType drop;
+    bool isBlocked;
+};
 
-    enum TILE_FLAGS : uint8_t {
-        TILE_TYPE     = 0x0F, // 0000 1111 : 지형 정보
-        TILE_EX       = 0x30, // 0011 0000 : 타일의 자원 종류 (0 : 없음 / 1 : 시야 보임 / 2 : 시야 차단 3 : 길 차단)
-        TILE_WALKABLE = 0x40, // 0100 0000 : 지형 이동 가능 유무
-        TILE_HEIGHT   = 0x80, // 1000 0000 : 지형 높이
-    };
-    /*
-        비트 5 (Height),    비트 4 (Walkable),  지형 의미,              게임 내 역할
-        0 (Low) ,           0 (No) ,           물 (Water),             저지대 장애물, 이동 불가
-        0 (Low) ,           1 (Yes),           평지 (Ground),          일반적인 저지대 이동 구역
-        1 (High),           1 (Yes),           언덕 (Slope),           저지대 ↔ 고지대 연결 통로
-        1 (High),           0 (No) ,           고지대 (Cliff/High),    고지대 본토 (저지대 유닛 진입 불가)
-    .                                                                                                      */
+// -------------------------------
+// Chunk 구조
+// -------------------------------
+struct Chunk
+{
+    static constexpr int SIZE = 32;
 
-    enum EX_TYPE : uint8_t {
-        EX_OWNER    = 0x0f // 0000 1111 : 15개 팀 -> 0 : 중립
-        EX_DROP     = 0x30 // 0011 0000 : 드랍 유무 (0 : NONE / 1 : DNA / 2 : FOOD / 3 : URANIUM)
-        EX_REGEN    = 0x40 // 0100 0000 : 리젠 유무
-        EX_ISBUILD  = 0x80 // 1000 0000 : BUILDING or RESOURCE
-    };
+    int chunkX;
+    int chunkY;
 
-    struct EX_DATA {
-        enum EX_TYPE TYPE;
-        unit16_t health;
-        unit16_t health;
-    }
-    /*
-    // 타일 데이터 조작 (인라인 함수로 오버헤드 제거)
-    inline bool IsTileOccupied(uint8_t data) { return data & TILE_OCCUPIED; }
-    inline bool IsHighGround(uint8_t data)   { return data & TILE_HEIGHT; }
-    inline uint8_t GetType(uint8_t data)     { return data & TILE_TYPE; }
+    std::vector<uint8_t> terrain;
+    // std::vector<uint8_t> dynamic; : 아직은 맵에 다이나믹한 요소가 없음
+    std::unordered_map<int, TileExtra> extras;
 
-    // 데이터 수정 (Set)
-    inline void SetOccupied(uint8_t& data, bool occupied) {
-        if (occupied) data |= TILE_OCCUPIED;
-        else data &= ~TILE_OCCUPIED;
-    }
-    */
+    bool dirty;
 
+    Chunk(int x = 0, int y = 0);
 
-    struct tile{
-        double height;
-        double temperature;
-        double humidity;
-        std::array<int,4> color;
-        std::string tileType;
-        SDL_Rect dst;
-    };
+    inline int Chunk::Index(int x, int y) const { return y * SIZE + x; }
+};
 
-    extern tile world[width][height];
-}
+// -------------------------------
+// Map 클래스
+// -------------------------------
+class Map
+{
+public:
+    int width;
+    int height;
+    int chunkWidth;
+    int chunkHeight;
+
+    std::vector<Chunk> chunks;
+
+public:
+    Map(int w, int h);
+
+    Chunk& GetChunk(int x, int y);
+		inline int Map::LocalX(int x) const { return x % Chunk::SIZE; }
+		inline int Map::LocalY(int y) const { return y % Chunk::SIZE; }
+
+    // Terrain
+		inline uint8_t Map::GetTileData(int x, int y) const
+		{
+		    const Chunk& chunk = const_cast<Map*>(this)->GetChunk(x,y);
+		    return chunk.terrain[chunk.Index(LocalX(x), LocalY(y))];
+		}
+		
+		inline uint8_t Map::GetHeight(int x, int y) const { return (GetTileData(x,y) & HEIGHT_MASK) >> HEIGHT_SHIFT; } // 0 ~ 3
+		inline void Map::SetHeight(int x, int y, uint8_t h)
+		{
+		    h = std::min<uint8_t>(h, 3);
+		    Chunk& chunk = GetChunk(x,y);
+		    int idx = chunk.Index(LocalX(x), LocalY(y));
+		    chunk.terrain[idx] = (chunk.terrain[idx] & ~HEIGHT_MASK) | ((h << HEIGHT_SHIFT) & HEIGHT_MASK);
+		    chunk.dirty = true;
+		}
+    
+		inline uint8_t Map::GetTileType(int x, int y) const { return GetTileData(x,y) & TILE_TYPE_MASK; }
+    inline void Map::SetTileType(int x, int y, uint8_t type)
+		{
+		    Chunk& chunk = GetChunk(x,y);
+		    int idx = chunk.Index(LocalX(x), LocalY(y));
+		    chunk.terrain[idx] = (chunk.terrain[idx] & ~TILE_TYPE_MASK) | (type & TILE_TYPE_MASK);
+		    chunk.dirty = true;
+		}
+
+    // CanMove
+    bool CanMove(int fromX, int fromY, int toX, int toY) const;
+
+    // Extra
+    TileExtra* GetExtra(int x, int y);
+    void SetExtra(int x, int y, const TileExtra& extra);
+};
