@@ -16,17 +16,21 @@ SparseComponent : 정렬 유지 x
 
 DenseComponent  : 정렬 유지 o
 탐색 : 이진 탐색
-
-    [컴포넌트 계층]
-     기본 컴포넌트
-     분류 컴포넌트
-     특화 컴포넌트
-     특수 컴포넌트
 */
 
+/*
+EntityManager class가 필요한 이유
+Component에 id로 정의되는 Entity들을 관리하기 위해 필요
+Entity는 필요적으로 Sparse와 Dense가 혼합된 Componet들로 관리가 됨
+이를 유지하기 위해 Entity 내부에서 관리가 필요
+
+근데 이렇게 할려면 기본 컴포넌트 클래스를 생성
+컴포넌트 풀에 상속 시킴
+Entity에서 기본 컴포너틑를 이들 클래스를 다운, 업 캐스팅으로 관리
+*/
 
 /**
- * @brief 밀도가 높은 컴포넌트
+ * @brief 밀도가 높은 컴포넌트의 원소
  * @note 해당 자료형은 UUID가 Entity ID입니다.
  * @code
 ```
@@ -46,8 +50,12 @@ class SparseComponent{
     T data;
 };
 
+class BaseComponent{
+    BaseComponent() = default;
+};
+
 /**
- * @brief 밀도가 높은 컴포넌트
+ * @brief 밀도가 높은 컴포넌트의 원소
  * @note 해당 자료형은 index가 Entity ID입니다.
  * @code
 ```
@@ -61,27 +69,26 @@ class DenseComponent{
 ```
  */
 template <typename T>
-class DenseComponent{
+class DenseComponent : public BaseComponent{
     public:
     T data;
 };
 
-
 template <typename T>
-class ComponentPool{
+class DenseComponentPool{
     private:
-    std::unique_ptr<std::vector<T>> Data;
+    std::unique_ptr<std::vector<DenseComponent<T>>> Data;
     
     public:
-    ComponentPool() : Data(std::make_unique<std::vector<T>>()) {}
+    DenseComponentPool() : Data(std::make_unique<std::vector<DenseComponent<T>>>()) {}
 
     /**
      * @brief 소유권 이전 오퍼레이터 함수
      * @note  왼쪽 스마트 포인터로 소유권이 이전 됨
      * @note  단, 타입이 동일해야 함.
      */
-    void operator=(const ComponentPool<T>& B){
-        Data = std::make_unique<std::vector<T>>(*B.Data);
+    void operator=(const DenseComponentPool<T>& B){
+        Data = std::make_unique<std::vector<DenseComponent<T>>>(*B.Data);
     }
 
     /**
@@ -90,7 +97,7 @@ class ComponentPool{
      */
     template <typename A>
     void add(const A data){
-        T input;
+        DenseComponent<T> input;
         input.data = data;
         Data->push_back(input);
     }
@@ -107,6 +114,22 @@ class ComponentPool{
     auto& operator[](const int index){
         return Data->at(index).data;
     }
+};
+
+/**
+ * @brief CoponnetPool들을 관리할 개체
+ */
+class Entity : public BaseComponent{
+    private:
+        std::map<std::type_index, BaseComponent&> Components;
+
+    public:
+        /**
+         * @brief 반환 연산 함수
+         */
+        void operator[](std::string name){
+            
+        }
 };
 
 #endif
