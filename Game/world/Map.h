@@ -9,6 +9,9 @@
 #include <unordered_map>
 #include <algorithm>
 
+namespace mapspace
+{
+
 // const double p[101] = { // 정규분포표에서 각 누적확률을 나타내는 숫자표
 //     0,
 //     0.0099, 0.0202, 0.0301, 0.0401, 0.0500, 0.0594, 0.0694, 0.0793, 0.0892, 0.0990, 
@@ -29,6 +32,14 @@
 constexpr uint8_t TILE_TYPE_MASK = 0b00111111; // bit0~5
 constexpr uint8_t HEIGHT_MASK    = 0b11000000; // bit6~7
 constexpr uint8_t HEIGHT_SHIFT   = 6;
+
+// -------------------------------
+// 시드 설정
+// -------------------------------
+int SEED = 1024;
+PerlinNoiseSpace::PerlinNoise perlin1(SEED);
+PerlinNoiseSpace::PerlinNoise perlin2(SEED+1);
+PerlinNoiseSpace::PerlinNoise perlin3(SEED+2);
 
 // -------------------------------
 // TerrainType & Extra
@@ -144,3 +155,5 @@ public:
     TileExtra* GetExtra(int x, int y);
     void SetExtra(int x, int y, const TileExtra& extra);
 };
+
+}
