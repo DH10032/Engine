@@ -1,7 +1,5 @@
 #include "GameManager.h"
 
-
-
 void Engine::GameManager::ShowWindow(){
     window::Create_window(&window_setting, SDL_WINDOW_SHOWN);
     CreateText::TTF_start(window_setting.renderer);
@@ -22,8 +20,15 @@ void Engine::GameManager::LoadAsset(std::string path){
     data = AssetManager::Load_Asset(window_setting.renderer, path);
 }
 
-void Engine::GameManager::DrawObject(){
+void Engine::GameManager::FrameStart(){
     SDL_RenderClear(window_setting.renderer);
+}
+
+void Engine::GameManager::DrawMap(){
+    Animation::Render_Entity(window_setting.renderer);
+}
+
+void Engine::GameManager::DrawObject(){
     Animation::Render_Entity(window_setting.renderer, data, p);
     SDL_RenderPresent(window_setting.renderer);
 }
