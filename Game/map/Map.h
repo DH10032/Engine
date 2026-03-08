@@ -168,7 +168,7 @@ public:
 		}
     
 		inline uint8_t Map::GetTileType(int x, int y) const { return GetTileData(x,y) & TILE_TYPE_MASK; }
-    inline void Map::SetTileType(int x, int y, uint8_t type)
+        inline void Map::SetTileType(int x, int y, uint8_t type)
 		{
 		    Chunk& chunk = GetChunk(x,y);
 		    int idx = chunk.Index(LocalX(x), LocalY(y));
