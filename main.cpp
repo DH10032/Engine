@@ -1,5 +1,18 @@
 #include "main.h"
 
+// Engine::GameManager system;
+// system.ShowWindow();
+// system.LoadAsset("Game/data/asset.json");
+// for(;;){
+//     system.DrawObject();
+//     SDL_Delay(30);
+// }
+
+// system.Destroy_Object();
+
+/*
+먼저 아래틑 테스트 코드 입니다.
+*/
 struct test{
     int a;
     int b;
@@ -7,44 +20,46 @@ struct test{
 
 int main()
 {
-    Engine::GameManager system;
-    system.ShowWindow();
-    system.LoadAsset("Game/data/asset.json");
     
-    // test 코드입니다.
-    // test 타입 변수 d 선언
     test d = {
         .a = 1,
         .b = 2
     };
 
-    // 컴포넌트 A 선언 타입 DenseComponent
+    /************************************************************************/
     DenseComponentPool<test> A;
-
-    // A에 d삽입
     A.add(d);
 
-    // operator를 통해 배열처럼 접근되는 것처럼 보이게 했습니다.
-    // 연사자 []를 통해 접근하면 됩니다.
     test r = A[0];
 
-    // 출력
     std::cout << r.a << std::endl;
     std::cout << r.b << std::endl;
-
+    
+    /************************************************************************/
     DenseComponentPool<test> B;
-
-
     B=A;
 
     r = B[0];
     std::cout << r.a << std::endl;
     std::cout << r.b << std::endl;
+    
+    /************************************************************************/
+    SparseComponentPool<test> C;
 
-    for(;;){
-        system.DrawObject();
-        SDL_Delay(30);
-    }
+    C.add(d, 0);
 
-    system.Destroy_Object();
+    r = C[0];
+
+    std::cout << r.a << std::endl;
+    std::cout << r.b << std::endl;
+    
+    /************************************************************************/
+    SparseComponentPool<test> D;
+
+    D=C;
+
+    r = D[0];
+    std::cout << r.a << std::endl;
+    std::cout << r.b << std::endl;
+
 }

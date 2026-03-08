@@ -1,8 +1,6 @@
 #include "animation.h"
 
-/*
-0xffffffff
-*/
+
 namespace Animation{
 
     void Render_Entity(SDL_Renderer* renderer, Asset data ,std::vector<Parts> p){

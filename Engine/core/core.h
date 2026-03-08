@@ -50,9 +50,51 @@ class SparseComponent{
     T data;
 };
 
-class BaseComponent{
-    BaseComponent() = default;
+template <typename T>
+class SparseComponentPool{
+    private:
+    std::unique_ptr<std::vector<SparseComponent<T>>> Data;
+    
+    public:
+    SparseComponentPool() : Data(std::make_unique<std::vector<SparseComponent<T>>>()) {}
+
+    /**
+     * @brief 소유권 이전 오퍼레이터 함수
+     * @note  왼쪽 스마트 포인터로 소유권이 이전 됨
+     * @note  단, 타입이 동일해야 함.
+     */
+    void operator=(const SparseComponentPool<T>& B){
+        Data = std::make_unique<std::vector<SparseComponent<T>>>(*B.Data);
+    }
+
+    /**
+     * @brief Data 삽입 함수
+     * @넣는 순서대로 index 증가
+     */
+    template <typename A>
+    void add(const A data, const int id){
+        SparseComponent<T> input;
+        input.data = data;
+        input.UUID = id;
+        Data->push_back(input);
+    }
+
+    template <typename A>
+    void del(A data){
+
+    }
+
+    /**
+     * @brief Data 반환 함수
+     * @note 복사가 발생
+     */
+    auto& operator[](const int index){
+        for(auto& i:*Data){
+            if(index==i.UUID) return i.data;
+        }
+    }
 };
+
 
 /**
  * @brief 밀도가 높은 컴포넌트의 원소
@@ -69,7 +111,7 @@ class DenseComponent{
 ```
  */
 template <typename T>
-class DenseComponent : public BaseComponent{
+class DenseComponent{
     public:
     T data;
 };
@@ -114,22 +156,6 @@ class DenseComponentPool{
     auto& operator[](const int index){
         return Data->at(index).data;
     }
-};
-
-/**
- * @brief CoponnetPool들을 관리할 개체
- */
-class Entity : public BaseComponent{
-    private:
-        std::map<std::type_index, BaseComponent&> Components;
-
-    public:
-        /**
-         * @brief 반환 연산 함수
-         */
-        void operator[](std::string name){
-            
-        }
 };
 
 #endif
