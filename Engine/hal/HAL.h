@@ -63,8 +63,19 @@ typedef struct{
     int angle;
 }Parts;
 
-void DrawTexture(){
-    
+/*
+내일 정리할 것
+*/
+void DrawTexture(SDL_Renderer* renderer, SDL_Texture* Texture, SDL_Rect* src, SDL_Rect* dst, int angle, SDL_Point* center){
+    SDL_RenderCopyEx(
+        renderer,           // 렌더러
+        Texture, // 텍스처
+        src,        // 소스 영역 (NULL = 전체)
+        dst,        // 목적지 영역
+        angle,         // 각도 (도 단위, 시계방향)
+        center,     // 회전중심(dst기준 상대 좌표)
+        SDL_FLIP_NONE       // 뒤집기 옵션
+    )
 };
 
 
