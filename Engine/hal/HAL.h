@@ -19,6 +19,7 @@
 #include <map>
 #include <typeindex>
 #include <vector>
+#include<cassert>
 
 using json = nlohmann::json;
 
