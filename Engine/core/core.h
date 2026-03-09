@@ -92,6 +92,8 @@ class SparseComponentPool{
         for(auto& i:*Data){
             if(index==i.UUID) return i.data;
         }
+        std::cout<<"해당 id는 컴포넌트에 존재하지 않습니다."<<std::endl;
+        assert(false);
     }
 };
 
