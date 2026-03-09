@@ -63,5 +63,9 @@ typedef struct{
     int angle;
 }Parts;
 
+void DrawTexture(){
+    
+};
+
 
 #endif
