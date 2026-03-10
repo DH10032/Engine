@@ -215,9 +215,6 @@ public:
     // SmoothBiomes
 	void SmoothBiomes(int threshold = 5, int iterations = 2);
 
-    // GenerateBeaches
-	void GenerateBeaches();
-
     // CanMove
     bool CanMove(int fromX, int fromY, int toX, int toY) const;
 
