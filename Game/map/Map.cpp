@@ -205,6 +205,47 @@ namespace mapspace
     }
 
     // -------------------------------
+    // 해변 만들기
+    // -------------------------------
+    void Map::GenerateBeaches() {
+        // 변화를 실시간으로 적용하면 해안선이 계속 밀려 들어갈 수 있으므로, 
+        // 여기서는 간단하게 현재 상태를 체크하며 진행합니다.
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
+                uint8_t currentType = GetTileType(x, y);
+    
+                // 1. 현재 타일이 육지(바다가 아님)이고, 높이가 낮은 지형(Height 1)일 때만 적용
+                if (currentType != (uint8_t)TT::water && GetHeight(x, y) == 1) {
+                    
+                    if (IsAdjacentToWater(x, y)) {
+                        // 2. 바다와 인접했다면 모래사장(사막 타일 등)으로 변경
+                        SetTileType(x, y, (uint8_t)TT::dessert); 
+                    }
+                }
+            }
+        }
+    }
+    
+    // 주변 8칸 중 바다가 있는지 확인하는 헬퍼 함수
+    bool Map::IsAdjacentToWater(int x, int y) const {
+        for (int i = -1; i <= 1; ++i) {
+            for (int j = -1; j <= 1; ++j) {
+                if (i == 0 && j == 0) continue;
+    
+                int nx = x + i;
+                int ny = y + j;
+    
+                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                    if (GetTileType(nx, ny) == (uint8_t)TT::water) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    // -------------------------------
     // Extra layer
     // -------------------------------
     TileExtra* Map::GetExtra(int x, int y)
