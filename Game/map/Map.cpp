@@ -129,8 +129,6 @@ namespace mapspace
         const Chunk& toChunk = const_cast<Map*>(this)->GetChunk(toX,toY);
         int idx = toChunk.Index(LocalX(toX), LocalY(toY));
     
-        if(toChunk.dynamic[idx] & PATH_BLOCK_BIT) return false;
-    
         uint8_t fromHeight = GetHeight(fromX, fromY);
         uint8_t toHeight   = GetHeight(toX, toY);
     
