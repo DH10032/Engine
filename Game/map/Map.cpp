@@ -185,10 +185,12 @@ namespace mapspace
     // -------------------------------
     // 바이옴 다듬기
     // -------------------------------
-    void Map::SmoothBiomes(int threshold, int iterations) {
+    void Map::SmoothBiomes(int threshold, int iterations) 
+    {
+        std::vector<uint8_t> nextTypes(width * height);
+    
         for (int iter = 0; iter < iterations; ++iter) {
-            std::vector<uint8_t> nextTypes(width * height);
-            
+            // 루프마다 새로 할당하지 않고 기존 메모리를 재사용
             for (int y = 0; y < height; ++y) {
                 for (int x = 0; x < width; ++x) {
                     auto [bestType, count] = GetMostFrequentBiomeWithCount(x, y);
@@ -196,7 +198,6 @@ namespace mapspace
                 }
             }
     
-            // 실제 맵에 적용
             for (int y = 0; y < height; ++y) {
                 for (int x = 0; x < width; ++x) {
                     SetTileType(x, y, nextTypes[y * width + x]);
