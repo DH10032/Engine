@@ -86,7 +86,7 @@ namespace mapspace
     }
     
     // -------------------------------
-    // Map 클래스
+    // Map 클래스 : 처음 딱 한번만 만들어짐
     // -------------------------------
     Map::Map(int w, int h) : width(w), height(h) // Map 클래스
     {
