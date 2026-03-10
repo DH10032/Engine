@@ -200,48 +200,58 @@ namespace mapspace
     // -------------------------------
     void Map::SmoothBiomes(int threshold, int iterations) 
     {
-        std::vector<uint8_t> nextTypes(width * height);
+        // 초기 flat buffer 생성
+        std::vector<uint8_t> tileTypes(width * height);
+        for(int y=0; y<height; ++y)
+            for(int x=0; x<width; ++x)
+                tileTypes[y*width + x] = GetTileType(x, y);
     
-        for (int iter = 0; iter < iterations; ++iter) {
-            
-            // OpenMP 지시어: 루프를 여러 스레드로 분할 실행
-            // shared(nextTypes): 모든 스레드가 이 버퍼를 공유함
-            // private(cx, cy, currentChunk, lx, ly...): 각 스레드가 개별 변수를 가짐
+        std::vector<uint8_t> nextTileTypes = tileTypes;
+    
+        for(int iter = 0; iter < iterations; ++iter) 
+        {
+            // -----------------------
+            // smoothing kernel 적용
+            // -----------------------
             #pragma omp parallel for collapse(2) schedule(dynamic)
-            for (int cy = 0; cy < chunkHeight; ++cy) {
-                for (int cx = 0; cx < chunkWidth; ++cx) {
-                    
-                    // 각 스레드는 자신이 담당한 청크만 처리
-                    Chunk& currentChunk = chunks[cy * chunkWidth + cx];
-                    int startX = cx * Chunk::SIZE;
-                    int startY = cy * Chunk::SIZE;
-    
-                    for (int ly = 0; ly < Chunk::SIZE; ++ly) {
-                        int gy = startY + ly;
-                        if (gy >= height) continue;
-    
-                        for (int lx = 0; lx < Chunk::SIZE; ++lx) {
-                            int gx = startX + lx;
-                            if (gx >= width) continue;
-    
-                            auto [bestType, count] = GetMostFrequentBiomeWithCount(gx, gy);
-                            uint8_t currentType = currentChunk.terrain[ly * Chunk::SIZE + lx] & TILE_TYPE_MASK;
-                            
-                            // nextTypes[index]에 쓰는 작업은 타일마다 위치가 다르므로 
-                            // Race Condition(경합)이 발생하지 않아 안전함
-                            nextTypes[gy * width + gx] = (count >= threshold) ? bestType : currentType;
+            for(int y = 0; y < height; ++y) {
+                for(int x = 0; x < width; ++x) {
+                    int counts[64] = {0};
+                    // 3x3 neighborhood
+                    for(int dy = -1; dy <= 1; ++dy) {
+                        for(int dx = -1; dx <= 1; ++dx) {
+                            int nx = x + dx;
+                            int ny = y + dy;
+                            if(nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
+                            counts[tileTypes[ny * width + nx]]++;
                         }
                     }
+    
+                    // 가장 많이 나온 tile type
+                    uint8_t bestType = 0;
+                    int maxCount = 0;
+                    for(int i = 0; i < 64; ++i) {
+                        if(counts[i] > maxCount) {
+                            maxCount = counts[i];
+                            bestType = static_cast<uint8_t>(i);
+                        }
+                    }
+                    // threshold 적용
+                    nextTileTypes[y * width + x] = (maxCount >= threshold) ? bestType : tileTypes[y * width + x];
                 }
             }
     
-            // 결과 일괄 적용 (이 루프도 병렬화 가능)
-            #pragma omp parallel for
-            for (int i = 0; i < (int)nextTypes.size(); ++i) {
-                int y = i / width;
-                int x = i % width;
-                SetTileType(x, y, nextTypes[i]);
+            // -----------------------
+            // 결과 반영
+            // -----------------------
+            #pragma omp parallel for collapse(2) schedule(static)
+            for(int y = 0; y < height; ++y){
+                for(int x = 0; x < width; ++x){
+                    SetTileType(x, y, nextTileTypes[y * width + x]);
+                }
             }
+            // 다음 iteration을 위해 swap
+            std::swap(tileTypes, nextTileTypes);
         }
     }
 
