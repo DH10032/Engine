@@ -218,8 +218,8 @@ namespace mapspace
                 for(int x = 0; x < width; ++x) {
                     int counts[64] = {0};
                     // 3x3 neighborhood
-                    for(int dy = -1; dy <= 1; ++dy) {
-                        for(int dx = -1; dx <= 1; ++dx) {
+                    for(int dy = -2; dy <= 2; ++dy) {
+                        for(int dx = -2; dx <= 2; ++dx) {
                             int nx = x + dx;
                             int ny = y + dy;
                             if(nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
