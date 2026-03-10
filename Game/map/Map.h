@@ -144,7 +144,7 @@ struct Chunk
 
     std::vector<uint8_t> terrain;
     // std::vector<uint8_t> dynamic; : 아직은 맵에 다이나믹한 요소가 없음
-    std::vector<Tile> extras;
+    std::unordered_map<int, TileExtra> extras;
 
     bool dirty;
 
