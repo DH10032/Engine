@@ -113,12 +113,16 @@ namespace mapspace
     // -------------------------------
     Chunk& Map::GetChunk(int x, int y)
     {
+        assert(x >= 0 && x < width && "x coordinate out of range!");
+        assert(y >= 0 && y < height && "y coordinate out of range!");
         int cx = x / Chunk::SIZE;
         int cy = y / Chunk::SIZE;
         return chunks[cy * chunkWidth + cx];
     }
     const Chunk& Map::GetChunk(int x, int y) const 
     {
+        assert(x >= 0 && x < width && "x coordinate out of range!");
+        assert(y >= 0 && y < height && "y coordinate out of range!");
         int cx = x / Chunk::SIZE;
         int cy = y / Chunk::SIZE;
         return chunks[cy * chunkWidth + cx];
