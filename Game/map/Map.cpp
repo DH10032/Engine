@@ -30,7 +30,7 @@ namespace mapspace
     }
 
     // 지형 데이터 초기화 및 비트 연산 로직
-    uint8_t TerrainGenerator::InitTerrainData(int x, int y, int d)
+    uint8_t TerrainGenerator::InitTerrainData(int width, int height, int x, int y, int d)
     {
         uint8_t tileTypeData;
         uint8_t tileHeightData;
@@ -102,7 +102,7 @@ namespace mapspace
         TerrainGenerator TG;
         for(int y=0; y<height; ++y)
             for(int x=0; x<width; ++x)
-                SetTileData(x,y,TG.InitTerrainData(x,y,10));
+                SetTileData(x,y,TG.InitTerrainData(width, height, x, y, 10));
 
         SmoothBiomes(5,2);
         GenerateBeaches();
