@@ -110,6 +110,27 @@ struct TileExtra
 };
 
 // -------------------------------
+// TerrainGenerator 클래스
+// -------------------------------
+class TerrainGenerator {
+private:
+    std::vector<double> t_steps;
+    std::vector<double> h_steps;
+    std::vector<std::vector<std::string>> matrix;
+    std::vector<std::vector<int>> e_matrix;
+
+    // 내부 유틸리티 함수
+    int GetIdxForMatrix(double envar, const std::vector<double>& steps);
+
+public:
+    // 생성자
+    TerrainGenerator();
+
+    // 지형 데이터 초기화 함수
+    uint8_t InitTerrainData(int x, int y, int d);
+};
+
+// -------------------------------
 // Chunk 구조
 // -------------------------------
 struct Chunk
