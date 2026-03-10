@@ -64,6 +64,11 @@ namespace mapspace
             tileTypeData = 0;
             tileHeightData = 0;
         }
+        else if (h_val < 0.32) 
+        {
+            tileTypeData = 4;
+            tileHeightData = 1;
+        }
         else 
         {
             tileTypeData = (uint8_t)e_matrix[h_idx][t_idx];
@@ -238,46 +243,6 @@ namespace mapspace
                 SetTileType(x, y, nextTypes[i]);
             }
         }
-    }
-
-    // -------------------------------
-    // 해변 만들기
-    // -------------------------------
-    void Map::GenerateBeaches() {
-        for (int y = 0; y < height; ++y) {
-            for (int x = 0; x < width; ++x) {
-                // GetTileData 호출 최소화 (한 번 가져와서 재사용)
-                uint8_t data = GetTileData(x, y);
-                uint8_t currentType = data & TILE_TYPE_MASK;
-                uint8_t currentHeight = (data & HEIGHT_MASK) >> HEIGHT_SHIFT;
-    
-                // 바다가 아니고, 낮은 지대(Height 1)일 때만 주변 바다 검사
-                if (currentType != (uint8_t)TT::water && currentHeight == 1) {
-                    if (IsAdjacentToWater(x, y)) {
-                        SetTileType(x, y, (uint8_t)TT::dessert); 
-                    }
-                }
-            }
-        }
-    }
-    
-    // 주변 8칸 중 바다가 있는지 확인하는 헬퍼 함수
-    bool Map::IsAdjacentToWater(int x, int y) const {
-        for (int i = -1; i <= 1; ++i) {
-            for (int j = -1; j <= 1; ++j) {
-                if (i == 0 && j == 0) continue;
-    
-                int nx = x + i;
-                int ny = y + j;
-    
-                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-                    if (GetTileType(nx, ny) == (uint8_t)TT::water) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     // -------------------------------
