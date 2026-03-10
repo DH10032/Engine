@@ -168,34 +168,36 @@ public:
     Map(int w, int h);
 
     Chunk& GetChunk(int x, int y);
-		inline int Map::LocalX(int x) const { return x % Chunk::SIZE; }
-		inline int Map::LocalY(int y) const { return y % Chunk::SIZE; }
+	const Chunk& GetChunk(int x, int y) const;
 
-    // Terrain
-		inline uint8_t Map::GetTileData(int x, int y) const
-		{
-		    const Chunk& chunk = const_cast<Map*>(this)->GetChunk(x,y);
-		    return chunk.terrain[chunk.Index(LocalX(x), LocalY(y))];
-		}
-		
-		inline uint8_t Map::GetHeight(int x, int y) const { return (GetTileData(x,y) & HEIGHT_MASK) >> HEIGHT_SHIFT; } // 0 ~ 3
-		inline void Map::SetHeight(int x, int y, uint8_t h)
-		{
-		    h = std::min<uint8_t>(h, 3);
-		    Chunk& chunk = GetChunk(x,y);
-		    int idx = chunk.Index(LocalX(x), LocalY(y));
-		    chunk.terrain[idx] = (chunk.terrain[idx] & ~HEIGHT_MASK) | ((h << HEIGHT_SHIFT) & HEIGHT_MASK);
-		    chunk.dirty = true;
-		}
-    
-		inline uint8_t Map::GetTileType(int x, int y) const { return GetTileData(x,y) & TILE_TYPE_MASK; }
-        inline void Map::SetTileType(int x, int y, uint8_t type)
-		{
-		    Chunk& chunk = GetChunk(x,y);
-		    int idx = chunk.Index(LocalX(x), LocalY(y));
-		    chunk.terrain[idx] = (chunk.terrain[idx] & ~TILE_TYPE_MASK) | (type & TILE_TYPE_MASK);
-		    chunk.dirty = true;
-		}
+	inline int Map::LocalX(int x) const { return x % Chunk::SIZE; }
+	inline int Map::LocalY(int y) const { return y % Chunk::SIZE; }
+
+// Terrain
+	inline uint8_t Map::GetTileData(int x, int y) const
+	{
+		const Chunk& chunk = GetChunk(x,y);
+		return chunk.terrain[chunk.Index(LocalX(x), LocalY(y))];
+	}
+	
+	inline uint8_t Map::GetHeight(int x, int y) const { return (GetTileData(x,y) & HEIGHT_MASK) >> HEIGHT_SHIFT; } // 0 ~ 3
+	inline void Map::SetHeight(int x, int y, uint8_t h)
+	{
+		h = std::min<uint8_t>(h, 3);
+		Chunk& chunk = GetChunk(x,y);
+		int idx = chunk.Index(LocalX(x), LocalY(y));
+		chunk.terrain[idx] = (chunk.terrain[idx] & ~HEIGHT_MASK) | ((h << HEIGHT_SHIFT) & HEIGHT_MASK);
+		chunk.dirty = true;
+	}
+
+	inline uint8_t Map::GetTileType(int x, int y) const { return GetTileData(x,y) & TILE_TYPE_MASK; }
+	inline void Map::SetTileType(int x, int y, uint8_t type)
+	{
+		Chunk& chunk = GetChunk(x,y);
+		int idx = chunk.Index(LocalX(x), LocalY(y));
+		chunk.terrain[idx] = (chunk.terrain[idx] & ~TILE_TYPE_MASK) | (type & TILE_TYPE_MASK);
+		chunk.dirty = true;
+	}
 
     // CanMove
     bool CanMove(int fromX, int fromY, int toX, int toY) const;
