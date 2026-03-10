@@ -37,9 +37,9 @@ constexpr uint8_t HEIGHT_SHIFT   = 6;
 // 시드 설정
 // -------------------------------
 int SEED = 1024;
-PerlinNoiseSpace::PerlinNoise perlin1(SEED);
-PerlinNoiseSpace::PerlinNoise perlin2(SEED+1);
-PerlinNoiseSpace::PerlinNoise perlin3(SEED+2);
+static PerlinNoiseSpace::PerlinNoise perlin1(SEED);
+static PerlinNoiseSpace::PerlinNoise perlin2(SEED+1);
+static PerlinNoiseSpace::PerlinNoise perlin3(SEED+2);
 
 // -------------------------------
 // TerrainType & Extra
