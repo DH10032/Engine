@@ -44,7 +44,7 @@ enum class TT : uint8_t // TerrainType
     plain,
     forest,
     jungle,
-    dessert,
+    desert,
     savanna,
     taiga,
     meadow,
@@ -61,7 +61,7 @@ enum class TT : uint8_t // TerrainType
 };
 
 constexpr const char* TTStrings[] = {
-    "water", "plain", "forest", "jungle", "dessert", "savanna", "taiga", "meadow", "tundra", "karst", "swamp", "iced_plain", "iced_karst", "snow", "glacier", "volcano"
+    "water", "plain", "forest", "jungle", "desert", "savanna", "taiga", "meadow", "tundra", "karst", "swamp", "iced_plain", "iced_karst", "snow", "glacier", "volcano"
 };
 
 inline TT StringToTT(const std::string& str)
@@ -70,7 +70,7 @@ inline TT StringToTT(const std::string& str)
     if (str == "plain")  	 return TT::plain;
     if (str == "forest")   	 return TT::forest;
     if (str == "jungle")   	 return TT::jungle;
-    if (str == "dessert") 	 return TT::dessert;
+    if (str == "desert") 	 return TT::desert;
     if (str == "savanna")    return TT::savanna;
     if (str == "taiga") 	 return TT::taiga;
     if (str == "meadow") 	 return TT::meadow;
