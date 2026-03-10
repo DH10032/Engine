@@ -96,8 +96,6 @@ struct ResourceStack
 
 struct TileExtra
 {
-	uint16_t x;
-	uint16_t x;
     uint16_t hp;
     std::vector<ResourceStack> resources; // 여러 종류 표현 위해
     uint8_t owner;
