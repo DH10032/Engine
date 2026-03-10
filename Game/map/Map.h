@@ -72,7 +72,7 @@ constexpr const char* TTStrings[] = {
 
 inline TT StringToTT(const std::string& str)
 {
-    if (str == "Water")  	 return TT::Water;
+    if (str == "water")  	 return TT::water;
     if (str == "plain")  	 return TT::plain;
     if (str == "forest")   	 return TT::forest;
     if (str == "jungle")   	 return TT::jungle;
@@ -89,7 +89,7 @@ inline TT StringToTT(const std::string& str)
     if (str == "glacier") 	 return TT::glacier;
     if (str == "volcano") 	 return TT::volcano;
 
-    return TT::Water; // 기본값
+    return TT::water; // 기본값
 }
 
 inline const char* TTToString(Biome b) { return TTStrings[static_cast<uint8_t>(b)]; }
