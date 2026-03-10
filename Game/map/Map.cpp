@@ -2,77 +2,85 @@
 
 namespace mapspace
 {
-    class TerrainGenerator {
-    private:
-        std::vector<double> t_steps;
-        std::vector<double> h_steps;
-        std::vector<std::vector<std::string>> matrix;
-        std::vector<std::vector<int>> e_matrix;
-
-        int GetIdxForMatrix(double envar std::vector<double> steps) // Matrix 인덱스 추출
+    // 생성자 구현
+    TerrainGenerator::TerrainGenerator()
+    {
+        std::ifstream terrainFile("Game/data/terrain.json");
+        if (!terrainFile.is_open()) 
         {
-            int idx = std::lower_bound(steps.begin(), steps.end(), envar) - steps.begin(); // lower_bound를 이용해 인덱스 추출
-            return std::min((int)steps.size() - 1, idx); // 범위 초과 방지
-        }
-    public:
-        void TerrainGenerator() // Reading Json...
-        {
-            // 파일 가져오기
-            std::ifstream terrainFile("Game/data/terrain.json");
-            if (!terrainFile.is_open()) std::cout << "can't open file!" << std::endl;
-            json terrainData;
-            terrainFile >> terrainData;
-            
-            // 데이터 불러오기
-            t_steps = terrainData["setting"]["temp_steps"].get<std::vector<double>>();
-            h_steps = terrainData["setting"]["humid_steps"].get<std::vector<double>>();
-            matrix= terrainData["setting"]["matrix"].get<std::vector<std::vector<std::string>>>();
-            e_matrix = terrainData["setting"]["matrix_enum"].get<std::vector<std::vector<uint8_t>>>();
+            std::cout << "can't open file!" << std::endl;
+            return;
         }
 
-        uint8_t InitTerrainData(int x, int y, int d) : x(x), y(y), Density(d)
-        {
-            uint8_t tileTypeData;
-            uint8_t tileHeightData;
+        json terrainData;
+        terrainFile >> terrainData;
 
-            double nx = (double)x / width * Density;
-            double ny = (double)y / height * Density;
-    
-            // Noise 부여
-            // Perlin(6, 0.5, 2) -> min = 0.02, MAX = 0.7, average = 0.26 graph = _/\__
-            double height = PerlinNoiseSpace::fbm(perlin1, nx, ny, 4, 0.5, 2);
-            double temp = PerlinNoiseSpace::fbm(perlin2, nx, ny, 4, 0.5, 3);
-            double humid = PerlinNoiseSpace::fbm(perlin3, nx, ny, 4, 0.4, 3);
-        
-            // 높이에 따른 온도 변화
-            temp = temp - (height * 0.3); 
-            temp = std::clamp(temp, 0.0, 1.0);
-    
-            if (x < 100 && y < 100) // 휘태커 도표 UI 출력
-            {
-                temp = x / 100.0;
-                humid = y / 100.0;
-                height = 0.0;
-            }
-
-            // temp, humid의 step 계산
-            int h_idx = GetIdxForMatrix(humid, h_steps);
-            int t_idx = GetIdxForMatrix(temp, t_steps);
-
-            // TileType 계산
-            if (height < 0.3) tileTypeData = 0;
-            else tileTypeData = e_matrix[h_idx][t_idx];
-
-            // TileHeight 계산
-            if (height < 0.3) tileHeightData = 0;
-            else if (0.58 < height) tileHeightData = 3;
-            else tileHeightData = 1;
-
-            return ((tileHeightData << HEIGHT_SHIFT) & HEIGHT_MASK) | (tileTypeData & TILE_TYPE_MASK);
-        }
+        t_steps = terrainData["setting"]["temp_steps"].get<std::vector<double>>();
+        h_steps = terrainData["setting"]["humid_steps"].get<std::vector<double>>();
+        matrix = terrainData["setting"]["matrix"].get<std::vector<std::vector<std::string>>>();
+        e_matrix = terrainData["setting"]["matrix_enum"].get<std::vector<std::vector<int>>>();
     }
 
-    Chunk::Chunk(int x, int y) : chunkX(x), chunkY(y), dirty(true) // Chunk 구조
+    // 인덱스 추출 로직
+    int TerrainGenerator::GetIdxForMatrix(double envar, const std::vector<double>& steps)
+    {
+        auto it = std::lower_bound(steps.begin(), steps.end(), envar);
+        int idx = std::distance(steps.begin(), it);
+        return std::min((int)steps.size() - 1, idx);
+    }
+
+    // 지형 데이터 초기화 및 비트 연산 로직
+    uint8_t TerrainGenerator::InitTerrainData(int x, int y, int d)
+    {
+        uint8_t tileTypeData;
+        uint8_t tileHeightData;
+
+        // 외부 변수 width, height, Density 등은 정의되어 있다고 가정
+        double nx = (double)x / width * d; 
+        double ny = (double)y / height * d;
+
+        // Noise 부여 (FBM)
+        double height = PerlinNoiseSpace::fbm(perlin1, nx, ny, 4, 0.5, 2);
+        double temp = PerlinNoiseSpace::fbm(perlin2, nx, ny, 4, 0.5, 3);
+        double humid = PerlinNoiseSpace::fbm(perlin3, nx, ny, 4, 0.4, 3);
+
+        // 높이에 따른 온도 보정
+        temp = std::clamp(temp - (height * 0.3), 0.0, 1.0);
+
+        // 휘태커 도표 UI 출력 영역 예외 처리
+        if (x < 100 && y < 100)
+        {
+            temp = x / 100.0;
+            humid = y / 100.0;
+            height = 0.0;
+        }
+
+        // 행렬 인덱스 계산
+        int h_idx = GetIdxForMatrix(humid, h_steps);
+        int t_idx = GetIdxForMatrix(temp, t_steps);
+
+        // 높이값에 따른 타일 타입 및 높이 데이터 결정
+        if (height < 0.3) 
+        {
+            tileTypeData = 0;
+            tileHeightData = 0;
+        }
+        else 
+        {
+            tileTypeData = (uint8_t)e_matrix[h_idx][t_idx];
+            
+            if (0.58 < height) tileHeightData = 3;
+            else tileHeightData = 1;
+        }
+
+        // 비트 연산 후 반환
+        return ((tileHeightData << HEIGHT_SHIFT) & HEIGHT_MASK) | (tileTypeData & TILE_TYPE_MASK);
+    }
+
+    // -------------------------------
+    // Chunk 구조
+    // -------------------------------
+    Chunk::Chunk(int x, int y) : chunkX(x), chunkY(y), dirty(true)
     {
         terrain.resize(SIZE * SIZE);
         // dynamic.resize(SIZE * SIZE, 0); 아직 다이나믹한 요소 없음
