@@ -257,10 +257,8 @@ namespace mapspace
         return &it->second;
     }
     
-    void Map::SetExtra(const TileExtra& extra)
+    void Map::SetExtra(int x, int y, const TileExtra& extra)
     {
-        int x = extra.x;
-        int y = extra.y;
         Chunk& chunk = GetChunk(x,y);
         int idx = chunk.Index(LocalX(x), LocalY(y));
         chunk.extras[idx] = extra;
