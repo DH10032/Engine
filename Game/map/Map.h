@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <unordered_map>
 #include <algorithm>
+#include <utility>
 
 namespace mapspace
 {
@@ -156,13 +157,16 @@ struct Chunk
 // -------------------------------
 class Map
 {
-public:
+private:
     int width;
     int height;
     int chunkWidth;
     int chunkHeight;
 
     std::vector<Chunk> chunks;
+
+    std::pair<uint8_t, int> GetMostFrequentBiomeWithCount(int x, int y) const;
+    std::vector<uint8_t> GetFullTileTypeBuffer() const;
 
 public:
     Map(int w, int h);
@@ -173,7 +177,7 @@ public:
 	inline int LocalX(int x) const { return x % Chunk::SIZE; }
 	inline int LocalY(int y) const { return y % Chunk::SIZE; }
 
-// Terrain
+	// Terrain
 	inline uint8_t GetTileData(int x, int y) const
 	{
 		const Chunk& chunk = GetChunk(x,y);
@@ -205,6 +209,9 @@ public:
 		chunk.terrain[idx] = (chunk.terrain[idx] & ~TILE_TYPE_MASK) | (type & TILE_TYPE_MASK);
 		chunk.dirty = true;
 	}
+
+    // SmoothBiomes
+	void SmoothBiomes(int threshold = 5, int iterations = 2);
 
     // CanMove
     bool CanMove(int fromX, int fromY, int toX, int toY) const;
