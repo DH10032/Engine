@@ -103,6 +103,9 @@ namespace mapspace
         for(int y=0; y<height; ++y)
             for(int x=0; x<width; ++x)
                 SetTileData(x,y,TG.InitTerrainData(x,y,10));
+
+        SmoothBiomes();
+        SmoothBiomes();
     }
 
     // -------------------------------
@@ -150,12 +153,13 @@ namespace mapspace
     // -------------------------------
     //  근처에 가장 많은 바이옴 검색
     // -------------------------------
-    uint8_t Map::GetMostFrequentBiome(int x, int y) const 
-    {
-        std::unordered_map<uint8_t, int> counts;
+    std::pair<uint8_t, int> Map::GetMostFrequentBiomeWithCount(int x, int y) const {
+        // 인덱스: 바이옴 타입(TT), 값: 등장 횟수
+        int counts[64] = { 0, }; // TT::MAX가 64이므로
         
         for (int i = -1; i <= 1; ++i) {
             for (int j = -1; j <= 1; ++j) {
+    
                 int nx = x + i;
                 int ny = y + j;
                 
@@ -166,18 +170,49 @@ namespace mapspace
             }
         }
     
-        // 가장 많이 등장한 바이옴 찾기
-        uint8_t mostFrequent = GetTileType(x, y);
+        uint8_t mostFrequent = 0;
         int maxCount = 0;
-        for (auto const& [type, count] : counts) {
-            if (count > maxCount) {
-                maxCount = count;
-                mostFrequent = type;
+        for (uint8_t i = 0; i < 64; ++i) {
+            if (counts[i] > maxCount) {
+                maxCount = counts[i];
+                mostFrequent = i;
             }
         }
-        return mostFrequent;
+        
+        return { mostFrequent, maxCount };
     }
+
+    void Map::SmoothBiomes() {
+        // 1. 결과값을 임시로 저장할 버퍼 (원본을 보존하며 계산해야 왜곡이 없음)
+        // 맵 전체 크기의 TileType 데이터를 담을 공간이 필요합니다.
+        std::vector<uint8_t> nextTypes(width * height);
     
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
+                uint8_t currentType = GetTileType(x, y);
+                
+                // 주변 바이옴 카운트 조사
+                uint8_t mostFrequent;
+                int count;
+                std::tie(mostFrequent, count) = GetMostFrequentBiomeWithCount(x, y);
+    
+                // 임계값 설정 (예: 주변 8칸 중 5칸 이상이 같은 바이옴이면 변경)
+                if (count >= 5) {
+                    nextTypes[y * width + x] = mostFrequent;
+                } else {
+                    nextTypes[y * width + x] = currentType; // 변화 없음
+                }
+            }
+        }
+    
+        // 2. 버퍼의 내용을 실제 맵에 적용
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
+                SetTileType(x, y, nextTypes[y * width + x]);
+            }
+        }
+    }
+
     // -------------------------------
     // Extra layer
     // -------------------------------
