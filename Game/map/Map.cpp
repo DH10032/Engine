@@ -146,6 +146,37 @@ namespace mapspace
         // 나머지는 이동 가능 (1↔2, 2↔3, 1↔1, 3↔3, 2↔2)
         return true;
     }
+
+    // -------------------------------
+    //  근처에 가장 많은 바이옴 검색
+    // -------------------------------
+    uint8_t Map::GetMostFrequentBiome(int x, int y) const 
+    {
+        std::unordered_map<uint8_t, int> counts;
+        
+        for (int i = -1; i <= 1; ++i) {
+            for (int j = -1; j <= 1; ++j) {
+                int nx = x + i;
+                int ny = y + j;
+                
+                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                    uint8_t type = GetTileType(nx, ny);
+                    counts[type]++;
+                }
+            }
+        }
+    
+        // 가장 많이 등장한 바이옴 찾기
+        uint8_t mostFrequent = GetTileType(x, y);
+        int maxCount = 0;
+        for (auto const& [type, count] : counts) {
+            if (count > maxCount) {
+                maxCount = count;
+                mostFrequent = type;
+            }
+        }
+        return mostFrequent;
+    }
     
     // -------------------------------
     // Extra layer
