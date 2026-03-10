@@ -96,6 +96,8 @@ struct ResourceStack
 
 struct TileExtra
 {
+	uint16_t x;
+	uint16_t x;
     uint16_t hp;
     std::vector<ResourceStack> resources; // 여러 종류 표현 위해
     uint8_t owner;
@@ -144,7 +146,7 @@ struct Chunk
 
     std::vector<uint8_t> terrain;
     // std::vector<uint8_t> dynamic; : 아직은 맵에 다이나믹한 요소가 없음
-    std::unordered_map<int, TileExtra> extras;
+    std::vector<Tile> extras;
 
     bool dirty;
 
@@ -220,7 +222,7 @@ public:
 
     // Extra
     TileExtra* GetExtra(int x, int y);
-    void SetExtra(int x, int y, const TileExtra& extra);
+    void SetExtra(const TileExtra& extra);
 };
 
 }
