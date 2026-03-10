@@ -30,21 +30,21 @@ namespace mapspace
         TileEnvironments TE;
 
         TE = SetNoise(x,y,10,TE);
-        if (x < 100 && y < 100) 
+        
+        if (x < 100 && y < 100)
             TE = PrintWhittaker(TE);
 
-        humidIdx = GetIdxForMatrix(TE.humid, h_steps);
-        tempIdx = GetIdxForMatrix(TE.temp, t_steps);
+        RefineHeight(TE.height);
 
-        // matrix배열에 따른 tileType 부여 -------------------------------- Layer 3
-        SetTileType(x,y,StringToTT(e_matrix[h_idx][t_idx]));
-        SetHeight(x,y,0);
+        h_idx = GetIdxForMatrix(TE.humid, h_steps);
+        t_idx = GetIdxForMatrix(TE.temp, t_steps);
+
+        // matrix배열에 따른 tileType 부여
+        if (TE.height < 0.3) SetTileType(x,y,0);
+        else SetTileType(x,y,e_matrix[h_idx][t_idx]);
     }
 
-    // -------------------------------
-    // Noise 부여
-    // -------------------------------
-    TileEnvironments SetNoise(int x, int y, int Density, TileEnvironments TE)
+    TileEnvironments SetNoise(int x, int y, int Density, TileEnvironments TE) // Noise 부여
     {
         double nx = (double)x / width * Density;
         double ny = (double)y / height * Density;
@@ -57,22 +57,17 @@ namespace mapspace
         // 높이에 따른 온도 변화
         double TE.temperature = TE.temperature - (TE.height * 0.3); 
         double TE.temperature = std::clamp(TE.temperature, 0.0, 1.0);
+
         return TE;
     }
 
-    // -------------------------------
-    // Matrix 인덱스 추출
-    // -------------------------------
-    int GetIdxForMatrix(double envar std::vector<double> steps)
+    int GetIdxForMatrix(double envar std::vector<double> steps) // Matrix 인덱스 추출
     {
         int idx = std::lower_bound(steps.begin(), steps.end(), envar) - steps.begin(); // lower_bound를 이용해 인덱스 추출
         return std::min((int)steps.size() - 1, idx); // 범위 초과 방지
     }
 
-    // -------------------------------
-    // 휘태커 도표 UI 출력
-    // -------------------------------
-    TileEnvironments PrintWhittaker(TileEnvironments TE)
+    TileEnvironments PrintWhittaker(TileEnvironments TE) // 휘태커 도표 UI 출력
     {
         double TE.temperature = x / 100.0;
         double TE.humidity = y / 100.0;
@@ -80,11 +75,14 @@ namespace mapspace
         return TE;
     }
 
+    void RefineHeight(TileEnvironments TE)
+    {
+        if (height < 0.3) SetHeight(x,y,0);
+        else if (0.58 < height) SetHeight(x,y,3);
+        else SetHeight(x,y,1);
+    }
 
-    // -------------------------------
-    // Chunk 구조
-    // -------------------------------
-    Chunk::Chunk(int x, int y) : chunkX(x), chunkY(y), dirty(true)
+    Chunk::Chunk(int x, int y) : chunkX(x), chunkY(y), dirty(true) // Chunk 구조
     {
         terrain.resize(SIZE * SIZE);
         // dynamic.resize(SIZE * SIZE, 0); 아직 다이나믹한 요소 없음
@@ -93,7 +91,7 @@ namespace mapspace
     // -------------------------------
     // Map 클래스
     // -------------------------------
-    Map::Map(int w, int h) : width(w), height(h)
+    Map::Map(int w, int h) : width(w), height(h) // Map 클래스
     {
         chunkWidth  = (width  + Chunk::SIZE - 1) / Chunk::SIZE;
         chunkHeight = (height + Chunk::SIZE - 1) / Chunk::SIZE;
@@ -104,25 +102,11 @@ namespace mapspace
             for(int cx=0; cx<chunkWidth; ++cx)
                 chunks.emplace_back(cx, cy);
 
-        for(int y=0; y<height; ++y){
+        for(int y=0; y<height; ++y)
             for(int x=0; x<width; ++x)
-            {
-                initTile(x,y);
-            
-                // matrix배열에 따른 TerrainType 부여 -------------------------------- Layer 1
-                SetTileType(StringToTT(matrix[h_idx][t_idx]));
-                if (0.58 < height) SetHeight(x,y,3);
-                else SetHeight(x,y,1);
-
-                // 높이 낮으면 물 고정 ----------------------------------------------- layer 2
-                if (height < 0.3) {
-                    SetTileType(x,y,StringToTT("water"));
-                    SetHeight(x,y,0);
-                }
-            }
-        }
+                InitTile(x,y);
     }
-    
+
     // -------------------------------
     // Chunk / local 좌표 변환
     // -------------------------------
