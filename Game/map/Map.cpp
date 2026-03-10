@@ -105,6 +105,7 @@ namespace mapspace
                 SetTileData(x,y,TG.InitTerrainData(x,y,10));
 
         SmoothBiomes(5,2);
+        GenerateBeaches();
     }
 
     // -------------------------------
