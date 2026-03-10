@@ -1,85 +1,75 @@
 #include "Map.h"
 
-struct TileEnvironments {
-    double height;
-    double temp;
-    double humid;
-}
-
 namespace mapspace
 {
-    // -------------------------------
-    // Reading Json...
-    // -------------------------------
+    class TerrainGenerator {
+    private:
+        std::vector<double> t_steps;
+        std::vector<double> h_steps;
+        std::vector<std::vector<std::string>> matrix;
+        std::vector<std::vector<int>> e_matrix;
+
+        int GetIdxForMatrix(double envar std::vector<double> steps) // Matrix 인덱스 추출
+        {
+            int idx = std::lower_bound(steps.begin(), steps.end(), envar) - steps.begin(); // lower_bound를 이용해 인덱스 추출
+            return std::min((int)steps.size() - 1, idx); // 범위 초과 방지
+        }
+    public:
+        void TerrainGenerator() // Reading Json...
+        {
+            // 파일 가져오기
+            std::ifstream terrainFile("Game/data/terrain.json");
+            if (!terrainFile.is_open()) std::cout << "can't open file!" << std::endl;
+            json terrainData;
+            terrainFile >> terrainData;
+            
+            // 데이터 불러오기
+            this->t_steps = terrainData["setting"]["temp_steps"].get<std::vector<double>>();
+            this->h_steps = terrainData["setting"]["humid_steps"].get<std::vector<double>>();
+            this->matrix= terrainData["setting"]["matrix"].get<std::vector<std::vector<std::string>>>();
+            this->e_matrix = terrainData["setting"]["matrix_enum"].get<std::vector<std::vector<uint8_t>>>();
+        }
+
+        uint8_t InitTerrainData(int x, int y, int d) : x(x), y(y), Density(d)
+        {
+            uint8_t tileTypeData;
+            uint8_t tileHeightData;
+
+            double nx = (double)x / width * Density;
+            double ny = (double)y / height * Density;
     
-    // 파일 가져오기
-    std::ifstream terrainFile("Game/data/terrain.json");
-    if (!terrainFile.is_open()){ std::cout << "can't open file!" << std::endl; }
-    json terrainData;
-    terrainFile >> terrainData;
-    
-    // 데이터 불러오기
-    std::vector<double> t_steps = terrainData["setting"]["temp_steps"].get<std::vector<double>>();
-    std::vector<double> h_steps = terrainData["setting"]["humid_steps"].get<std::vector<double>>();
-    std::vector<std::vector<std::string>> matrix= terrainData["setting"]["matrix"].get<std::vector<std::vector<std::string>>>();
-    std::vector<std::vector<std::string>> e_matrix= terrainData["setting"]["matrix_enum"].get<std::vector<std::vector<int>>>();
-
-
-    void InitTile(int x, int y)  // 맵 기본 생성 알고리즘
-    {
-        TileEnvironments TE;
-
-        TE = SetNoise(x,y,10,TE);
+            // Noise 부여
+            // Perlin(6, 0.5, 2) -> min = 0.02, MAX = 0.7, average = 0.26 graph = _/\__
+            double height = PerlinNoiseSpace::fbm(perlin1, nx, ny, 4, 0.5, 2);
+            double temp = PerlinNoiseSpace::fbm(perlin2, nx, ny, 4, 0.5, 3);
+            double humid = PerlinNoiseSpace::fbm(perlin3, nx, ny, 4, 0.4, 3);
         
-        if (x < 100 && y < 100)
-            TE = PrintWhittaker(TE);
-
-        RefineHeight(TE.height);
-
-        h_idx = GetIdxForMatrix(TE.humid, h_steps);
-        t_idx = GetIdxForMatrix(TE.temp, t_steps);
-
-        // matrix배열에 따른 tileType 부여
-        if (TE.height < 0.3) SetTileType(x,y,0);
-        else SetTileType(x,y,e_matrix[h_idx][t_idx]);
-    }
-
-    TileEnvironments SetNoise(int x, int y, int Density, TileEnvironments TE) // Noise 부여
-    {
-        double nx = (double)x / width * Density;
-        double ny = (double)y / height * Density;
+            // 높이에 따른 온도 변화
+            temp = temp - (height * 0.3); 
+            temp = std::clamp(temp, 0.0, 1.0);
     
-        // Perlin(6, 0.5, 2) -> min = 0.02, MAX = 0.7, average = 0.26 graph = _/\__
-        double TE.height = PerlinNoiseSpace::fbm(perlin1, nx, ny, 4, 0.5, 2);
-        double TE.temperature = PerlinNoiseSpace::fbm(perlin2, nx, ny, 4, 0.5, 3);
-        double TE.humidity = PerlinNoiseSpace::fbm(perlin3, nx, ny, 4, 0.4, 3);
-    
-        // 높이에 따른 온도 변화
-        double TE.temperature = TE.temperature - (TE.height * 0.3); 
-        double TE.temperature = std::clamp(TE.temperature, 0.0, 1.0);
+            if (x < 100 && y < 100) // 휘태커 도표 UI 출력
+            {
+                temp = x / 100.0;
+                humid = y / 100.0;
+                height = 0.0;
+            }
 
-        return TE;
-    }
+            // temp, humid의 step 계산
+            int h_idx = this->GetIdxForMatrix(humid, this->h_steps);
+            int t_idx = this->GetIdxForMatrix(temp, this->t_steps);
 
-    int GetIdxForMatrix(double envar std::vector<double> steps) // Matrix 인덱스 추출
-    {
-        int idx = std::lower_bound(steps.begin(), steps.end(), envar) - steps.begin(); // lower_bound를 이용해 인덱스 추출
-        return std::min((int)steps.size() - 1, idx); // 범위 초과 방지
-    }
+            // TileType 계산
+            if (height < 0.3) tileTypeData = 0;
+            else tileTypeData = this.e_matrix[h_idx][t_idx];
 
-    TileEnvironments PrintWhittaker(TileEnvironments TE) // 휘태커 도표 UI 출력
-    {
-        double TE.temperature = x / 100.0;
-        double TE.humidity = y / 100.0;
-        double TE.height = 0.0;
-        return TE;
-    }
+            // TileHeight 계산
+            if (height < 0.3) tileHeightData = 0;
+            else if (0.58 < height) tileHeightData = 3;
+            else tileHeightData = 1;
 
-    void RefineHeight(TileEnvironments TE)
-    {
-        if (height < 0.3) SetHeight(x,y,0);
-        else if (0.58 < height) SetHeight(x,y,3);
-        else SetHeight(x,y,1);
+            return ((tileHeightData << HEIGHT_SHIFT) & HEIGHT_MASK) | (tileTypeData & TILE_TYPE_MASK);
+        }
     }
 
     Chunk::Chunk(int x, int y) : chunkX(x), chunkY(y), dirty(true) // Chunk 구조
@@ -102,9 +92,10 @@ namespace mapspace
             for(int cx=0; cx<chunkWidth; ++cx)
                 chunks.emplace_back(cx, cy);
 
+        TerrainGenerator TG;
         for(int y=0; y<height; ++y)
             for(int x=0; x<width; ++x)
-                InitTile(x,y);
+                SetTileData(x,y,TG.InitTerrainData(x,y,10));
     }
 
     // -------------------------------
