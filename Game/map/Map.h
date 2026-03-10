@@ -92,7 +92,7 @@ inline TT StringToTT(const std::string& str)
     return TT::water; // 기본값
 }
 
-inline const char* TTToString(Biome b) { return TTStrings[static_cast<uint8_t>(b)]; }
+inline const char* TTToString(TT b) { return TTStrings[static_cast<uint8_t>(b)]; }
 
 struct ResourceStack
 {
@@ -170,18 +170,18 @@ public:
     Chunk& GetChunk(int x, int y);
 	const Chunk& GetChunk(int x, int y) const;
 
-	inline int Map::LocalX(int x) const { return x % Chunk::SIZE; }
-	inline int Map::LocalY(int y) const { return y % Chunk::SIZE; }
+	inline int LocalX(int x) const { return x % Chunk::SIZE; }
+	inline int LocalY(int y) const { return y % Chunk::SIZE; }
 
 // Terrain
-	inline uint8_t Map::GetTileData(int x, int y) const
+	inline uint8_t GetTileData(int x, int y) const
 	{
 		const Chunk& chunk = GetChunk(x,y);
 		return chunk.terrain[chunk.Index(LocalX(x), LocalY(y))];
 	}
 	
-	inline uint8_t Map::GetHeight(int x, int y) const { return (GetTileData(x,y) & HEIGHT_MASK) >> HEIGHT_SHIFT; } // 0 ~ 3
-	inline void Map::SetHeight(int x, int y, uint8_t h)
+	inline uint8_t GetHeight(int x, int y) const { return (GetTileData(x,y) & HEIGHT_MASK) >> HEIGHT_SHIFT; } // 0 ~ 3
+	inline void SetHeight(int x, int y, uint8_t h)
 	{
 		h = std::min<uint8_t>(h, 3);
 		Chunk& chunk = GetChunk(x,y);
@@ -190,8 +190,8 @@ public:
 		chunk.dirty = true;
 	}
 
-	inline uint8_t Map::GetTileType(int x, int y) const { return GetTileData(x,y) & TILE_TYPE_MASK; }
-	inline void Map::SetTileType(int x, int y, uint8_t type)
+	inline uint8_t GetTileType(int x, int y) const { return GetTileData(x,y) & TILE_TYPE_MASK; }
+	inline void SetTileType(int x, int y, uint8_t type)
 	{
 		Chunk& chunk = GetChunk(x,y);
 		int idx = chunk.Index(LocalX(x), LocalY(y));
