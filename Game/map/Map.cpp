@@ -16,7 +16,7 @@ namespace mapspace
     std::vector<double> t_steps = terrainData["setting"]["temp_steps"].get<std::vector<double>>();
     std::vector<double> h_steps = terrainData["setting"]["humid_steps"].get<std::vector<double>>();
     std::vector<std::vector<std::string>> matrix= terrainData["setting"]["matrix"].get<std::vector<std::vector<std::string>>>();
-    std::vector<std::vector<std::string>> e_matrix= terrainData["setting"]["matrix_enum"].get<std::vector<std::vector<std::string>>>();
+    std::vector<std::vector<std::string>> e_matrix= terrainData["setting"]["matrix_enum"].get<std::vector<std::vector<int>>>();
 
     // -------------------------------
     // Chunk 구조
