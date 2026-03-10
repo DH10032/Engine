@@ -129,7 +129,7 @@ public:
     TerrainGenerator();
 
     // 지형 데이터 초기화 함수
-    uint8_t InitTerrainData(int x, int y, int d);
+    uint8_t InitTerrainData(int width, int height, int x, int y, int d);
 };
 
 // -------------------------------
