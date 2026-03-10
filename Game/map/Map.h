@@ -179,7 +179,7 @@ public:
 		const Chunk& chunk = GetChunk(x,y);
 		return chunk.terrain[chunk.Index(LocalX(x), LocalY(y))];
 	}
-	inline int8_t SetTileData(int x, int y, uint8_t data)
+	inline void SetTileData(int x, int y, uint8_t data)
 	{
 		Chunk& chunk = GetChunk(x,y);
 		int idx = chunk.Index(LocalX(x), LocalY(y));
