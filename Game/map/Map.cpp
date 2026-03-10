@@ -199,6 +199,7 @@ namespace mapspace
     
         for (int iter = 0; iter < iterations; ++iter) {
             // 1. 청크 단위 외곽 루프 (청크 참조 횟수 1024배 감소)
+            // #pragma omp parallel for collapse(2) schedule(dynamic)
             for (int cy = 0; cy < chunkHeight; ++cy) {
                 for (int cx = 0; cx < chunkWidth; ++cx) {
                     
@@ -229,8 +230,8 @@ namespace mapspace
             }
     
             // 3. 결과 일괄 적용 (인덱스 연산 최적화)
-            int totalSize = width * height;
-            for (int i = 0; i < totalSize; ++i) {
+            // #pragma omp parallel for
+            for (int i = 0; i < (int)nextTypes.size(); ++i) {
                 int y = i / width;
                 int x = i % width;
                 SetTileType(x, y, nextTypes[i]);
