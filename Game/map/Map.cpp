@@ -35,32 +35,31 @@ namespace mapspace
         uint8_t tileTypeData;
         uint8_t tileHeightData;
 
-        // 외부 변수 width, height, Density 등은 정의되어 있다고 가정
         double nx = (double)x / width * d; 
         double ny = (double)y / height * d;
 
         // Noise 부여 (FBM)
-        double height = PerlinNoiseSpace::fbm(perlin1, nx, ny, 4, 0.5, 2);
-        double temp = PerlinNoiseSpace::fbm(perlin2, nx, ny, 4, 0.5, 3);
+        double h_val = PerlinNoiseSpace::fbm(perlin1, nx, ny, 4, 0.5, 2);
+        double t_val = PerlinNoiseSpace::fbm(perlin2, nx, ny, 4, 0.5, 3);
         double humid = PerlinNoiseSpace::fbm(perlin3, nx, ny, 4, 0.4, 3);
 
         // 높이에 따른 온도 보정
-        temp = std::clamp(temp - (height * 0.3), 0.0, 1.0);
+        t_val = std::clamp(t_val - (h_val * 0.3), 0.0, 1.0);
 
         // 휘태커 도표 UI 출력 영역 예외 처리
         if (x < 100 && y < 100)
         {
-            temp = x / 100.0;
+            t_val = x / 100.0;
             humid = y / 100.0;
-            height = 0.0;
+            h_val = 0.0;
         }
 
         // 행렬 인덱스 계산
         int h_idx = GetIdxForMatrix(humid, h_steps);
-        int t_idx = GetIdxForMatrix(temp, t_steps);
+        int t_idx = GetIdxForMatrix(t_val, t_steps);
 
         // 높이값에 따른 타일 타입 및 높이 데이터 결정
-        if (height < 0.3) 
+        if (h_val < 0.3) 
         {
             tileTypeData = 0;
             tileHeightData = 0;
@@ -69,7 +68,7 @@ namespace mapspace
         {
             tileTypeData = (uint8_t)e_matrix[h_idx][t_idx];
             
-            if (0.58 < height) tileHeightData = 3;
+            if (0.58 < h_val) tileHeightData = 3;
             else tileHeightData = 1;
         }
 
