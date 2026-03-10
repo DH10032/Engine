@@ -113,18 +113,22 @@ namespace mapspace
     // -------------------------------
     Chunk& Map::GetChunk(int x, int y)
     {
-        assert(x >= 0 && x < width && "x coordinate out of range!");
-        assert(y >= 0 && y < height && "y coordinate out of range!");
+        int safeX = std::clamp(x, 0, width - 1);
+        int safeY = std::clamp(y, 0, height - 1);
+        
         int cx = x / Chunk::SIZE;
         int cy = y / Chunk::SIZE;
+        
         return chunks[cy * chunkWidth + cx];
     }
     const Chunk& Map::GetChunk(int x, int y) const 
     {
-        assert(x >= 0 && x < width && "x coordinate out of range!");
-        assert(y >= 0 && y < height && "y coordinate out of range!");
+        int safeX = std::clamp(x, 0, width - 1);
+        int safeY = std::clamp(y, 0, height - 1);
+        
         int cx = x / Chunk::SIZE;
         int cy = y / Chunk::SIZE;
+        
         return chunks[cy * chunkWidth + cx];
     }
     
@@ -194,18 +198,42 @@ namespace mapspace
         std::vector<uint8_t> nextTypes(width * height);
     
         for (int iter = 0; iter < iterations; ++iter) {
-            // 루프마다 새로 할당하지 않고 기존 메모리를 재사용
-            for (int y = 0; y < height; ++y) {
-                for (int x = 0; x < width; ++x) {
-                    auto [bestType, count] = GetMostFrequentBiomeWithCount(x, y);
-                    nextTypes[y * width + x] = (count >= threshold) ? bestType : GetTileType(x, y);
+            // 1. 청크 단위 외곽 루프 (청크 참조 횟수 1024배 감소)
+            for (int cy = 0; cy < chunkHeight; ++cy) {
+                for (int cx = 0; cx < chunkWidth; ++cx) {
+                    
+                    Chunk& currentChunk = chunks[cy * chunkWidth + cx];
+                    int startX = cx * Chunk::SIZE;
+                    int startY = cy * Chunk::SIZE;
+    
+                    // 2. 청크 내부 타일 루프 (캐시 지역성 활용)
+                    for (int ly = 0; ly < Chunk::SIZE; ++ly) {
+                        int gy = startY + ly;
+                        if (gy >= height) break;
+    
+                        for (int lx = 0; lx < Chunk::SIZE; ++lx) {
+                            int gx = startX + lx;
+                            if (gx >= width) break;
+    
+                            // 주변 8칸 검사 및 최빈값 계산
+                            auto [bestType, count] = GetMostFrequentBiomeWithCount(gx, gy);
+                            
+                            // 현재 타일의 타입 추출 (비트 마스킹)
+                            uint8_t currentType = currentChunk.terrain[ly * Chunk::SIZE + lx] & TILE_TYPE_MASK;
+                            
+                            // 결과 버퍼에 저장
+                            nextTypes[gy * width + gx] = (count >= threshold) ? bestType : currentType;
+                        }
+                    }
                 }
             }
     
-            for (int y = 0; y < height; ++y) {
-                for (int x = 0; x < width; ++x) {
-                    SetTileType(x, y, nextTypes[y * width + x]);
-                }
+            // 3. 결과 일괄 적용 (인덱스 연산 최적화)
+            int totalSize = width * height;
+            for (int i = 0; i < totalSize; ++i) {
+                int y = i / width;
+                int x = i % width;
+                SetTileType(x, y, nextTypes[i]);
             }
         }
     }
@@ -214,17 +242,16 @@ namespace mapspace
     // 해변 만들기
     // -------------------------------
     void Map::GenerateBeaches() {
-        // 변화를 실시간으로 적용하면 해안선이 계속 밀려 들어갈 수 있으므로, 
-        // 여기서는 간단하게 현재 상태를 체크하며 진행합니다.
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
-                uint8_t currentType = GetTileType(x, y);
+                // GetTileData 호출 최소화 (한 번 가져와서 재사용)
+                uint8_t data = GetTileData(x, y);
+                uint8_t currentType = data & TILE_TYPE_MASK;
+                uint8_t currentHeight = (data & HEIGHT_MASK) >> HEIGHT_SHIFT;
     
-                // 1. 현재 타일이 육지(바다가 아님)이고, 높이가 낮은 지형(Height 1)일 때만 적용
-                if (currentType != (uint8_t)TT::water && GetHeight(x, y) == 1) {
-                    
+                // 바다가 아니고, 낮은 지대(Height 1)일 때만 주변 바다 검사
+                if (currentType != (uint8_t)TT::water && currentHeight == 1) {
                     if (IsAdjacentToWater(x, y)) {
-                        // 2. 바다와 인접했다면 모래사장(사막 타일 등)으로 변경
                         SetTileType(x, y, (uint8_t)TT::dessert); 
                     }
                 }
