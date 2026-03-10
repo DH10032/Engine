@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <algorithm>
 #include <utility>
-// #include <omp.h>
+#include <omp.h>
 
 namespace mapspace
 {
