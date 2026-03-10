@@ -114,6 +114,12 @@ namespace mapspace
         int cy = y / Chunk::SIZE;
         return chunks[cy * chunkWidth + cx];
     }
+    const Chunk& Map::GetChunk(int x, int y) const 
+    {
+        int cx = x / Chunk::SIZE;
+        int cy = y / Chunk::SIZE;
+        return chunks[cy * chunkWidth + cx];
+    }
     
     // -------------------------------
     // CanMove: height 규칙 적용
@@ -123,7 +129,7 @@ namespace mapspace
         if(toX < 0 || toX >= width || toY < 0 || toY >= height)
             return false;
     
-        const Chunk& toChunk = const_cast<Map*>(this)->GetChunk(toX,toY);
+        const Chunk& toChunk = GetChunk(toX,toY);
         int idx = toChunk.Index(LocalX(toX), LocalY(toY));
     
         uint8_t fromHeight = GetHeight(fromX, fromY);
