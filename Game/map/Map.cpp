@@ -118,18 +118,16 @@ namespace mapspace
     // -------------------------------
     Chunk& Map::GetChunk(int x, int y)
     {
-        int safeX = std::clamp(x, 0, width - 1);
-        int safeY = std::clamp(y, 0, height - 1);
+        assert(0<=x && 0<=y && x<width && y<height);
         
-        int cx = safeX / Chunk::SIZE;
-        int cy = safeY / Chunk::SIZE;
+        int cx = x / Chunk::SIZE;
+        int cy = y / Chunk::SIZE;
         
         return chunks[cy * chunkWidth + cx];
     }
     const Chunk& Map::GetChunk(int x, int y) const 
     {
-        int safeX = std::clamp(x, 0, width - 1);
-        int safeY = std::clamp(y, 0, height - 1);
+        assert(0<=x && 0<=y && x<width && y<height);
         
         int cx = safeX / Chunk::SIZE;
         int cy = safeY / Chunk::SIZE;
