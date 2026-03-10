@@ -198,39 +198,40 @@ namespace mapspace
         std::vector<uint8_t> nextTypes(width * height);
     
         for (int iter = 0; iter < iterations; ++iter) {
-            // 1. 청크 단위 외곽 루프 (청크 참조 횟수 1024배 감소)
-            // #pragma omp parallel for collapse(2) schedule(dynamic)
+            
+            // OpenMP 지시어: 루프를 여러 스레드로 분할 실행
+            // shared(nextTypes): 모든 스레드가 이 버퍼를 공유함
+            // private(cx, cy, currentChunk, lx, ly...): 각 스레드가 개별 변수를 가짐
+            #pragma omp parallel for collapse(2) schedule(dynamic)
             for (int cy = 0; cy < chunkHeight; ++cy) {
                 for (int cx = 0; cx < chunkWidth; ++cx) {
                     
+                    // 각 스레드는 자신이 담당한 청크만 처리
                     Chunk& currentChunk = chunks[cy * chunkWidth + cx];
                     int startX = cx * Chunk::SIZE;
                     int startY = cy * Chunk::SIZE;
     
-                    // 2. 청크 내부 타일 루프 (캐시 지역성 활용)
                     for (int ly = 0; ly < Chunk::SIZE; ++ly) {
                         int gy = startY + ly;
-                        if (gy >= height) break;
+                        if (gy >= height) continue;
     
                         for (int lx = 0; lx < Chunk::SIZE; ++lx) {
                             int gx = startX + lx;
-                            if (gx >= width) break;
+                            if (gx >= width) continue;
     
-                            // 주변 8칸 검사 및 최빈값 계산
                             auto [bestType, count] = GetMostFrequentBiomeWithCount(gx, gy);
-                            
-                            // 현재 타일의 타입 추출 (비트 마스킹)
                             uint8_t currentType = currentChunk.terrain[ly * Chunk::SIZE + lx] & TILE_TYPE_MASK;
                             
-                            // 결과 버퍼에 저장
+                            // nextTypes[index]에 쓰는 작업은 타일마다 위치가 다르므로 
+                            // Race Condition(경합)이 발생하지 않아 안전함
                             nextTypes[gy * width + gx] = (count >= threshold) ? bestType : currentType;
                         }
                     }
                 }
             }
     
-            // 3. 결과 일괄 적용 (인덱스 연산 최적화)
-            // #pragma omp parallel for
+            // 결과 일괄 적용 (이 루프도 병렬화 가능)
+            #pragma omp parallel for
             for (int i = 0; i < (int)nextTypes.size(); ++i) {
                 int y = i / width;
                 int x = i % width;
