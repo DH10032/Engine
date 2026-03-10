@@ -24,10 +24,10 @@ namespace mapspace
             terrainFile >> terrainData;
             
             // 데이터 불러오기
-            this->t_steps = terrainData["setting"]["temp_steps"].get<std::vector<double>>();
-            this->h_steps = terrainData["setting"]["humid_steps"].get<std::vector<double>>();
-            this->matrix= terrainData["setting"]["matrix"].get<std::vector<std::vector<std::string>>>();
-            this->e_matrix = terrainData["setting"]["matrix_enum"].get<std::vector<std::vector<uint8_t>>>();
+            t_steps = terrainData["setting"]["temp_steps"].get<std::vector<double>>();
+            h_steps = terrainData["setting"]["humid_steps"].get<std::vector<double>>();
+            matrix= terrainData["setting"]["matrix"].get<std::vector<std::vector<std::string>>>();
+            e_matrix = terrainData["setting"]["matrix_enum"].get<std::vector<std::vector<uint8_t>>>();
         }
 
         uint8_t InitTerrainData(int x, int y, int d) : x(x), y(y), Density(d)
@@ -56,12 +56,12 @@ namespace mapspace
             }
 
             // temp, humid의 step 계산
-            int h_idx = this->GetIdxForMatrix(humid, this->h_steps);
-            int t_idx = this->GetIdxForMatrix(temp, this->t_steps);
+            int h_idx = GetIdxForMatrix(humid, h_steps);
+            int t_idx = GetIdxForMatrix(temp, t_steps);
 
             // TileType 계산
             if (height < 0.3) tileTypeData = 0;
-            else tileTypeData = this.e_matrix[h_idx][t_idx];
+            else tileTypeData = e_matrix[h_idx][t_idx];
 
             // TileHeight 계산
             if (height < 0.3) tileHeightData = 0;
