@@ -179,6 +179,13 @@ public:
 		const Chunk& chunk = GetChunk(x,y);
 		return chunk.terrain[chunk.Index(LocalX(x), LocalY(y))];
 	}
+	inline int8_t SetTileData(int x, int y, uint8_t d)
+	{
+		Chunk& chunk = GetChunk(x,y);
+		int idx = chunk.Index(LocalX(x), LocalY(y));
+		chunk.terrain[idx] = d;
+		chunk.dirty = true;
+	}
 	
 	inline uint8_t GetHeight(int x, int y) const { return (GetTileData(x,y) & HEIGHT_MASK) >> HEIGHT_SHIFT; } // 0 ~ 3
 	inline void SetHeight(int x, int y, uint8_t h)
