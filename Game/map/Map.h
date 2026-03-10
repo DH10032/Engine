@@ -167,6 +167,7 @@ private:
 
     std::pair<uint8_t, int> GetMostFrequentBiomeWithCount(int x, int y) const;
     std::vector<uint8_t> GetFullTileTypeBuffer() const;
+	bool IsAdjacentToWater(int x, int y) const;
 
 public:
     Map(int w, int h);
@@ -212,6 +213,9 @@ public:
 
     // SmoothBiomes
 	void SmoothBiomes(int threshold = 5, int iterations = 2);
+
+    // GenerateBeaches
+	void GenerateBeaches();
 
     // CanMove
     bool CanMove(int fromX, int fromY, int toX, int toY) const;
