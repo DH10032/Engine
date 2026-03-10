@@ -112,9 +112,9 @@ private:
 	// 시드 설정 (임시)
 	// -------------------------------
 	int SEED = 1024;
-	static PerlinNoiseSpace::PerlinNoise perlin1(SEED);
-	static PerlinNoiseSpace::PerlinNoise perlin2(SEED+1);
-	static PerlinNoiseSpace::PerlinNoise perlin3(SEED+2);
+	PerlinNoiseSpace::PerlinNoise perlin1(SEED);
+	PerlinNoiseSpace::PerlinNoise perlin2(SEED+1);
+	PerlinNoiseSpace::PerlinNoise perlin3(SEED+2);
 
     std::vector<double> t_steps;
     std::vector<double> h_steps;
