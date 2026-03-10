@@ -179,11 +179,11 @@ public:
 		const Chunk& chunk = GetChunk(x,y);
 		return chunk.terrain[chunk.Index(LocalX(x), LocalY(y))];
 	}
-	inline int8_t SetTileData(int x, int y, uint8_t d)
+	inline int8_t SetTileData(int x, int y, uint8_t data)
 	{
 		Chunk& chunk = GetChunk(x,y);
 		int idx = chunk.Index(LocalX(x), LocalY(y));
-		chunk.terrain[idx] = d;
+		chunk.terrain[idx] = data;
 		chunk.dirty = true;
 	}
 	
