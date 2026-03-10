@@ -121,8 +121,8 @@ namespace mapspace
         int safeX = std::clamp(x, 0, width - 1);
         int safeY = std::clamp(y, 0, height - 1);
         
-        int cx = x / Chunk::SIZE;
-        int cy = y / Chunk::SIZE;
+        int cx = safeX / Chunk::SIZE;
+        int cy = safeY / Chunk::SIZE;
         
         return chunks[cy * chunkWidth + cx];
     }
@@ -131,8 +131,8 @@ namespace mapspace
         int safeX = std::clamp(x, 0, width - 1);
         int safeY = std::clamp(y, 0, height - 1);
         
-        int cx = x / Chunk::SIZE;
-        int cy = y / Chunk::SIZE;
+        int cx = safeX / Chunk::SIZE;
+        int cy = safeY / Chunk::SIZE;
         
         return chunks[cy * chunkWidth + cx];
     }
