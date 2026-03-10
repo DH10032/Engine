@@ -36,14 +36,6 @@ constexpr uint8_t HEIGHT_MASK    = 0b11000000; // bit6~7
 constexpr uint8_t HEIGHT_SHIFT   = 6;
 
 // -------------------------------
-// 시드 설정
-// -------------------------------
-int SEED = 1024;
-static PerlinNoiseSpace::PerlinNoise perlin1(SEED);
-static PerlinNoiseSpace::PerlinNoise perlin2(SEED+1);
-static PerlinNoiseSpace::PerlinNoise perlin3(SEED+2);
-
-// -------------------------------
 // TerrainType & Extra
 // -------------------------------
 enum class TT : uint8_t // TerrainType
@@ -116,6 +108,14 @@ struct TileExtra
 // -------------------------------
 class TerrainGenerator {
 private:
+	// -------------------------------
+	// 시드 설정 (임시)
+	// -------------------------------
+	int SEED = 1024;
+	static PerlinNoiseSpace::PerlinNoise perlin1(SEED);
+	static PerlinNoiseSpace::PerlinNoise perlin2(SEED+1);
+	static PerlinNoiseSpace::PerlinNoise perlin3(SEED+2);
+
     std::vector<double> t_steps;
     std::vector<double> h_steps;
     std::vector<std::vector<std::string>> matrix;
