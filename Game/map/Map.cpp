@@ -39,9 +39,13 @@ namespace mapspace
         double ny = (double)y / height * d;
 
         // Noise 부여 (FBM)
+        double c_val = PerlinNoiseSpace::fbm(perlin4, nx, ny, 3, 0.5, 1.5) * 2.0 - 1.2;
         double h_val = PerlinNoiseSpace::fbm(perlin1, nx, ny, 4, 0.5, 2);
         double t_val = PerlinNoiseSpace::fbm(perlin2, nx, ny, 4, 0.5, 3);
         double humid = PerlinNoiseSpace::fbm(perlin3, nx, ny, 4, 0.4, 3);
+
+        // 대륙성에 따른 높이 보정
+        h_val = std::clamp(h_val + c_val, 0.0, 1.0);
 
         // 높이에 따른 온도 보정
         t_val = std::clamp(t_val - (h_val * 0.3), 0.0, 1.0);
