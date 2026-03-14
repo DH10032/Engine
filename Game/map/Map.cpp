@@ -133,8 +133,8 @@ namespace mapspace
     {
         assert(0<=x && 0<=y && x<width && y<height);
         
-        int cx = safeX / Chunk::SIZE;
-        int cy = safeY / Chunk::SIZE;
+        int cx = x / Chunk::SIZE;
+        int cy = y / Chunk::SIZE;
         
         return chunks[cy * chunkWidth + cx];
     }
@@ -166,38 +166,6 @@ namespace mapspace
     }
 
     // -------------------------------
-    //  근처에 가장 많은 바이옴 검색
-    // -------------------------------
-    std::pair<uint8_t, int> Map::GetMostFrequentBiomeWithCount(int x, int y) const {
-        // 인덱스: 바이옴 타입(TT), 값: 등장 횟수
-        int counts[64] = { 0, }; // TT::MAX가 64이므로
-        
-        for (int i = -1; i <= 1; ++i) {
-            for (int j = -1; j <= 1; ++j) {
-    
-                int nx = x + i;
-                int ny = y + j;
-                
-                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-                    uint8_t type = GetTileType(nx, ny);
-                    counts[type]++;
-                }
-            }
-        }
-        
-        uint8_t mostFrequent = 0;
-        int maxCount = 0;
-        for (uint8_t i = 0; i < 64; ++i) {
-            if (counts[i] > maxCount) {
-                maxCount = counts[i];
-                mostFrequent = i;
-            }
-        }
-        
-        return { mostFrequent, maxCount };
-    }
-
-    // -------------------------------
     // 바이옴 다듬기
     // -------------------------------
     void Map::SmoothBiomes(int threshold, int iterations) 
@@ -219,7 +187,7 @@ namespace mapspace
             for(int y = 0; y < height; ++y) {
                 for(int x = 0; x < width; ++x) {
                     int counts[64] = {0};
-                    // 3x3 neighborhood
+                    // 5x5 neighborhood
                     for(int dy = -2; dy <= 2; ++dy) {
                         for(int dx = -2; dx <= 2; ++dx) {
                             int nx = x + dx;
@@ -242,18 +210,17 @@ namespace mapspace
                     nextTileTypes[y * width + x] = (maxCount >= threshold) ? bestType : tileTypes[y * width + x];
                 }
             }
-    
-            // -----------------------
-            // 결과 반영
-            // -----------------------
-            #pragma omp parallel for collapse(2) schedule(static)
-            for(int y = 0; y < height; ++y){
-                for(int x = 0; x < width; ++x){
-                    SetTileType(x, y, nextTileTypes[y * width + x]);
-                }
-            }
             // 다음 iteration을 위해 swap
             std::swap(tileTypes, nextTileTypes);
+        }
+        // -----------------------
+        // 결과 반영
+        // -----------------------
+        #pragma omp parallel for collapse(2) schedule(static)
+        for(int y = 0; y < height; ++y){
+            for(int x = 0; x < width; ++x){
+                SetTileType(x, y, tileTypes[y * width + x]);
+            }
         }
     }
 
