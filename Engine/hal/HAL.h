@@ -25,6 +25,8 @@ using json = nlohmann::json;
 
 typedef SDL_Texture* Texture;
 
+typedef SDL_Renderer* Renderer;
+
 /**
  * @brief Asset을 변환해 폴더별로 분류해 저장가능한 자료
  * 
@@ -41,10 +43,6 @@ typedef SDL_Texture* Texture;
 typedef struct {
     std::vector<SDL_Texture*> IMGS;
 } Asset;
-
-typedef SDL_Texture Texture;
-
-typedef SDL_Renderer* Renderer;
 
 typedef struct {
    const char* window_name;
@@ -65,7 +63,7 @@ typedef struct{
     SDL_Rect dst;
     SDL_Point center;
     int angle;
-    SDL_RendererFlip IsFlip;
+    bool IsFlip;
 }Parts;
 
 /*
@@ -79,8 +77,8 @@ SDL_RenderCopyEx(
     SDL_FLIP_NONE       // 뒤집기 옵션
 );
 */
-namespace SDL{
-    void Render(Renderer renderer, Texture* Picture ,Parts part);
+namespace HAL{
+    void Render(Renderer renderer, Texture Picture ,Parts part);
 }
 
 #endif

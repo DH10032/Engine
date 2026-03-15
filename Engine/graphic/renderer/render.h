@@ -8,8 +8,8 @@
  */
 
 namespace GameGraphicApi{
-    void Set_draw_all(SDL_Renderer* renderer);
-    void Render_Entity(SDL_Renderer* renderer, Asset data ,std::vector<Parts> p);
+    void Set_draw_all(Renderer renderer);
+    void Render_Entity(Renderer renderer, Asset data ,std::vector<Parts> p);
 }
 
 namespace CreateText { // 미리 선언해두기

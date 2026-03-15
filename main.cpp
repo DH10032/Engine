@@ -62,4 +62,16 @@ int main()
     std::cout << r.a << std::endl;
     std::cout << r.b << std::endl;
 
+    /************************************************************************/
+    Engine::GameManager system;
+    system.ShowWindow();
+    system.LoadAsset("Game/data/asset.json");
+
+    for(;;){
+        system.DrawObject();
+        SDL_Delay(30);
+    }
+
+    system.Destroy_Object();
+
 }

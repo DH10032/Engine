@@ -31,21 +31,24 @@ namespace Engine{
                 {0, 0, 16, 16},
                 {200, 200, size, size},
                 {size/2, 0},
-                0
+                30,
+                true
             },
             {
                 9,
                 {0, 16, 16, 32},
                 {200, 264, size, size},
                 {size/2, 0},
-                0
+                0,
+                false
             },
             {
                 9,
                 {48, 48, 64, 64},
                 {200, 328, size, size},
                 {size/2, 0},
-                0
+                0,
+                false
             }
         };
 
