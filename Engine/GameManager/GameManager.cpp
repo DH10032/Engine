@@ -24,7 +24,7 @@ void Engine::GameManager::LoadAsset(std::string path){
 
 void Engine::GameManager::DrawObject(){
     SDL_RenderClear(window_setting.renderer);
-    Animation::Render_Entity(window_setting.renderer, data, p);
+    GameGraphicApi::Render_Entity(window_setting.renderer, data, p);
     SDL_RenderPresent(window_setting.renderer);
 }
 

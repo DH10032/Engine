@@ -1,17 +1,5 @@
 #include "render.h"
  
-/* 컴파일
-
-cd project/engine/rendering
-g++ render.cpp -o render -lSDL2 -lSDL2_image -lSDL2_ttf
-./render -> 실행
-
--> make로 바뀜
-
-*/
-
-
-
 
 namespace GameGraphicApi{
 
@@ -19,11 +7,15 @@ namespace GameGraphicApi{
         //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         //SDL_RenderClear(renderer);
     }
-}
 
-namespace CreateAssets{
-    typedef struct{ 
-        SDL_Texture* texture;
-        SDL_Rect dst; // (x,y,tile_width,tile_height)
-    }img;
+    void Render_Entity(SDL_Renderer* renderer, Asset data ,std::vector<Parts> p){
+        for(Parts part:p){
+            SDL::Render(
+                renderer,           // 렌더러
+                data.IMGS[part.id], // 텍스처
+                part       // 뒤집기 옵션
+            );
+        }
+    }
+
 }

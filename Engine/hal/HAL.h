@@ -41,6 +41,10 @@ typedef struct {
     std::vector<SDL_Texture*> IMGS;
 } Asset;
 
+typedef SDL_Texture Texture;
+
+typedef SDL_Renderer* Renderer;
+
 typedef struct {
    const char* window_name;
    SDL_Window* window;
@@ -60,7 +64,22 @@ typedef struct{
     SDL_Rect dst;
     SDL_Point center;
     int angle;
+    SDL_RendererFlip IsFlip;
 }Parts;
 
+/*
+SDL_RenderCopyEx(
+    renderer,           // 렌더러
+    data.IMGS[part.id], // 텍스처
+    &(part.src),        // 소스 영역 (NULL = 전체)
+    &(part.dst),        // 목적지 영역
+    part.angle,         // 각도 (도 단위, 시계방향)
+    &(part.center),     // 회전중심(dst기준 상대 좌표)
+    SDL_FLIP_NONE       // 뒤집기 옵션
+);
+*/
+namespace SDL{
+    void Render(Renderer renderer, Texture* Picture ,Parts part);
+}
 
 #endif

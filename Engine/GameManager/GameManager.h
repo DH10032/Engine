@@ -5,6 +5,7 @@
 #include "../graphic/font/font.h"
 #include "../core/assetManager/assetManager.h"
 #include "../graphic/animation/animation.h"
+#include "../graphic/renderer/render.h"
 #include "../core/core.h"
 
 namespace Engine{

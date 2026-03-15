@@ -10,10 +10,7 @@ SDL_Rect
 */
 
 namespace Animation{
-    /**
-     * @brief Parts를 통해 이미지 조립
-     */
-    void Render_Entity(SDL_Renderer* renderer, Asset picture ,std::vector<Parts> p);
+
 }
 
 #endif
