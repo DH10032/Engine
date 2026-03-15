@@ -1,6 +1,7 @@
 #ifndef RENDER
 #define RENDER
 
+#include <vector>
 #include "../../hal/HAL.h"
 
 /**
@@ -8,7 +9,7 @@
  */
 
 namespace GameGraphicApi{
-    void Set_draw_all(SDL_Renderer* renderer);
+    void Set_draw(SDL_Renderer* renderer, int x, int y, int w, int h, std::vector<int> color);
 }
 
 namespace CreateText { // 미리 선언해두기

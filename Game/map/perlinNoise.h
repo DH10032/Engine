@@ -17,7 +17,7 @@ private:
     double grad(int hash, double x, double y) const;
 
 public:
-    PerlinNoise(unsigned int seed = 1024);
+    PerlinNoise(unsigned int seed = 0);
 
     double noise(double x, double y) const;
 };

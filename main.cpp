@@ -17,23 +17,50 @@ int main()
     // 7. 리소스 정리
 
     Engine::GameManager system;
+    int MAPSIZE = 2048;
+    mapspace::Map myMap(MAPSIZE,MAPSIZE);
     system.ShowWindow();
     system.LoadAsset("Game/data/asset.json");
     
-    system.Reg.CreateComponent<worldspace::tile>(Dense);
+    //system.Reg.CreateComponent<worldspace::tile>(Dense);
 
-    for(;;){
+
+    std::vector<std::vector<int>> tile_color_datas = {
+        {0, 100, 200, 255},
+        {120, 180, 80, 255},
+        {34, 139, 34, 255},
+        {0, 80, 0, 255},
+        {240, 200, 100, 255},
+        {200, 180, 50, 255},
+        {30, 80, 60, 255},
+        {100, 200, 50, 255},
+        {150, 160, 150, 255},
+        {130, 120, 110, 255},
+        {47, 79, 79, 255},
+        {200, 220, 240, 255},
+        {160, 190, 220, 255},
+        {245, 250, 255, 255},
+        {180, 230, 255, 255},
+        {150, 50, 50, 255}
+    };
+
+    while(true){
         system.FrameStart();
-        mapspace::map(1024,1024);
-        for (int cy=0; cy<map.chunkHeight; ++cy){
-            for (int cx=0; cx<map.chunkWidth; ++cx){
-                for (int ly=0; ly<SIZE; ++ly){
-                    for (int lx=0; lx<SIZE; ++lx)
-                    {
-                        
-                    }
-                }
-        }
+
+        for (int y = 0; y <MAPSIZE; y++)
+            for (int x = 0; x <MAPSIZE; x++)
+               system.DrawMap(x,y,1,1,tile_color_datas[myMap.GetTileType(x,y)]);
+        // for (int cy=0; cy<Map.chunkHeight; ++cy){
+        //     for (int cx=0; cx<Map.chunkWidth; ++cx){
+        //         for (int ly=0; ly<SIZE; ++ly){
+        //             for (int lx=0; lx<SIZE; ++lx)
+        //             {
+        //                 Engine::GameManager::DrawMap()
+        //             }
+        //         }
+        //     }
+        // }
+        system.FrameEnd();
         SDL_Delay(30);
     }
 }

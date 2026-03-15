@@ -15,9 +15,14 @@ g++ render.cpp -o render -lSDL2 -lSDL2_image -lSDL2_ttf
 
 namespace GameGraphicApi{
 
-    void Set_draw_all(SDL_Renderer* renderer){
-        //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        //SDL_RenderClear(renderer);
+    void Set_draw(SDL_Renderer* renderer, int x, int y, int w, int h, std::vector<int> color){
+        SDL_Rect rect;
+        rect.x = x;
+        rect.y = y;
+        rect.w = w;
+        rect.h = h;
+        SDL_SetRenderDrawColor(renderer, color[0], color[1], color[2], color[3]);
+        SDL_RenderFillRect(renderer, &rect);
     }
 }
 

@@ -88,6 +88,14 @@ inline TT StringToTT(const std::string& str)
 
 inline const char* TTToString(TT b) { return TTStrings[static_cast<uint8_t>(b)]; }
 
+enum class DropType : uint8_t
+{
+    fruit = 0,
+    meat,
+    dna,
+    exp
+};
+
 struct ResourceStack
 {
     DropType type;
@@ -101,35 +109,6 @@ struct TileExtra
     uint8_t owner;
     DropType drop;
     bool isBlocked;
-};
-
-// -------------------------------
-// TerrainGenerator 클래스
-// -------------------------------
-class TerrainGenerator {
-private:
-	// -------------------------------
-	// 시드 설정 (임시)
-	// -------------------------------
-	int SEED = 1024;
-	PerlinNoiseSpace::PerlinNoise perlin1(SEED);
-	PerlinNoiseSpace::PerlinNoise perlin2(SEED+1);
-	PerlinNoiseSpace::PerlinNoise perlin3(SEED+2);
-
-    std::vector<double> t_steps;
-    std::vector<double> h_steps;
-    std::vector<std::vector<std::string>> matrix;
-    std::vector<std::vector<int>> e_matrix;
-
-    // 내부 유틸리티 함수
-    int GetIdxForMatrix(double envar, const std::vector<double>& steps);
-
-public:
-    // 생성자
-    TerrainGenerator();
-
-    // 지형 데이터 초기화 함수
-    uint8_t InitTerrainData(int width, int height, int x, int y, int d);
 };
 
 // -------------------------------
@@ -150,7 +129,36 @@ struct Chunk
 
     Chunk(int x = 0, int y = 0);
 
-    inline int Chunk::Index(int x, int y) const { return y * SIZE + x; }
+    inline int Index(int x, int y) const { return y * SIZE + x; }
+};
+
+// -------------------------------
+// TerrainGenerator 클래스
+// -------------------------------
+class TerrainGenerator {
+private:
+	// -------------------------------
+	// 시드 설정 (임시)
+	// -------------------------------
+	unsigned int SEED = 0;
+	PerlinNoiseSpace::PerlinNoise perlin1{SEED};
+	PerlinNoiseSpace::PerlinNoise perlin2{SEED * 2};
+	PerlinNoiseSpace::PerlinNoise perlin3{SEED * 3};
+
+    std::vector<double> t_steps;
+    std::vector<double> h_steps;
+    std::vector<std::vector<std::string>> matrix;
+    std::vector<std::vector<int>> e_matrix;
+
+    // 내부 유틸리티 함수
+    int GetIdxForMatrix(double envar, const std::vector<double>& steps);
+
+public:
+    // 생성자
+    TerrainGenerator();
+
+    // 지형 데이터 초기화 함수
+    uint8_t InitTerrainData(int width, int height, int x, int y, int d);
 };
 
 // -------------------------------
@@ -220,7 +228,7 @@ public:
 
     // Extra
     TileExtra* GetExtra(int x, int y);
-    void SetExtra(const TileExtra& extra);
+    void SetExtra(int x, int y, const TileExtra& extra);
 };
 
 }

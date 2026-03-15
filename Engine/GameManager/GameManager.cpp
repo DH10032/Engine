@@ -21,15 +21,20 @@ void Engine::GameManager::LoadAsset(std::string path){
 }
 
 void Engine::GameManager::FrameStart(){
+    SDL_SetRenderDrawColor(window_setting.renderer, 0, 0, 0, 255);
     SDL_RenderClear(window_setting.renderer);
 }
+void Engine::GameManager::FrameEnd(){
+    SDL_RenderPresent(window_setting.renderer);
+}
 
-void Engine::GameManager::DrawMap(){
-    Animation::Render_Entity(window_setting.renderer);
+void Engine::GameManager::DrawMap(int x, int y, int w, int h, std::vector<int> color){
+    GameGraphicApi::Set_draw(window_setting.renderer,x,y,w,h,color);
+    //Animation::Render_Entity(window_setting.renderer);
 }
 
 void Engine::GameManager::DrawObject(){
-    Animation::Render_Entity(window_setting.renderer, data, p);
+    //Animation::Render_Entity(window_setting.renderer, data, p);
     SDL_RenderPresent(window_setting.renderer);
 }
 

@@ -1,4 +1,4 @@
-#include "PerlinNoise.h"
+#include "perlinNoise.h"
 
 namespace PerlinNoiseSpace {
 
@@ -7,14 +7,17 @@ namespace PerlinNoiseSpace {
 // ----------------------
 PerlinNoise::PerlinNoise(unsigned int seed)
 {
-    if(seed == 1024) // 기본 시드일 경우
+    std::mt19937::result_type realseed;
+    if(seed == 0) // 기본 시드일 경우
     {
         std::random_device rd;
-        std::mt19937::result_type seed = rd();
+        std::mt19937::result_type seedseed = rd();
+        realseed = seedseed;
     }
+    else realseed = seed;
     p.resize(256);
     std::iota(p.begin(), p.end(), 0);
-    std::mt19937 engine(seed);
+    std::mt19937 engine(realseed);
     std::shuffle(p.begin(), p.end(), engine);
     p.insert(p.end(), p.begin(), p.end());
 }
