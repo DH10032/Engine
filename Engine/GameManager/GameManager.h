@@ -6,7 +6,7 @@
 #include "../core/assetManager/assetManager.h"
 #include "../graphic/animation/animation.h"
 #include "../graphic/renderer/render.h"
-#include "../core/core.h"
+#include "../core/memory.h"
 
 namespace Engine{
     class GameManager{
