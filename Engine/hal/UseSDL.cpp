@@ -1,8 +1,5 @@
 #include "HAL.h"
-/*
-IsFlip_Horizontal;
-IsFlip_Vertical;
-*/
+
 namespace HAL{
     void Render(Renderer renderer, Texture Picture ,Parts part){
         SDL_RendererFlip flip = SDL_FLIP_NONE;
