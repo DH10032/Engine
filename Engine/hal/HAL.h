@@ -1,10 +1,18 @@
 #pragma once
 
-// 엔진 전체에서 공통으로 사용할 추상화된 키 코드
 enum class KeyCode {
-    W, A, S, D, Space, Escape, 
-    Left, Right, Up, Down,
-    Mouse_Left, Mouse_Right,
+    W,
+    A,
+    S,
+    D,
+    Space,
+    Escape,
+    Left, 
+    Right,
+    Up,
+    Down,
+    Mouse_Left,
+    Mouse_Right,
     Unknown
 };
 
