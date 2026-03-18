@@ -1,66 +1,27 @@
-#ifndef _HAL_
-#define _HAL_
+#pragma once
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_image.h>
+// 엔진 전체에서 공통으로 사용할 추상화된 키 코드
+enum class KeyCode {
+    W, A, S, D, Space, Escape, 
+    Left, Right, Up, Down,
+    Mouse_Left, Mouse_Right,
+    Unknown
+};
 
-#include <nlohmann/json.hpp>
-#include <iostream>
-#include <fstream>
-#include <filesystem>
-#include <cstring>
-#include <glm/glm.hpp>
-#include <algorithm>
+class HAL {
+public:
+    virtual ~HAL() {}
 
-#include <cmath>
-#include <array>
-#include <numeric>
-#include <map>
-#include <typeindex>
-#include <vector>
+    // 하드웨어 초기화 및 종료
+    virtual bool Initialize() = 0;
+    virtual void Shutdown() = 0;
 
-using json = nlohmann::json;
+    // 매 프레임마다 하드웨어 신호(이벤트)를 갱신
+    virtual void PollEvents() = 0;
 
-typedef SDL_Texture* Texture;
+    // 물리적 키 상태 확인 (InputManager가 호출할 함수)
+    virtual bool IsKeyDown(KeyCode key) const = 0;
 
-/**
- * @brief Asset을 변환해 폴더별로 분류해 저장가능한 자료
- * 
- * @par buildings (std::vector<SDL_Texture*>)
- * 
- * @par character (std::vector<SDL_Texture*>)
- * 
- * @par interactives (std::vector<SDL_Texture*>)
- * 
- * @par tiles (std::vector<SDL_Texture*>)
- * 
- * @note 수정될 수도 있음
- */
-typedef struct {
-    std::vector<SDL_Texture*> IMGS;
-} Asset;
-
-typedef struct {
-   const char* window_name;
-   SDL_Window* window;
-   SDL_Renderer* renderer;
-   int Red;
-   int Green;
-   int Blue;
-   int Bright;
-} window_info;
-
-/**
- * 
- */
-typedef struct{
-    unsigned int id;
-    SDL_Rect src;
-    SDL_Rect dst;
-    SDL_Point center;
-    int angle;
-}Parts;
-
-
-#endif
+    // 윈도우 종료 이벤트 발생 여부 (엔진 루프 제어용)
+    virtual bool ShouldQuit() const = 0;
+};
