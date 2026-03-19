@@ -15,4 +15,18 @@ namespace HAL{
             flip                // 뒤집기 옵션
         );
     }
+
+    void Destroy(window_info& info){
+        SDL_DestroyRenderer(info.renderer);
+        SDL_DestroyWindow(info.window);
+        IMG_Quit();
+        SDL_Quit();
+    }
+
+    void RenderClear(Renderer R){
+        SDL_RenderClear(R);
+    }
+    void RenderPresent(Renderer R){
+        SDL_RenderPresent(R);
+    }
 }

@@ -79,6 +79,9 @@ SDL_RenderCopyEx(
 */
 namespace HAL{
     void Render(Renderer renderer, Texture Picture ,Parts part);
+    void Destroy(window_info& info);
+    void RenderClear(Renderer R);
+    void RenderPresent(Renderer R);
 }
 
 #endif

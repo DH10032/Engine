@@ -79,7 +79,7 @@ namespace Engine{
          * @brief 
          * @note 현재 스마트 포인터 도입으로 크게 신경쓰지 않아도 됨
          */
-        void Destroy_Object();
+        void Destroy_window();
         
     };
 }

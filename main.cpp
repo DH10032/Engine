@@ -72,6 +72,6 @@ int main()
         SDL_Delay(30);
     }
 
-    system.Destroy_Object();
+    system.Destroy_window();
 
 }
