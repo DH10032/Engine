@@ -15,9 +15,9 @@ void Engine::GameManager::LoadAsset(std::string path){
     data = AssetManager::Load_Asset(window_setting.renderer, path);
 }
 
-void Engine::GameManager::DrawObject(){
+void Engine::GameManager::DrawObject(DenseComponentPool<Parts>& action_buffer){
     HAL::RenderClear(window_setting.renderer);
-    GameGraphicApi::Render_Entity(window_setting.renderer, data, p);
+    GameGraphicApi::Render_Entity(window_setting.renderer, data, action_buffer);
     HAL::RenderPresent(window_setting.renderer);
 }
 

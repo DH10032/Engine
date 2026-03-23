@@ -8,8 +8,8 @@ namespace GameGraphicApi{
         //SDL_RenderClear(renderer);
     }
 
-    void Render_Entity(Renderer renderer, Asset data ,std::vector<Parts> p){
-        for(Parts part:p){
+    void Render_Entity(Renderer renderer, Asset data ,DenseComponentPool<Parts>& action_buffer){
+        for(Parts part:action_buffer){
             HAL::Render(
                 renderer,           // 렌더러
                 data.IMGS[part.id], // 텍스처

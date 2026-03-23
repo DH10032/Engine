@@ -1,7 +1,7 @@
 #ifndef RENDER
 #define RENDER
 
-#include "../../hal/HAL.h"
+#include "../../core/memory.h"
 
 /**
  * @brief 윈도우 설정을 위해 필요한 데이터
@@ -9,7 +9,7 @@
 
 namespace GameGraphicApi{
     void Set_draw_all(Renderer renderer);
-    void Render_Entity(Renderer renderer, Asset data ,std::vector<Parts> p);
+    void Render_Entity(Renderer renderer, Asset data ,DenseComponentPool<Parts>& action_buffer);
 }
 
 namespace CreateText { // 미리 선언해두기

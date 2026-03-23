@@ -124,6 +124,12 @@ class DenseComponentPool{
     std::unique_ptr<std::vector<DenseComponent<T>>> Data;
     
     public:
+    using iterator       = typename std::vector<DenseComponent<T>>::iterator;
+    using const_iterator = typename std::vector<DenseComponent<T>>::const_iterator;
+
+    iterator begin() { return Data->begin(); }
+    iterator end()   { return Data->end(); }
+
     DenseComponentPool() : Data(std::make_unique<std::vector<DenseComponent<T>>>()) {}
 
     /**

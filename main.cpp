@@ -67,6 +67,8 @@ int main()
     system.ShowWindow();
     system.LoadAsset("Game/data/asset.json");
 
+    // system.AppendBuffer();
+
     for(;;){
         system.DrawObject();
         SDL_Delay(30);

@@ -25,32 +25,41 @@ namespace Engine{
             .Bright = 255
         };
 
-        std::vector<Parts> p = {
-            {
-                9,
-                {0, 0, 16, 16},
-                {200, 200, size, size},
-                {size/2, 0},
-                30,
-                true
-            },
-            {
-                9,
-                {0, 16, 16, 32},
-                {200, 264, size, size},
-                {size/2, 0},
-                0,
-                false
-            },
-            {
-                9,
-                {48, 48, 64, 64},
-                {200, 328, size, size},
-                {size/2, 0},
-                0,
-                false
-            }
-        };
+        DenseComponentPool<Parts> action_buffer;
+        // std::vector<Parts> p = {
+        //     {
+        //         9,
+        //         {0, 0, 16, 16},
+        //         {200, 200, size, size},
+        //         {size/2, 0},
+        //         30,
+        //         true
+        //     },
+        //     {
+        //         9,
+        //         {0, 16, 16, 32},
+        //         {200, 264, size, size},
+        //         {size/2, 0},
+        //         0,
+        //         false
+        //     },
+        //     {
+        //         9,
+        //         {48, 48, 64, 64},
+        //         {200, 328, size, size},
+        //         {size/2, 0},
+        //         0,
+        //         false
+        //     }
+        // };
+
+        void AppendBuffer(Parts p){
+            action_buffer.add(p);
+        }
+
+        void ClearBuffer(Parts p){
+
+        }
 
         /**
          * @brief 내장 윈도우 호출 함수
@@ -73,7 +82,7 @@ namespace Engine{
          * @brief Entity 중 업데이트가 필요한 Entity만 업데이트
          * @note Entity에 렌더링 관련 컴포넌트 필수
          */
-        void DrawObject();
+        void DrawObject(DenseComponentPool<Parts>& action_buffer);
 
         /**
          * @brief 

@@ -10,7 +10,7 @@ SDL_Rect
 */
 
 namespace Animation{
-
+    
 }
 
 #endif
