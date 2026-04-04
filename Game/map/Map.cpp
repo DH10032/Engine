@@ -38,24 +38,23 @@ namespace mapspace {
         double ny = (double)y / height * d;
 
         // Noise 부여 (FBM)
-        //double c_val = PerlinNoiseSpace::fbm(perlin4, nx, ny, 3, 0.5, 1.5) * 2.0 - 1.2;
+        double c_val = PerlinNoiseSpace::fbm(perlin4, nx, ny, 3, 0.5, 1.5);
         double h_val = PerlinNoiseSpace::fbm(perlin1, nx, ny, 4, 0.5, 2);
         double t_val = PerlinNoiseSpace::fbm(perlin2, nx, ny, 6, 0.5, 2);
         double humid = PerlinNoiseSpace::fbm(perlin3, nx, ny, 6, 0.5, 2);
 
+        // 온도 정제 (높이 중간일수록 온도 ++ (최대 0.25))
+        double midding = 0.25 - ((y * (2.0f / height) - 1.0f) * (y * (2.0f / height) - 1.0f) * 0.25);
+        t_val += midding;
+
+        // 대륙성 정제
+        c_val = (c_val - 0.1) * (c_val - 0.1) * (c_val - 0.1) * 4 - 0.3;
+
         // 대륙성에 따른 높이 보정
-        //h_val = std::clamp(h_val + c_val, 0.0, 1.0);
+        h_val = std::clamp(h_val + c_val, 0.0, 1.0);
 
         // 높이에 따른 온도 보정
         t_val = std::clamp(t_val - (h_val * 0.3), 0.0, 1.0);
-
-        // 휘태커 도표 UI 출력 영역 예외 처리
-        if (x < 100 && y < 100)
-        {
-            t_val = x / 100.0;
-            humid = y / 100.0;
-            h_val = 0.0;
-        }
 
         // 행렬 인덱스 계산
         int h_idx = GetIdxForMatrix(humid, h_steps);
@@ -67,7 +66,7 @@ namespace mapspace {
             tileTypeData = 0;
             tileHeightData = 0;
         }
-        else if (h_val < 0.32) 
+        else if (h_val < 0.35) 
         {
             tileTypeData = 4;
             tileHeightData = 1;

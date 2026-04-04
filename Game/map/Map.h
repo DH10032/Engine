@@ -144,6 +144,7 @@ private:
 	PerlinNoiseSpace::PerlinNoise perlin1{SEED};
 	PerlinNoiseSpace::PerlinNoise perlin2{SEED * 2};
 	PerlinNoiseSpace::PerlinNoise perlin3{SEED * 3};
+	PerlinNoiseSpace::PerlinNoise perlin4{SEED * 4};
 
     std::vector<double> t_steps;
     std::vector<double> h_steps;
