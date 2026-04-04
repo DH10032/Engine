@@ -3,11 +3,14 @@
 
 #include "../graphic/window/window.h"
 #include "../graphic/font/font.h"
+#include "../graphic/renderer/render.h"
 #include "../core/assetManager/assetManager.h"
 #include "../graphic/animation/animation.h"
 #include "../core/core.h"
 
 namespace Engine{
+
+
     class GameManager{
         private:
         Asset data;
@@ -65,6 +68,20 @@ namespace Engine{
          * @note 해당 json에 Asset들이 등록이 되어 있어야 함
          */
         void LoadAsset(std::string path);
+
+        /** 
+        * @brief render_claer 등 각 프레임 에서 처음으로 호출해야 하는 함수들의 집합
+        */
+        void FrameStart();
+        /** 
+        * @brief render_claer 등 각 프레임 에서 마지막으로 호출해야 하는 함수들의 집합
+        */
+        void FrameEnd();
+
+        /** 
+        * 맵 드로일 함수
+        */
+        void DrawMap(int x, int y, int w, int h, std::vector<int> color);
 
         /**
          * @brief Entity 중 업데이트가 필요한 Entity만 업데이트

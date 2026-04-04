@@ -15,51 +15,52 @@ int main()
     //      - 렌더링
     //      - 프레임 제한
     // 7. 리소스 정리
+
     Engine::GameManager system;
+    int MAPSIZE = 2048;
+    mapspace::Map myMap(MAPSIZE,MAPSIZE);
     system.ShowWindow();
     system.LoadAsset("Game/data/asset.json");
     
-    system.Reg.CreateComponent<worldspace::tile>(Dense);
+    //system.Reg.CreateComponent<worldspace::tile>(Dense);
 
-    for(;;){
-        system.DrawObject();
+
+    std::vector<std::vector<int>> tile_color_datas = {
+        {0, 100, 200, 255},
+        {120, 180, 80, 255},
+        {34, 139, 34, 255},
+        {0, 80, 0, 255},
+        {240, 200, 100, 255},
+        {200, 180, 50, 255},
+        {30, 80, 60, 255},
+        {100, 200, 50, 255},
+        {150, 160, 150, 255},
+        {130, 120, 110, 255},
+        {47, 79, 79, 255},
+        {200, 220, 240, 255},
+        {160, 190, 220, 255},
+        {245, 250, 255, 255},
+        {180, 230, 255, 255},
+        {150, 50, 50, 255}
+    };
+
+    while(true){
+        system.FrameStart();
+
+        for (int y = 0; y <MAPSIZE; y++)
+            for (int x = 0; x <MAPSIZE; x++)
+               system.DrawMap(x,y,1,1,tile_color_datas[myMap.GetTileType(x,y)]);
+        // for (int cy=0; cy<Map.chunkHeight; ++cy){
+        //     for (int cx=0; cx<Map.chunkWidth; ++cx){
+        //         for (int ly=0; ly<SIZE; ++ly){
+        //             for (int lx=0; lx<SIZE; ++lx)
+        //             {
+        //                 Engine::GameManager::DrawMap()
+        //             }
+        //         }
+        //     }
+        // }
+        system.FrameEnd();
         SDL_Delay(30);
     }
-
-    system.Destroy_Object();
 }
-
-
-/*
-// 3. World 생성
-worldspace::worldInit();
-SDL_SetRenderDrawBlendMode(window_setting.renderer, SDL_BLENDMODE_BLEND);
-
-
-while(true) {
-    SDL_SetRenderDrawColor(window_setting.renderer, 255,255,255,255);
-    SDL_RenderClear(window_setting.renderer);
-
-    
-    for (int x = 0; x < worldspace::width; x++){ // 지형 높이 표현
-        for (int y = 0; y < worldspace::height; y++){
-            auto color = worldspace::world[x][y].color;
-            SDL_SetRenderDrawColor(window_setting.renderer, color[0], color[1], color[2], color[3]);
-            SDL_RenderFillRect(window_setting.renderer, &worldspace::world[x][y].dst);
-        }
-    }
-
-    SDL_RenderPresent(window_setting.renderer);
-    SDL_Delay(30);
-}
-
-struct tile{
-    double height;
-    double temperature;
-    double humidity;
-    std::array<int,4> color;
-    std::string tileType;
-    SDL_Rect dst;
-};
-
-*/
